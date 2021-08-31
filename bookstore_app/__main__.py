@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -9,8 +10,8 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 
 # Why does 'from . import' not work
-import crud, models, schemas
-from database import SessionLocal, engine
+from . import crud, models, schemas
+from .database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -137,7 +138,7 @@ def read_user(username: str, db: Session = Depends(get_db)):
 
 
 @app.post("/login/", response_model=schemas.Token)
-async def read_items(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
 	user = authenticate_user(db=db, username=form_data.username, password=form_data.password)
 	if not user:
 		raise HTTPException(status_code=401, detail="Login failed")
@@ -147,3 +148,6 @@ async def read_items(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 	)
 	return {"access_token": access_token, "token_type": "bearer"}
 
+
+if __name__ == '__main__':
+	uvicorn.run(app, host='127.0.0.1', port=8000)
