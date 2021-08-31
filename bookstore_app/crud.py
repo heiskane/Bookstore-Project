@@ -4,6 +4,23 @@ from sqlalchemy import func
 import models, schemas
 
 
+def get_user_by_name(db: Session, username: str):
+	return db.query(models.User).filter(func.lower(models.User.username) == username.lower()).first()
+
+
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+	return db.query(models.User).offset(skip).limit(limit).all()
+
+
+def create_user(db: Session, user: schemas.UserCreate):
+	password_hash = pwd_context.hash(user.password)
+	db_user = models.User(username=user.username, password_hash=password_hash)
+	db.add(db_user)
+	db.commit()
+	db.refresh(db_user)
+	return db_user
+
+
 def get_author(db: Session, author_id: int):
 	return db.query(models.Author).filter(models.Author.id == author_id).first()
 
@@ -12,6 +29,7 @@ def get_author_by_name(db: Session, name: str):
 	"""
 	Returns as lowercase
 	"""
+	# https://stackoverflow.com/questions/47635580/case-insensitive-exact-match-with-sqlalchemy
 	return db.query(models.Author).filter(func.lower(models.Author.name) == name.lower()).first()
 
 
