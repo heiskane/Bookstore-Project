@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 import pytest
 
 from ..database import Base
-from ..__main__ import app, get_db
+from ..main import app, get_db
 
 # Not sure if i will have time to implement all proper tests
 
@@ -17,6 +17,8 @@ engine = create_engine(
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Drop all existing data first
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 def override_get_db():
@@ -87,4 +89,8 @@ def test_login():
 		"auth_required"
 	)
 	assert response.status_code == 401, response.text
-	
+
+
+	# Only drops all it tests are successfull unfortunately
+def finish():
+	Base.metadata.drop_all(bind=engine)
