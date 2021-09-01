@@ -89,8 +89,3 @@ def test_login():
 		"auth_required"
 	)
 	assert response.status_code == 401, response.text
-
-
-	# Only drops all it tests are successfull unfortunately
-def finish():
-	Base.metadata.drop_all(bind=engine)
