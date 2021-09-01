@@ -2,7 +2,7 @@
 
 Development environment setup: 
 ```bash
-git clone git@github.com:heiskane/Bookstore-Project.git
+git clone https://github.com/heiskane/Bookstore-Project.git
 cd Bookstore-Project/fastapi_backend
 python3 -m venv venv
 source venv/bin/activate
