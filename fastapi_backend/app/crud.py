@@ -45,6 +45,20 @@ def get_author_by_name(db: Session, fname: str, lname: str):
 	)).first()
 
 
+def get_genre_by_name(db: Session, name: str):
+	return db.query(models.Genre).filter(
+		func.lower(models.Genre.name) == name.lower()
+	).first()
+
+
+def create_genre(db: Session, genre: schemas.GenreCreate):
+	db_genre = models.Genre(**genre.dict())
+	db.add(db_genre)
+	db.commit()
+	db.refresh(db_genre)
+	return db_genre
+
+
 def get_authors(db: Session, skip: int = 0, limit: int = 100):
 	return db.query(models.Author).offset(skip).limit(limit).all()
 
@@ -70,8 +84,29 @@ def get_book_by_title(db: Session, title: str):
 
 
 def create_book(db: Session, book: schemas.BookCreate, author: schemas.AuthorCreate):
-							# Figure this out later
+	# Get existing genres and create the new ones
+	db_genres = []
+	for genre_name in book.genres:
+		db_genre = get_genre_by_name(db=db, name=genre_name)
+		if not db_genre:
+			db_genres.append(create_genre(db=db, genre=schemas.GenreCreate(name=genre_name)))
+		else:
+			db_genres.append(db_genre)
+
+	#db_book = models.Book(
+	#	title = book.title,
+	#	description = book.description,
+	#	language = book.language,
+	#	price = book.price,
+	#	isbn = book.isbn,
+	#	author_id=author.id
+	#	)
+
+	# Empty out List[str] so that **book.dict() works
+	book.genres = []
 	db_book = models.Book(**book.dict(), author_id=author.id)
+
+	db_book.genres = db_genres
 	db.add(db_book)
 	db.commit()
 	db.refresh(db_book)

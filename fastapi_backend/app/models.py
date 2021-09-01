@@ -25,10 +25,11 @@ class Genre(Base):
 
 	id = Column(Integer, primary_key=True)
 	name = Column(String, index=True)
+
 	books = relationship(
 		"Book",
 		secondary=book_genre,
-		back_populates="books"
+		back_populates="genres"
 	)
 
 
@@ -40,7 +41,7 @@ class Book(Base):
 	description = Column(String, index=True)
 	language = Column(String, index=True)
 	price = Column(Float, index=True)
-	publisher = Column(String, index=True)
+	#publisher = Column(String, index=True)
 	isbn = Column(String, index=True)
 
 	author_id = Column(Integer, ForeignKey("authors.id"))
@@ -49,7 +50,7 @@ class Book(Base):
 	genres = relationship(
 		"Genre",
 		secondary=book_genre,
-		back_populates="genres"
+		back_populates="books"
 	)
 
 

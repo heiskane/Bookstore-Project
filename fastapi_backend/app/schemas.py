@@ -3,6 +3,21 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 
 
+class GenreBase(BaseModel):
+	name: str
+
+
+class GenreCreate(GenreBase):
+	books: List['Book'] = [] # This must be here to avoid recursion error where genre and book show eachother
+
+
+class Genre(GenreBase):
+	id: int
+
+	class Config:
+		orm_mode = True
+
+
 class BookBase(BaseModel):
 	title: str
 	description: Optional[str] = None
@@ -12,15 +27,21 @@ class BookBase(BaseModel):
 
 
 class BookCreate(BookBase):
-	pass
+	genres: List[str]
 
 
 class Book(BookBase):
 	id: int
 	author_id: int
+	genres: List[Genre] = []
 
 	class Config:
 		orm_mode = True
+
+
+# https://github.com/samuelcolvin/pydantic/issues/1333
+# Need this so classes refrence each other
+Genre.update_forward_refs()
 
 
 class AuthorBase(BaseModel):

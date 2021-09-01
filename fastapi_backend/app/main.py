@@ -102,14 +102,22 @@ def read_author(author_id: int, db: Session = Depends(get_db)):
 	return db_author
 
 
-@app.post("/authors/{author_name}/books/", response_model=schemas.Book)
-def create_book(author_fname: str, author_lname: str, book: schemas.BookCreate, db: Session = Depends(get_db)):
+@app.post("/books/", response_model=schemas.Book)
+def create_book(
+		author_fname: str,
+		author_lname: str,
+		book: schemas.BookCreate,
+		db: Session = Depends(get_db)):
+
 	db_book = crud.get_book_by_title(db, title=book.title)
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
 	db_author = crud.get_author_by_name(db=db, fname=author_fname, lname=author_lname)
 	if not db_author:
-		db_author = crud.create_author(db=db, author=db_author)
+		db_author = crud.create_author(
+			db=db, author=schemas.AuthorCreate(fname=author_fname, lname=author_lname)
+		)
+
 	return crud.create_book(db=db, book=book, author=db_author)
 
 
