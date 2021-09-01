@@ -1,11 +1,14 @@
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class BookBase(BaseModel):
 	title: str
 	description: Optional[str] = None
+	language: Optional[str] = None
+	price: float = 0
+	isbn: Optional[str] = None
 
 
 class BookCreate(BookBase):
@@ -21,7 +24,8 @@ class Book(BookBase):
 
 
 class AuthorBase(BaseModel):
-	name: str
+	fname: str
+	lname: str
 
 
 class AuthorCreate(AuthorBase):
@@ -38,6 +42,7 @@ class Author(AuthorBase):
 
 class UserBase(BaseModel):
 	username: str
+	email: Optional[EmailStr] = None
 
 
 class UserCreate(UserBase):
@@ -46,6 +51,8 @@ class UserCreate(UserBase):
 
 class User(UserBase):
 	id: int
+	is_active: Optional[bool] = True
+	is_admin: Optional[bool] = False
 
 	class Config:
 		orm_mode = True

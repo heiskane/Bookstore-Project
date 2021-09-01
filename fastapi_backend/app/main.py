@@ -9,7 +9,6 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 
-# Why does 'from . import' not work
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 
@@ -83,7 +82,7 @@ def auth_required(curr_user: schemas.User = Depends(get_current_user)):
 
 @app.post("/authors/", response_model=schemas.Author)
 def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
-	db_author = crud.get_author_by_name(db, name = author.name)
+	db_author = crud.get_author_by_name(db, fname = author.fname, lname = author.lname)
 	if db_author:
 		raise HTTPException(status_code=400, detail="Author already exists")
 	return crud.create_author(db=db, author=author)

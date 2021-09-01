@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from passlib.context import CryptContext
 
 from . import models, schemas
@@ -18,7 +18,12 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def create_user(db: Session, user: schemas.UserCreate):
 	password_hash = pwd_context.hash(user.password)
-	db_user = models.User(username=user.username, password_hash=password_hash)
+	db_user = models.User(
+		username=user.username,
+		password_hash=password_hash,
+		is_active = True,
+		is_admin = False,
+	)
 	db.add(db_user)
 	db.commit()
 	db.refresh(db_user)
@@ -29,12 +34,15 @@ def get_author(db: Session, author_id: int):
 	return db.query(models.Author).filter(models.Author.id == author_id).first()
 
 
-def get_author_by_name(db: Session, name: str):
+def get_author_by_name(db: Session, fname: str, lname: str):
 	"""
-	Returns as lowercase
+	Search for author as lowercase so its case insensitive
 	"""
 	# https://stackoverflow.com/questions/47635580/case-insensitive-exact-match-with-sqlalchemy
-	return db.query(models.Author).filter(func.lower(models.Author.name) == name.lower()).first()
+	return db.query(models.Author).filter(and_(
+		func.lower(models.Author.fname) == fname.lower(),
+		func.lower(models.Author.lname) == lname.lower()
+	)).first()
 
 
 def get_authors(db: Session, skip: int = 0, limit: int = 100):
@@ -42,7 +50,7 @@ def get_authors(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_author(db: Session, author: schemas.AuthorCreate):
-	db_author = models.Author(name=author.name)
+	db_author = models.Author(**author.dict())
 	db.add(db_author)
 	db.commit()
 	db.refresh(db_author)
