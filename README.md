@@ -1,6 +1,6 @@
 # Bookstore-Project
 
-## Development environment setup 
+## Uvicorn deployment (Development)
 ```bash
 git clone https://github.com/heiskane/Bookstore-Project.git
 cd Bookstore-Project/fastapi_backend
