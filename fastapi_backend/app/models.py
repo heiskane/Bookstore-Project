@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Table
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -14,6 +14,24 @@ class Author(Base):
 	books = relationship("Book", back_populates="author")
 
 
+book_genre = Table('book_genres', Base.metadata,
+	Column('book_id', ForeignKey('books.id'), primary_key=True),
+	Column('genre_id', ForeignKey('genres.id'), primary_key=True)
+)
+
+
+class Genre(Base):
+	__tablename__ = "genres"
+
+	id = Column(Integer, primary_key=True)
+	name = Column(String, index=True)
+	books = relationship(
+		"Book",
+		secondary=book_genre,
+		back_populates="books"
+	)
+
+
 class Book(Base):
 	__tablename__ = "books"
 
@@ -26,8 +44,13 @@ class Book(Base):
 	isbn = Column(String, index=True)
 
 	author_id = Column(Integer, ForeignKey("authors.id"))
-
 	author = relationship("Author", back_populates="books")
+
+	genres = relationship(
+		"Genre",
+		secondary=book_genre,
+		back_populates="genres"
+	)
 
 
 class User(Base):

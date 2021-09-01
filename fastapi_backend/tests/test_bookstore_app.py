@@ -37,18 +37,20 @@ client = TestClient(app)
 def test_create_author():
 	response = client.post(
 		"/authors/",
-		json={"name": "Bob"}
+		json={"fname": "Bob", "lname": "Bobson"}
 	)
 	assert response.status_code == 200, response.text
 	data = response.json()
-	assert data["name"] == "Bob"
+	assert data["fname"] == "Bob"
+	assert data["lname"] == "Bobson"
 	assert "id" in data
 	author_id = data["id"]
 
 	response = client.get(f"/authors/{author_id}")
 	assert response.status_code == 200, response.text
 	data = response.json()
-	assert data["name"] == "Bob"
+	assert data["fname"] == "Bob"
+	assert data["lname"] == "Bobson"
 	author_id = data["id"]
 
 
