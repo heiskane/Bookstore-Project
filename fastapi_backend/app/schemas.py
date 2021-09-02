@@ -8,7 +8,9 @@ class GenreBase(BaseModel):
 
 
 class GenreCreate(GenreBase):
-	books: List['Book'] = [] # This must be here to avoid recursion error where genre and book show eachother
+	# This must be here instead of 'Genre' class to avoid 
+	# recursion error when genre and book show eachother
+	books: List['Book'] = [] 
 
 
 class Genre(GenreBase):
@@ -32,7 +34,7 @@ class BookCreate(BookBase):
 
 class Book(BookBase):
 	id: int
-	author_id: int
+	author_id: int # Is it better to return author names instead?
 	genres: List[Genre] = []
 
 	class Config:
@@ -40,13 +42,12 @@ class Book(BookBase):
 
 
 # https://github.com/samuelcolvin/pydantic/issues/1333
-# Need this so classes refrence each other
+# Need this so classes can refrence each other
 Genre.update_forward_refs()
 
 
 class AuthorBase(BaseModel):
-	fname: str
-	lname: str
+	names: List[str] = []
 
 
 class AuthorCreate(AuthorBase):

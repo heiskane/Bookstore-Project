@@ -80,9 +80,12 @@ def auth_required(curr_user: schemas.User = Depends(get_current_user)):
 	return curr_user
 
 
-@app.post("/authors/", response_model=schemas.Author)
+@app.post("/authors", response_model=schemas.Author)
 def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
-	db_author = crud.get_author_by_name(db, fname = author.fname, lname = author.lname)
+	# Capitalize first letter in names in case some madman doesnt do that
+	# Also makes uniquenes fairly reliable assuming it would be used by admin only
+	author.names = [name.capitalize() for name in author.names]
+	db_author = crud.get_author_by_names(db=db, names=author.names)
 	if db_author:
 		raise HTTPException(status_code=400, detail="Author already exists")
 	return crud.create_author(db=db, author=author)
@@ -104,18 +107,17 @@ def read_author(author_id: int, db: Session = Depends(get_db)):
 
 @app.post("/books/", response_model=schemas.Book)
 def create_book(
-		author_fname: str,
-		author_lname: str,
+		author_names: List[str],
 		book: schemas.BookCreate,
 		db: Session = Depends(get_db)):
 
 	db_book = crud.get_book_by_title(db, title=book.title)
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
-	db_author = crud.get_author_by_name(db=db, fname=author_fname, lname=author_lname)
+	db_author = crud.get_author_by_names(db=db, names=author_names)
 	if not db_author:
 		db_author = crud.create_author(
-			db=db, author=schemas.AuthorCreate(fname=author_fname, lname=author_lname)
+			db=db, author=schemas.AuthorCreate(names=author_names)
 		)
 
 	return crud.create_book(db=db, book=book, author=db_author)

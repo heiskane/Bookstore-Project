@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, and_
 from passlib.context import CryptContext
 
+from typing import List
+
 from . import models, schemas
 
 
@@ -34,16 +36,6 @@ def get_author(db: Session, author_id: int):
 	return db.query(models.Author).filter(models.Author.id == author_id).first()
 
 
-def get_author_by_name(db: Session, fname: str, lname: str):
-	"""
-	Search for author as lowercase so its case insensitive
-	"""
-	# https://stackoverflow.com/questions/47635580/case-insensitive-exact-match-with-sqlalchemy
-	return db.query(models.Author).filter(and_(
-		func.lower(models.Author.fname) == fname.lower(),
-		func.lower(models.Author.lname) == lname.lower()
-	)).first()
-
 
 def get_genre_by_name(db: Session, name: str):
 	return db.query(models.Genre).filter(
@@ -62,6 +54,17 @@ def create_genre(db: Session, genre: schemas.GenreCreate):
 def get_authors(db: Session, skip: int = 0, limit: int = 100):
 	return db.query(models.Author).offset(skip).limit(limit).all()
 
+
+def get_author_by_names(db: Session, names: List[str]):
+	return db.query(models.Author).filter(models.Author.names == names).first()
+
+
+def create_author(db: Session, author: schemas.AuthorCreate):
+	db_author = models.Author(names = author.names)
+	db.add(db_author)
+	db.commit()
+	db.refresh(db_author)
+	return db_author
 
 def create_author(db: Session, author: schemas.AuthorCreate):
 	db_author = models.Author(**author.dict())
@@ -84,6 +87,7 @@ def get_book_by_title(db: Session, title: str):
 
 
 def create_book(db: Session, book: schemas.BookCreate, author: schemas.AuthorCreate):
+	
 	# Get existing genres and create the new ones
 	db_genres = []
 	for genre_name in book.genres:
@@ -92,15 +96,6 @@ def create_book(db: Session, book: schemas.BookCreate, author: schemas.AuthorCre
 			db_genres.append(create_genre(db=db, genre=schemas.GenreCreate(name=genre_name)))
 		else:
 			db_genres.append(db_genre)
-
-	#db_book = models.Book(
-	#	title = book.title,
-	#	description = book.description,
-	#	language = book.language,
-	#	price = book.price,
-	#	isbn = book.isbn,
-	#	author_id=author.id
-	#	)
 
 	# Empty out List[str] so that **book.dict() works
 	book.genres = []

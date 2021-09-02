@@ -1,5 +1,6 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, ForeignKey, Integer
+from sqlalchemy import String, Float, Table, PickleType
+from sqlalchemy.orm import relationship, synonym
 
 from .database import Base
 
@@ -10,6 +11,8 @@ class Author(Base):
 	id = Column(Integer, primary_key=True, index=True)
 	fname = Column(String, index=True)
 	lname = Column(String, index=True)
+
+	names = Column(PickleType, index=True, unique=True)
 
 	books = relationship("Book", back_populates="author")
 
