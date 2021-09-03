@@ -5,13 +5,23 @@ from sqlalchemy.orm import relationship, synonym
 from .database import Base
 
 
+book_author = Table('book_authors', Base.metadata,
+	Column('author_id', ForeignKey('authors.id'), primary_key=True),
+	Column('book_id', ForeignKey('books.id'), primary_key=True)
+)
+
+
 class Author(Base):
 	__tablename__ = "authors"
 
 	id = Column(Integer, primary_key=True, index=True)
 	names = Column(PickleType, index=True, unique=True)
 
-	books = relationship("Book", back_populates="author")
+	books = relationship(
+		"Book",
+		secondary=book_author,
+		back_populates="authors"
+	)
 
 
 book_genre = Table('book_genres', Base.metadata,
@@ -45,7 +55,12 @@ class Book(Base):
 	isbn = Column(String, index=True)
 
 	author_id = Column(Integer, ForeignKey("authors.id"))
-	author = relationship("Author", back_populates="books")
+
+	authors = relationship(
+		"Author",
+		secondary=book_author,
+		back_populates="books"
+	)
 
 	genres = relationship(
 		"Genre",

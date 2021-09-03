@@ -10,7 +10,8 @@ class GenreBase(BaseModel):
 class GenreCreate(GenreBase):
 	# This must be here instead of 'Genre' class to avoid 
 	# recursion error when genre and book show eachother
-	books: List['Book'] = [] 
+	# On a second thought i might not need books here at all
+	books: List['Book'] = []
 
 
 class Genre(GenreBase):
@@ -34,8 +35,8 @@ class BookCreate(BookBase):
 
 class Book(BookBase):
 	id: int
-	author_id: int # Is it better to return author names instead?
-	genres: List[Genre] = []
+	authors: List['Author'] # Is it better to return author names instead?
+	genres: List[Genre]
 
 	class Config:
 		orm_mode = True
@@ -47,20 +48,20 @@ Genre.update_forward_refs()
 
 
 class AuthorBase(BaseModel):
-	names: List[str] = []
+	names: List[str]
 
 
 class AuthorCreate(AuthorBase):
 	pass
 
-
 class Author(AuthorBase):
 	id: int
-	books: List[Book] = []
+	#books: List[Book] = []
 
 	class Config:
 		orm_mode = True
 
+Book.update_forward_refs()
 
 class UserBase(BaseModel):
 	username: str

@@ -80,15 +80,12 @@ def auth_required(curr_user: schemas.User = Depends(get_current_user)):
 	return curr_user
 
 
-@app.post("/authors", response_model=schemas.Author)
-def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
-	# Capitalize first letter in names in case some madman doesnt do that
-	# Also makes uniquenes fairly reliable assuming it would be used by admin only
-	author.names = [name.capitalize() for name in author.names]
-	db_author = crud.get_author_by_names(db=db, names=author.names)
-	if db_author:
-		raise HTTPException(status_code=400, detail="Author already exists")
-	return crud.create_author(db=db, author=author)
+@app.post("/authors/", response_model=List[schemas.Author])
+def create_authors(authors: List[schemas.AuthorCreate], db: Session = Depends(get_db)):
+	# This endpoint might not be needed
+	# If it is still in production a better response should be given
+	db_authors_created = crud.create_authors(db=db, authors=authors)
+	return db_authors_created
 
 
 @app.get("/authors/", response_model=List[schemas.Author])
@@ -107,20 +104,15 @@ def read_author(author_id: int, db: Session = Depends(get_db)):
 
 @app.post("/books/", response_model=schemas.Book)
 def create_book(
-		author_names: List[str],
+		authors: List[schemas.AuthorCreate],
 		book: schemas.BookCreate,
 		db: Session = Depends(get_db)):
 
 	db_book = crud.get_book_by_title(db, title=book.title)
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
-	db_author = crud.get_author_by_names(db=db, names=author_names)
-	if not db_author:
-		db_author = crud.create_author(
-			db=db, author=schemas.AuthorCreate(names=author_names)
-		)
 
-	return crud.create_book(db=db, book=book, author=db_author)
+	return crud.create_book(db=db, book=book, authors=authors)
 
 
 @app.get("/books/", response_model=List[schemas.Book])
@@ -156,7 +148,3 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 		data = {"sub": user.username}, expires_delta=access_token_expires
 	)
 	return {"access_token": access_token, "token_type": "bearer"}
-
-
-if __name__ == '__main__':
-	uvicorn.run(app, host='127.0.0.1', port=8000)
