@@ -14,7 +14,13 @@ from .database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+description = """
+
+Backend API for the Bookstore project
+
+"""
+
+app = FastAPI(description=description)
 
 # Remember to change later and use .env
 SECRET_KEY = "a155c5104f0f8fcc9c2c2506588a218476c72fb0c40897f3f93d501c75c8db32"
