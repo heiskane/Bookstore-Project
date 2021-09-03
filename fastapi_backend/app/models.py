@@ -9,9 +9,6 @@ class Author(Base):
 	__tablename__ = "authors"
 
 	id = Column(Integer, primary_key=True, index=True)
-	fname = Column(String, index=True)
-	lname = Column(String, index=True)
-
 	names = Column(PickleType, index=True, unique=True)
 
 	books = relationship("Book", back_populates="author")
