@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import date
 
 from pydantic import BaseModel, EmailStr
 
@@ -26,6 +27,7 @@ class BookBase(BaseModel):
 	description: Optional[str] = None
 	language: Optional[str] = None
 	price: float = 0
+	publication_date: date
 	isbn: Optional[str] = None
 
 

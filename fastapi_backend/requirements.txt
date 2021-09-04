@@ -17,6 +17,7 @@ iniconfig==1.1.1
 packaging==21.0
 passlib==1.7.4
 pluggy==1.0.0
+psycopg2==2.9.1
 py==1.10.0
 pyasn1==0.4.8
 pycparser==2.20

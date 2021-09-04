@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date
 from sqlalchemy import String, Float, Table, PickleType
 from sqlalchemy.orm import relationship, synonym
 
@@ -51,6 +51,7 @@ class Book(Base):
 	description = Column(String, index=True)
 	language = Column(String, index=True)
 	price = Column(Float, index=True)
+	publication_date = Column(Date, index=True)
 	#publisher = Column(String, index=True)
 	isbn = Column(String, index=True)
 
