@@ -9,7 +9,8 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./bookstore_app.db" # dev db
 
 engine = create_engine(         # This is just for sqlite
 	SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-	#SQLALCHEMY_DATABASE_URL
+	# Experiment with pool_size later
+	#SQLALCHEMY_DATABASE_URL, # pool_size=100, max_overflow=0
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
