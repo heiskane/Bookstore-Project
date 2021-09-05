@@ -106,6 +106,14 @@ def read_author(author_id: int, db: Session = Depends(get_db)):
 	return db_author
 
 
+@app.get("/authors/{author_id}/books", response_model=List[schemas.Book])
+def read_author_books(author_id: int, db: Session = Depends(get_db)):
+	db_author = crud.get_author(db=db, author_id=author_id)
+	if not db_author:
+		raise HTTPException(status_code=404, detail="Author not found")
+	return db_author.books
+
+
 @app.post("/books/", response_model=schemas.Book)
 def create_book(
 		authors: List[schemas.AuthorCreate],
