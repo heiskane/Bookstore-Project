@@ -71,3 +71,25 @@ def test_login():
 		"auth_required"
 	)
 	assert response.status_code == 401, response.text
+
+
+def test_create_book():
+	response = client.post(
+		"/books/",
+		json = {
+		  "authors": [
+		    {"name": "Test author1"}, {"name": "Test author2"}],
+		  "book": {
+		    "title": "Test Book",
+		    "description": "string",
+		    "language": "string",
+		    "price": 0,
+		    "publication_date": "2021-09-05",
+		    "isbn": "string",
+		    "genres": [
+		      "string"
+		    ]}}
+	)
+	assert response.status_code == 200, response.text
+	data = response.json()
+	assert data["title"] == "Test Book"

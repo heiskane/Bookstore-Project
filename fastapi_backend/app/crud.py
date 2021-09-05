@@ -54,35 +54,18 @@ def get_authors(db: Session, skip: int = 0, limit: int = 100):
 	return db.query(models.Author).offset(skip).limit(limit).all()
 
 
-def get_author_by_names(db: Session, names: List[str]):
-	# Not sure if this is good enough performance
-	db_authors = db.query(models.Author).all()
-
-	# Names are capitalized when added to db so do the same here
-	names = [name.capitalize() for name in names]
-
-	db_author_found = None
-	for db_author in db_authors:
-		db_author_found = db_author if db_author.names == names else None
-
-	return db_author_found
+def get_author_by_name(db: Session, name: str):
+	return db.query(models.Author).filter(func.lower(models.Author.name) == name.lower()).first()
 
 
-def create_authors(db: Session, authors: List[schemas.AuthorCreate]):
-	new_authors = []
-	for author in authors:
-		db_author = get_author_by_names(db=db, names=author.names)
-		if not db_author:
-			# Capitalize first letter in names in case some madman doesnt do that
-			# Also makes uniquenes fairly reliable assuming it would be used by admin only
-			author.names = [name.capitalize() for name in author.names]
-			author = models.Author(**author.dict())
-			db.add(author)
-			db.commit()
-			db.refresh(author)
-			new_authors.append(author)
-
-	return new_authors
+def create_author(db: Session, author: schemas.AuthorCreate):
+	db_author = get_author_by_name(db=db, name=author.name)
+	if not db_author:
+		db_author = models.Author(**author.dict())
+		db.add(db_author)
+		db.commit()
+		db.refresh(db_author)
+	return db_author
 
 
 					# Maybe call skip 'page' and set offset as page * limit
@@ -91,6 +74,10 @@ def create_authors(db: Session, authors: List[schemas.AuthorCreate]):
 					# Then set offset as (page * pagesize) and limit as page_size
 def get_books(db: Session, skip: int = 0, limit: int = 100):
 	return db.query(models.Book).offset(skip).limit(limit).all()
+
+
+def get_book(db: Session, book_id: int):
+	return db.query(models.Book).filter(models.Book.id == book_id).first()
 
 
 def get_book_by_title(db: Session, title: str):
@@ -108,11 +95,17 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.Aut
 		else:
 			db_genres.append(db_genre)
 
-	authors = create_authors(db=db, authors=authors)
+	db_authors = []
+	for author in authors:
+		db_author = get_author_by_name(db=db, name=author.name)
+		if not db_author:
+			db_authors.append(create_author(db=db, author=author))
+		else:
+			db_authors.append(db_author)
 
 	# Empty out List[str] so that **book.dict() works
 	book.genres = []
-	db_book = models.Book(**book.dict(), authors=authors)
+	db_book = models.Book(**book.dict(), authors=db_authors)
 
 	db_book.genres = db_genres
 	db.add(db_book)

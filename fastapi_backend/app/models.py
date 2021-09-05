@@ -16,6 +16,7 @@ class Author(Base):
 
 	id = Column(Integer, primary_key=True, index=True)
 	names = Column(PickleType, index=True, unique=True)
+	name = Column(String, index=True, unique=True)
 
 	books = relationship(
 		"Book",

@@ -9,7 +9,7 @@ class GenreBase(BaseModel):
 
 
 class GenreCreate(GenreBase):
-	# This must be here instead of 'Genre' class to avoid 
+	# This must be here instead of 'Genre' class to avoid
 	# recursion error when genre and book show eachother
 	# On a second thought i might not need books here at all
 	books: List['Book'] = []
@@ -50,7 +50,7 @@ Genre.update_forward_refs()
 
 
 class AuthorBase(BaseModel):
-	names: List[str]
+	name: str
 
 
 class AuthorCreate(AuthorBase):

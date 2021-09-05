@@ -83,13 +83,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 def auth_required(curr_user: schemas.User = Depends(get_current_user)):
 	return curr_user
 
-
-@app.post("/authors/", response_model=List[schemas.Author])
-def create_authors(authors: List[schemas.AuthorCreate], db: Session = Depends(get_db)):
+# Fix pls
+@app.post("/authors/", response_model=schemas.Author)
+def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
 	# This endpoint might not be needed
-	# If it is still in production a better response should be given
-	db_authors_created = crud.create_authors(db=db, authors=authors)
-	return db_authors_created
+	db_author = crud.get_author_by_name(db=db, name=author.name)
+	if db_author:
+		raise HTTPException(status_code=400, detail="Author already exists")
+	return crud.create_author(db=db, author=author)
 
 
 @app.get("/authors/", response_model=List[schemas.Author])
@@ -132,6 +133,14 @@ def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 	return crud.get_books(db=db, skip=skip, limit=limit)
 
 
+@app.get("/books/{book_id}", response_model=schemas.Book)
+def read_book(book_id: int, db: Session = Depends(get_db)):
+	db_book = crud.get_book(db=db, book_id=book_id)
+	if not db_book:
+		raise HTTPException(status_code=404, detail="Book not found")
+	return db_book
+
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 	db_user = crud.get_user_by_name(db=db, username=user.username)
@@ -157,6 +166,10 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 		raise HTTPException(status_code=401, detail="Login failed")
 	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 	access_token = create_access_token(
-		data = {"sub": user.username}, expires_delta=access_token_expires
+		data = {
+			"sub": user.username,
+			"is_admin": user.is_admin,
+			"is_active": user.is_active
+		}, expires_delta=access_token_expires
 	)
 	return {"access_token": access_token, "token_type": "bearer"}
