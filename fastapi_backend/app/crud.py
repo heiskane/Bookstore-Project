@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from passlib.context import CryptContext
 
 from typing import List
@@ -21,8 +21,8 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 def create_user(db: Session, user: schemas.UserCreate):
 	password_hash = pwd_context.hash(user.password)
 	db_user = models.User(
-		username=user.username,
-		password_hash=password_hash,
+		username = user.username,
+		password_hash = password_hash,
 		is_active = True,
 		is_admin = False,
 	)
@@ -34,7 +34,6 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def get_author(db: Session, author_id: int):
 	return db.query(models.Author).filter(models.Author.id == author_id).first()
-
 
 
 def get_genre_by_name(db: Session, name: str):

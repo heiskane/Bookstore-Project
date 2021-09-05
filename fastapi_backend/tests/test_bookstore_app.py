@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import pytest
 
 from ..app.database import Base
 from ..app.main import app, get_db
@@ -20,6 +19,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 # Drop all existing data first
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
+
 
 def override_get_db():
 	try:

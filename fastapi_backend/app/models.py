@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date
 from sqlalchemy import String, Float, Table, PickleType
-from sqlalchemy.orm import relationship, synonym
+from sqlalchemy.orm import relationship
 
 from .database import Base
 

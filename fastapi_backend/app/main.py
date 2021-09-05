@@ -1,10 +1,8 @@
 from typing import List, Optional
 
-import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from datetime import timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
