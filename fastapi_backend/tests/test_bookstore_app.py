@@ -93,3 +93,14 @@ def test_create_book():
 	assert response.status_code == 200, response.text
 	data = response.json()
 	assert data["title"] == "Test Book"
+
+
+def test_get_book():
+	response = client.get(
+		"/books/1"
+	)
+	assert response.status_code == 200, response.text
+	data = response.json()
+	assert data["title"] == "Test Book"
+	assert data["authors"][0]["name"] == "Test author1"
+	assert data["authors"][1]["name"] == "Test author2"
