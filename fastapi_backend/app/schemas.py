@@ -63,7 +63,9 @@ class Author(AuthorBase):
 	class Config:
 		orm_mode = True
 
+
 Book.update_forward_refs()
+
 
 class UserBase(BaseModel):
 	username: str
