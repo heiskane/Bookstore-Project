@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 
-models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine, checkfirst=True)
 
 description = """
 
