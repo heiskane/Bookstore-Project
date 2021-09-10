@@ -1,8 +1,9 @@
 from typing import List, Optional
 
 from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -19,6 +20,22 @@ Backend API for the Bookstore project
 """
 
 app = FastAPI(description=description)
+
+# https://fastapi.tiangolo.com/tutorial/cors/
+# Allowed origins required to allow react to communicate from "diffrent origin"
+# Will have to chech if a subdomain is "diffrent origin"
+origins = [
+	"*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # Remember to change later and use .env
 SECRET_KEY = "a155c5104f0f8fcc9c2c2506588a218476c72fb0c40897f3f93d501c75c8db32"
