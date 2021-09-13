@@ -10,6 +10,7 @@ export default function App() {
     axios.get(baseURL + "/books")
     .then((response) => {
       setBooks(response.data);
+      console.log(books)
     });
   }, []);
 
@@ -20,6 +21,7 @@ export default function App() {
 
   return (
     <div>
+      <h1>Books</h1>
     {books.map((book) => [
         <p>Title: {book.title}</p>,
         <p>Description: {book.description}</p>,
