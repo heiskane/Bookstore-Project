@@ -10,6 +10,8 @@ from datetime import datetime, timedelta
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+from .PayPal.CreateOrder import CreateOrder
+from .PayPal.CaptureOrder import CaptureOrder
 
 models.Base.metadata.create_all(bind=engine, checkfirst=True)
 
@@ -190,3 +192,13 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 		}, expires_delta=access_token_expires
 	)
 	return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.post("/checkout/paypal/order/create/")
+def paypal_create_order():
+	return CreateOrder().create_order(debug=True)
+
+
+@app.post("/checkout/paypal/order/{order_id}/capture")
+def paypal_capture_order(order_id: str):
+	return CaptureOrder().capture_order(order_id, debug=True)
