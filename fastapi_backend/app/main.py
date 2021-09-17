@@ -1,12 +1,16 @@
 from typing import List, Optional
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
+from os import path, getcwd
+from shutil import copyfileobj
+from werkzeug.utils import secure_filename
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -31,11 +35,11 @@ origins = [
 ]
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+	CORSMiddleware,
+	allow_origins=origins,
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"],
 )
 
 
@@ -160,6 +164,31 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
 	return db_book
 
 
+# https://github.com/tiangolo/fastapi/issues/426#issuecomment-542545608
+@app.post("/books/{book_id}/upload/")
+async def upload_book_file(book_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+	if file.content_type != "application/pdf":
+		raise HTTPException(status_code=400, detail="Only PDF allowed for now")
+	# this results to something like "/home/user/bookstore_project/fastapi_backend/app/books/"
+	# for docker deployment i would want it to be just /books
+	upload_directory = getcwd() + "/app/books"
+	book = crud.get_book(db = db, book_id = book_id)
+	file_name = secure_filename(book.title + ".pdf")
+	with open(path.join(upload_directory, file_name), 'wb') as upload_file:
+		copyfileobj(file.file, upload_file)
+	return {"filename": file_name}
+
+
+@app.get("/books/{book_id}/download/")
+async def download_book(book_id: int, db: Session = Depends(get_db)):
+	books_directory = getcwd() + "/app/books"
+	book = crud.get_book(db = db, book_id = book_id)
+	file_name = secure_filename(book.title + ".pdf")
+	with open(path.join(books_directory, file_name), 'rb') as file:
+		# https://stackoverflow.com/questions/60716529/download-file-using-fastapi
+		return FileResponse(file.name, media_type='application/octet-stream',filename=file_name)
+
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 	db_user = crud.get_user_by_name(db=db, username=user.username)
@@ -202,3 +231,4 @@ def paypal_create_order():
 @app.post("/checkout/paypal/order/{order_id}/capture/")
 def paypal_capture_order(order_id: str):
 	return CaptureOrder().capture_order(order_id, debug=True)
+

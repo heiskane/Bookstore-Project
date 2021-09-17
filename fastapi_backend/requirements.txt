@@ -1,3 +1,4 @@
+aiofiles==0.7.0
 asgiref==3.4.1
 attrs==21.2.0
 bcrypt==3.2.0
@@ -39,3 +40,4 @@ toml==0.10.2
 typing-extensions==3.10.0.1
 urllib3==1.26.6
 uvicorn==0.15.0
+Werkzeug==2.0.1

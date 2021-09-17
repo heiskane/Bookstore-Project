@@ -15,7 +15,6 @@ class Author(Base):
 	__tablename__ = "authors"
 
 	id = Column(Integer, primary_key=True, index=True)
-	names = Column(PickleType, index=True, unique=True)
 	name = Column(String, index=True, unique=True)
 
 	books = relationship(
@@ -55,8 +54,6 @@ class Book(Base):
 	publication_date = Column(Date, index=True)
 	#publisher = Column(String, index=True)
 	isbn = Column(String, index=True)
-
-	author_id = Column(Integer, ForeignKey("authors.id"))
 
 	authors = relationship(
 		"Author",
