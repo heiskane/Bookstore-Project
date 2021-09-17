@@ -2,29 +2,51 @@ import { Link } from 'react-router-dom'
 import React from 'react'
 import './Header.css'
 import SearchIcon from '@material-ui/icons/Search';
+import { ShoppingBasket } from '@material-ui/icons';
 
 const Header = () => {
     return (
-        <nav className="header">
-         
+        <div className="header">
+
             {/* logo on the left -> img */}
             {/* Search box */}
             {/* 3 links */}
             {/* Shopping Basket icon with number */}
 
             <Link to="/">
-                <img className="header__logo" src='https://d24v5oonnj2ncn.cloudfront.net/wp-content/uploads/2018/10/16030301/Amazon-Logo-Black.jpg' alt="QiBook store logo" />
+                <img className="header__logo" src='https://www.nicepng.com/png/full/16-167642_amazon-logo-amazon-logo-white-text.png' alt="QiBook store logo" />
             </Link>
 
-            <div class="header__search">
+            <div className="header__search">
                 <input type="text" className="header__searchInput" />
                 <SearchIcon className="header__searchIcon"></SearchIcon>
             </div>
 
-            <div class="header__nav">
-                
+            <div className="header__nav">
+                <div className="header__option">
+                    <span className="header__optionLineOne">Hello Guest</span>
+                    <span className="header__optionLineTwo">Sign In</span>
+                </div>
+
+
+
+                <div className="header__option">
+                    <span className="header__optionLineOne">Returns</span>
+                    <span className="header__optionLineTwo">&Oders</span>
+                </div>
+
+                <div className="header__option">
+                    <span className="header__optionLineOne">Your</span>
+                    <span className="header__optionLineTwo">Prime</span>
+                </div>
+
+                <div className="header__optionBasket">
+                    <ShoppingBasket />
+                    <span className="header__optionLineTwo header__basketCount">0</span>
+                </div>
+
             </div>
-        </nav>
+        </div>
     )
 }
 

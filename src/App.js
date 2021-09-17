@@ -6,11 +6,10 @@ import Home from './component/Home';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="app">
         <Switch>
           <Route path="/">
             <Header />
-
             <Home />
           </Route>
         </Switch>
