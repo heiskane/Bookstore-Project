@@ -101,6 +101,21 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 	return user
 
 
+def require_admin(
+	token: str = Depends(oauth2_scheme),
+	db: Session = Depends(get_db),
+	user = Depends(get_current_user)):
+	
+	if not user.is_admin:
+		raise HTTPException(status_code=401, detail="Admin privileges required")
+	return user
+
+
+@app.get("/admin_required/", response_model=schemas.User)
+def admin_required(curr_user: schemas.User = Depends(require_admin)):
+	return curr_user
+
+
 # Require authentication
 @app.get("/auth_required/", response_model=schemas.User)
 def auth_required(curr_user: schemas.User = Depends(get_current_user)):
@@ -216,6 +231,7 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 	access_token = create_access_token(
 		data = {
 			"sub": user.username,
+			# Probably dont need to set is_admin and is_active
 			"is_admin": user.is_admin,
 			"is_active": user.is_active
 		}, expires_delta=access_token_expires
