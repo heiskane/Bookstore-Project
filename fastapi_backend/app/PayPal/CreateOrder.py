@@ -50,11 +50,11 @@ class CreateOrder(PayPalClient):
 						"soft_descriptor": "HighFashions",
 						"amount": {
 							"currency_code": "EUR",
-							"value": "180.00",
+							"value": "290.00",
 							"breakdown": {
 								"item_total": {
 									"currency_code": "EUR",
-									"value": "180.00"
+									"value": "290.00"
 								},
 							}
 						},
@@ -65,7 +65,7 @@ class CreateOrder(PayPalClient):
 								"sku": "sku01",
 								"unit_amount": {
 									"currency_code": "EUR",
-									"value": "90.00"
+									"value": "190.00"
 								},
 								"quantity": "1",
 								"category": "PHYSICAL_GOODS"
@@ -76,7 +76,7 @@ class CreateOrder(PayPalClient):
 								"sku": "sku02",
 								"unit_amount": {
 									"currency_code": "EUR",
-									"value": "45.00"
+									"value": "50.00"
 								},
 								"quantity": "2",
 								"category": "PHYSICAL_GOODS"

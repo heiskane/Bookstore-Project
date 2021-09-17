@@ -199,6 +199,6 @@ def paypal_create_order():
 	return CreateOrder().create_order(debug=True)
 
 
-@app.post("/checkout/paypal/order/{order_id}/capture")
+@app.post("/checkout/paypal/order/{order_id}/capture/")
 def paypal_capture_order(order_id: str):
 	return CaptureOrder().capture_order(order_id, debug=True)

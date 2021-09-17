@@ -18,7 +18,7 @@ firefox http://localhost:8000/docs
 git clone https://github.com/heiskane/Bookstore-Project.git
 cd Bookstore-Project/fastapi_backend
 docker build -t bookstore_api .
-docker run -d --name bookstore_backend -p 8000:80 bookstore_api
+docker run -d --name bookstore_backend -p 8000:80 -e GUNICORN_CONF="/app/app/gunicorn_conf.py"  bookstore_api
 firefox http://localhost:8000/docs
 ```
 
