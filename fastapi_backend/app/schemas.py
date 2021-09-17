@@ -49,6 +49,10 @@ class Book(BookBase):
 Genre.update_forward_refs()
 
 
+class ShoppingCart(BaseModel):
+	book_ids: List[int]
+
+
 class AuthorBase(BaseModel):
 	name: str
 

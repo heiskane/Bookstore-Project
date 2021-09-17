@@ -190,6 +190,7 @@ async def upload_book_file(book_id: int, file: UploadFile = File(...), db: Sessi
 	book = crud.get_book(db = db, book_id = book_id)
 	file_name = secure_filename(book.title + ".pdf")
 	with open(path.join(upload_directory, file_name), 'wb') as upload_file:
+
 		copyfileobj(file.file, upload_file)
 	return {"filename": file_name}
 
@@ -240,8 +241,9 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 
 
 @app.post("/checkout/paypal/order/create/")
-def paypal_create_order():
-	return CreateOrder().create_order(debug=True)
+def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depends(get_db)):
+	books = [crud.get_book(db=db, book_id=book_id) for book_id in shopping_cart.book_ids]
+	return CreateOrder().create_order(books=books, debug=True)
 
 
 @app.post("/checkout/paypal/order/{order_id}/capture/")
