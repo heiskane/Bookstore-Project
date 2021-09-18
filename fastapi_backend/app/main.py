@@ -190,7 +190,6 @@ async def upload_book_file(book_id: int, file: UploadFile = File(...), db: Sessi
 	book = crud.get_book(db = db, book_id = book_id)
 	file_name = secure_filename(book.title + ".pdf")
 	with open(path.join(upload_directory, file_name), 'wb') as upload_file:
-
 		copyfileobj(file.file, upload_file)
 	return {"filename": file_name}
 
