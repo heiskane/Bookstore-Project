@@ -16,6 +16,7 @@ from . import crud, models, schemas
 from .database import SessionLocal, engine
 from .PayPal.CreateOrder import CreateOrder
 from .PayPal.CaptureOrder import CaptureOrder
+from .PayPal.GetOrder import GetOrder
 
 models.Base.metadata.create_all(bind=engine, checkfirst=True)
 
@@ -241,11 +242,29 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 
 @app.post("/checkout/paypal/order/create/")
 def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depends(get_db)):
-	books = [crud.get_book(db=db, book_id=book_id) for book_id in shopping_cart.book_ids]
+	books = []
+	for book_id in shopping_cart.book_ids:
+		db_book = crud.get_book(db=db, book_id=book_id)
+		books.append(db_book) if db_book else False
+
+	# Error if price is not above zero
 	return CreateOrder().create_order(books=books, debug=True)
 
 
 @app.post("/checkout/paypal/order/{order_id}/capture/")
-def paypal_capture_order(order_id: str):
-	return CaptureOrder().capture_order(order_id, debug=True)
+def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
+	response = CaptureOrder().capture_order(order_id, debug=True)
+	order = GetOrder().get_order(order_id = order_id)
 
+	ordered_books = []
+	for book in order.result.purchase_units[0].items:
+		ordered_books.append(crud.get_book_by_title(db = db, title = book.name))
+
+	# Maybe implement this in crud.py
+	# Try to let anonymous user buy too
+
+	curr_user.books += ordered_books
+	db.add(curr_user)
+	db.commit()
+
+	return response

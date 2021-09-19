@@ -43,6 +43,12 @@ class Genre(Base):
 	)
 
 
+book_ownership = Table('book_ownership', Base.metadata,
+	Column('user_id', ForeignKey('users.id'), primary_key=True),
+	Column('book_id', ForeignKey('books.id'), primary_key=True)
+)
+
+
 class Book(Base):
 	__tablename__ = "books"
 
@@ -67,6 +73,12 @@ class Book(Base):
 		back_populates="books"
 	)
 
+	owners = relationship(
+		"User",
+		secondary=book_ownership,
+		back_populates='books'
+	)
+
 
 class User(Base):
 	__tablename__ = "users"
@@ -77,3 +89,9 @@ class User(Base):
 	email = Column(String, index=True) # Set to unique later
 	is_admin = Column(Boolean, index=True)
 	is_active = Column(Boolean, index=True)
+
+	books = relationship(
+		"Book",
+		secondary=book_ownership,
+		back_populates='owners'
+	)
