@@ -1,2 +1,2 @@
 <h1>The project is a online bookstore</h1>
-https://sharktal.github.io/Bookstore/
+https://main.d2ex0y0w0bkrrn.amplifyapp.com/
