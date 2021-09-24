@@ -1,6 +1,7 @@
 import React from 'react'
 import Book from './Book'
 import './Home.css'
+import Books from './Books'
 
 const Home = () => {
     return (
@@ -10,22 +11,14 @@ const Home = () => {
             </div>
             <div class="home__row">
                 {/*  Six books */}
-                <Book />
-                <Book />
-                <Book />
-                <Book />
-                <Book />
-                <Book />
+                <Books />
+
             </div>
 
             <div class="home__row">
                 {/*  Six books */}
-                <Book />
-                <Book />
-                <Book />
-                <Book />
-                <Book />
-                <Book />
+                <Books />
+
             </div>
 
         </div>

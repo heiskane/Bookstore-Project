@@ -14,7 +14,7 @@ const Header = () => {
             {/* Shopping Basket icon with number */}
 
             <Link to="/">
-                <img className="header__logo" src='https://www.nicepng.com/png/full/16-167642_amazon-logo-amazon-logo-white-text.png' alt="QiBook store logo" />
+                <img className="header__logo" src='https://goodbookstore.s3.eu-north-1.amazonaws.com/MyBook.png' alt="QiBook store logo" />
             </Link>
 
             <div className="header__search">
