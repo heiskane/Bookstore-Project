@@ -1,2 +1,3 @@
 <h1>The project is a online bookstore</h1>
-https://main.d2ex0y0w0bkrrn.amplifyapp.com/
+You can click the link to check the application
+https://main.d1wx5d1ccnm9c6.amplifyapp.com/
