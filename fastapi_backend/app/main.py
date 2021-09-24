@@ -47,9 +47,10 @@ app.add_middleware(
 # Remember to change later and use .env
 SECRET_KEY = "a155c5104f0f8fcc9c2c2506588a218476c72fb0c40897f3f93d501c75c8db32"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated=["auto"])
 
 
@@ -102,6 +103,22 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 	return user
 
 
+# https://stackoverflow.com/questions/66254024/fastapi-optional-oauth2-authentication
+async def get_current_user_or_none(db: Session = Depends(get_db), token: str = Depends(optional_oauth2_scheme)):
+	if not token:
+		return None
+	try:
+		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+		username: str = payload.get("sub")
+		if username is None:
+			return None
+		token_data = schemas.TokenData(username=username)
+	except JWTError:
+		return None
+	user = crud.get_user_by_name(db=db, username=token_data.username)
+	return user
+
+
 def require_admin(
 	token: str = Depends(oauth2_scheme),
 	db: Session = Depends(get_db),
@@ -121,6 +138,12 @@ def admin_required(curr_user: schemas.User = Depends(require_admin)):
 @app.get("/auth_required/", response_model=schemas.User)
 def auth_required(curr_user: schemas.User = Depends(get_current_user)):
 	return curr_user
+
+
+@app.get("/auth_optional/", response_model=schemas.User)
+def auth_optional(curr_user: schemas.User = Depends(get_current_user_or_none)):
+	return curr_user
+
 
 # Fix pls
 @app.post("/authors/", response_model=schemas.Author)
@@ -200,6 +223,7 @@ async def download_book(book_id: int, db: Session = Depends(get_db)):
 	books_directory = getcwd() + "/app/books"
 	book = crud.get_book(db = db, book_id = book_id)
 	file_name = secure_filename(book.title + ".pdf")
+	# TODO: 404 if file not found
 	with open(path.join(books_directory, file_name), 'rb') as file:
 		# https://stackoverflow.com/questions/60716529/download-file-using-fastapi
 		return FileResponse(file.name, media_type='application/octet-stream',filename=file_name)
@@ -252,7 +276,7 @@ def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depen
 
 
 @app.post("/checkout/paypal/order/{order_id}/capture/")
-def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
+def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_current_user_or_none), db: Session = Depends(get_db)):
 	response = CaptureOrder().capture_order(order_id, debug=True)
 	order = GetOrder().get_order(order_id = order_id)
 
@@ -262,6 +286,16 @@ def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_cu
 
 	# Maybe implement this in crud.py
 	# Try to let anonymous user buy too
+
+	if not curr_user:
+		access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+		access_token = create_access_token(
+			data = {
+				"sub": "anonymous",
+				"ordered_book_ids": [book.id for book in ordered_books],
+			}, expires_delta=access_token_expires
+		)
+		return {"access_token": access_token, "token_type": "bearer"}
 
 	curr_user.books += ordered_books
 	db.add(curr_user)
