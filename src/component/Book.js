@@ -1,7 +1,21 @@
 import React from 'react'
 import './Book.css'
+import { useDispatch } from 'react-redux';
+import { addToBasket } from './slice'
 
 const Book = ({ book }) => {
+    const dispatch = useDispatch()
+
+    const saveToBasket = () => {
+        if ({ book }) {
+            dispatch(
+                addToBasket({
+                    book
+                })
+            )
+        }
+    }
+
     return (
         <div className="book">
             <img src="https://s1.adlibris.com/images/59263007/valo-joka-ei-kadonnutkaan.jpg" alt="" />
@@ -13,7 +27,7 @@ const Book = ({ book }) => {
                     <small> €</small>
                 </p>
             </div>
-            <button>Add to Basket</button>
+            <button type="button" onClick={saveToBasket}>Add to Basket</button>
         </div>
     )
 }

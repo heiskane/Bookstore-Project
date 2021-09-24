@@ -5,6 +5,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import { ShoppingBasket } from '@material-ui/icons';
 import HLG_Books from '../photos/HLG_Books.png'
 const Header = () => {
+    const handleAuthentication = () => {
+
+    }
     return (
         <div className="header">
 
@@ -23,11 +26,15 @@ const Header = () => {
             </div>
 
             <div className="header__nav">
-                <div className="header__option">
-                    <span className="header__optionLineOne">Hello Guest</span>
-                    <span className="header__optionLineTwo">Sign In</span>
-                </div>
-
+                <Link to="/login" className="header__link">
+                    <div
+                        className="header__option"
+                        onClick={handleAuthentication}
+                    >
+                        <span className="header__optionLineOne">Hello Guest</span>
+                        <span className="header__optionLineTwo">Sign In</span>
+                    </div>
+                </Link>
 
 
                 <div className="header__option">
