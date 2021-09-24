@@ -3,7 +3,7 @@ import React from 'react'
 import './Header.css'
 import SearchIcon from '@material-ui/icons/Search';
 import { ShoppingBasket } from '@material-ui/icons';
-
+import HLG_Books from '../photos/HLG_Books.png'
 const Header = () => {
     return (
         <div className="header">
@@ -14,7 +14,7 @@ const Header = () => {
             {/* Shopping Basket icon with number */}
 
             <Link to="/">
-                <img className="header__logo" src='https://goodbookstore.s3.eu-north-1.amazonaws.com/MyBook.png' alt="QiBook store logo" />
+                <img className="header__logo" src={HLG_Books} alt="HLG_Books logo" />
             </Link>
 
             <div className="header__search">

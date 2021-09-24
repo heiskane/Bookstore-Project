@@ -9,9 +9,9 @@
 }
 
 .header__logo {
-  width: 100px;
-  height: 31px;
-  padding: 4px;
+  background-color: white;
+  max-height: 34px;
+  margin: 5px;
 }
 
 .header__search {
