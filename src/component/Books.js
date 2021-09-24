@@ -3,6 +3,18 @@ import axios from "axios";
 import React from "react";
 import Book from './Book'
 
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "left",
+  color: theme.palette.text.secondary
+}));
+
 const baseURL = "http://localhost:8000";
 
 export default function App() {
@@ -22,7 +34,7 @@ export default function App() {
   // https://dev.to/njdevelopment/help-with-react-map-through-json-data-beh
 
   return (
-    <div className="books">
+    <Box className="books" sx={{ flexGrow: 1 }}>
       {/* <h1>Books</h1>
       {books.map((book) => [
         <p>Title: {book.title}</p>,
@@ -31,9 +43,13 @@ export default function App() {
         <p>Publication Date: {book.publication_date}</p>,
         <br />
       ])} */}
-
-      {books.map((book) => <Book book={book} />)}
-
-    </div>
+      <Grid container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}>
+        {books.map((book) => <Grid item xs={2}> <Item><Book book={book} /></Item> </Grid>)}
+      </Grid>
+    </Box>
   );
 }

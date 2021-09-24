@@ -1,5 +1,4 @@
 import React from 'react'
-import Book from './Book'
 import './Home.css'
 import Books from './Books'
 
@@ -12,13 +11,6 @@ const Home = () => {
             <div class="home__row">
                 {/*  Six books */}
                 <Books />
-
-            </div>
-
-            <div class="home__row">
-                {/*  Six books */}
-                <Books />
-
             </div>
 
         </div>
