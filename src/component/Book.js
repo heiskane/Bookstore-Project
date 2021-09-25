@@ -14,6 +14,7 @@ const Book = ({ book }) => {
                 })
             )
         }
+        console.log("saveToBasket clicked")
     }
 
     return (
