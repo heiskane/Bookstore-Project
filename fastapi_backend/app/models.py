@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date
-from sqlalchemy import String, Float, Table, PickleType
+from sqlalchemy import String, Float, Table, LargeBinary
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -60,6 +60,7 @@ class Book(Base):
 	publication_date = Column(Date, index=True)
 	#publisher = Column(String, index=True)
 	isbn = Column(String, index=True)
+	image = Column(LargeBinary, index=True)
 
 	authors = relationship(
 		"Author",

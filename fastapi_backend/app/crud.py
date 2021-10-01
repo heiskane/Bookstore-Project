@@ -3,6 +3,7 @@ from sqlalchemy import func
 from passlib.context import CryptContext
 
 from typing import List
+from base64 import decodebytes
 
 from . import models, schemas
 
@@ -102,6 +103,9 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.Aut
 			db_authors.append(create_author(db=db, author=author))
 		else:
 			db_authors.append(db_author)
+
+	image_file = decodebytes(book.image.encode('utf-8'))
+	book.image = image_file
 
 	# Empty out List[str] so that **book.dict() works
 	book.genres = []

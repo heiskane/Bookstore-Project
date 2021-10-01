@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -48,6 +48,8 @@ app.add_middleware(
 SECRET_KEY = "a155c5104f0f8fcc9c2c2506588a218476c72fb0c40897f3f93d501c75c8db32"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 600
+
+DEBUG = True
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
@@ -178,11 +180,7 @@ def read_author_books(author_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/books/", response_model=schemas.Book)
-def create_book(
-		authors: List[schemas.AuthorCreate],
-		book: schemas.BookCreate,
-		db: Session = Depends(get_db)):
-
+def create_book(authors: List[schemas.AuthorCreate], book: schemas.BookCreate, db: Session = Depends(get_db)):
 	db_book = crud.get_book_by_title(db, title=book.title)
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
@@ -229,6 +227,12 @@ async def download_book(book_id: int, db: Session = Depends(get_db)):
 		return FileResponse(file.name, media_type='application/octet-stream',filename=file_name)
 
 
+@app.get("/books/{book_id}/image/")
+def get_book_image(book_id: int, db: Session = Depends(get_db)):
+	book = crud.get_book(db = db, book_id = book_id)
+	return Response(book.image, media_type='image/png')
+
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 	db_user = crud.get_user_by_name(db=db, username=user.username)
@@ -257,6 +261,7 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 		data = {
 			"sub": user.username,
 			# Probably dont need to set is_admin and is_active
+			# Unless the frontend wants it
 			"is_admin": user.is_admin,
 			"is_active": user.is_active
 		}, expires_delta=access_token_expires
@@ -272,12 +277,12 @@ def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depen
 		books.append(db_book) if db_book else False
 
 	# Error if price is not above zero
-	return CreateOrder().create_order(books=books, debug=True)
+	return CreateOrder().create_order(books=books, debug=DEBUG)
 
 
 @app.post("/checkout/paypal/order/{order_id}/capture/")
 def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_current_user_or_none), db: Session = Depends(get_db)):
-	response = CaptureOrder().capture_order(order_id, debug=True)
+	response = CaptureOrder().capture_order(order_id, debug=DEBUG)
 	order = GetOrder().get_order(order_id = order_id)
 
 	ordered_books = []
