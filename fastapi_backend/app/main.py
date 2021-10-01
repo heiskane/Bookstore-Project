@@ -201,30 +201,11 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
 	return db_book
 
 
-# https://github.com/tiangolo/fastapi/issues/426#issuecomment-542545608
-@app.post("/books/{book_id}/upload/")
-async def upload_book_file(book_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
-	if file.content_type != "application/pdf":
-		raise HTTPException(status_code=400, detail="Only PDF allowed for now")
-	# this results to something like "/home/user/bookstore_project/fastapi_backend/app/books/"
-	# for docker deployment i would want it to be just /books
-	upload_directory = getcwd() + "/app/books"
-	book = crud.get_book(db = db, book_id = book_id)
-	file_name = secure_filename(book.title + ".pdf")
-	with open(path.join(upload_directory, file_name), 'wb') as upload_file:
-		copyfileobj(file.file, upload_file)
-	return {"filename": file_name}
-
-
 @app.get("/books/{book_id}/download/")
-async def download_book(book_id: int, db: Session = Depends(get_db)):
-	books_directory = getcwd() + "/app/books"
+def download_book(book_id: int, db: Session = Depends(get_db)):
 	book = crud.get_book(db = db, book_id = book_id)
-	file_name = secure_filename(book.title + ".pdf")
-	# TODO: 404 if file not found
-	with open(path.join(books_directory, file_name), 'rb') as file:
-		# https://stackoverflow.com/questions/60716529/download-file-using-fastapi
-		return FileResponse(file.name, media_type='application/octet-stream',filename=file_name)
+	headers = {"Content-Disposition": f"attachment; filename='{book.title}.pdf'"}
+	return Response(book.file, media_type='application/octet-stream', headers=headers)
 
 
 @app.get("/books/{book_id}/image/")

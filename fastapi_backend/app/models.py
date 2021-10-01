@@ -61,6 +61,7 @@ class Book(Base):
 	#publisher = Column(String, index=True)
 	isbn = Column(String, index=True)
 	image = Column(LargeBinary, index=True)
+	file = Column(LargeBinary, index=True)
 
 	authors = relationship(
 		"Author",

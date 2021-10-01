@@ -108,6 +108,9 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.Aut
 
 	image_file = decodebytes(book.image.encode('utf-8'))
 	book.image = image_file
+
+	book_file = decodebytes(book.file.encode('utf-8'))
+	book.file = book_file
 	
 	db_book = models.Book(**book.dict(), authors=db_authors)
 

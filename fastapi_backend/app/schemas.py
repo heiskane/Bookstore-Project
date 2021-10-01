@@ -32,6 +32,7 @@ class BookBase(BaseModel):
 
 class BookCreate(BookBase):
 	image: str
+	file: str
 	genres: List[str]
 
 
