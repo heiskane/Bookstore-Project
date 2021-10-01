@@ -121,6 +121,20 @@ async def get_current_user_or_none(db: Session = Depends(get_db), token: str = D
 	return user
 
 
+def get_ordered_books_token(token: str = Depends(optional_oauth2_scheme)):
+	if not token:
+		return None
+	try:
+		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+		ordered_books: str = payload.get("ordered_book_ids")
+		if ordered_books is None:
+			return None
+		#token_data = schemas.TokenData(ordered_books=ordered_books)
+	except JWTError:
+		return None
+	return ordered_books
+
+
 def require_admin(
 	token: str = Depends(oauth2_scheme),
 	db: Session = Depends(get_db),
@@ -202,9 +216,26 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/books/{book_id}/download/")
-def download_book(book_id: int, db: Session = Depends(get_db)):
+def download_book(
+		book_id: int,
+		curr_user: schemas.User = Depends(get_current_user_or_none),
+		ordered_books: List = Depends(get_ordered_books_token),
+		db: Session = Depends(get_db)):
+
 	book = crud.get_book(db = db, book_id = book_id)
-	headers = {"Content-Disposition": f"attachment; filename='{book.title}.pdf'"}
+
+	if not curr_user and not ordered_books:
+		raise HTTPException(status_code=403, detail="Unauthorized")
+
+	if curr_user and not curr_user.is_admin:
+		if book not in curr_user.books:
+			raise HTTPException(status_code=403, detail="You do not own this book")
+
+	if ordered_books:
+		if book_id not in ordered_books:
+			raise HTTPException(status_code=403, detail="You have not bought this book")
+
+	headers = {"Content-Disposition": f"attachment; filename={book.title}.pdf"}
 	return Response(book.file, media_type='application/octet-stream', headers=headers)
 
 
@@ -271,7 +302,6 @@ def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_cu
 		ordered_books.append(crud.get_book_by_title(db = db, title = book.name))
 
 	# Maybe implement this in crud.py
-	# Try to let anonymous user buy too
 
 	if not curr_user:
 		access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
