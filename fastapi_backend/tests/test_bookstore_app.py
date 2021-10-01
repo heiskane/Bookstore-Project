@@ -86,6 +86,7 @@ def test_create_book():
 		    "price": 0,
 		    "publication_date": "2021-09-05",
 		    "isbn": "string",
+		    "image": "iVBORw0KGgoAAAANSUhEUgAAABEAAAAXCAYAAADtNKTnAAAABHNCSVQICAgIfAhkiAAAAdBJREFUOI3tlE1uE0EQhb/+m/GMrShGSiwHwo8IG07AIhyCyyAOwFm4ABdAYssCRYhEASwSZYMSE1Bij7vnp1n0EI899iobFvSqq+b1q/eqq0c86z313HLJ2xL8QySiRIedx7w4of+8CNGHIedvuovgrUv6L8cYBeQpV693yK4WlAiKkxj/t8XbOXpJoxi4ee6iQz6p91417HxPKMr6wJZF6iaFR911CBGi6rRDUc2/3kD9rw75WGAGHmKL2fa4s/qUqND38hooKUYx3PlN/9U5RjcbW8W4bxIPIHLMTqOUdOhhHZcxbqQQDZ0N54L8OAEPCI964G6AYsOhN+pg3MFdgs8i7PtNpu82WXQ+SnH5NXEEcneGlAllBexmaFUL+ZKGXJYwfZssKwEmKe401BeDjKgbmqofzZAC8Ir8KGb5nSySeI07rEHaYu5XIAvMw/raZgl21J7PVqY86lKWgCgxexaRZJhhqO2/dslti2PF2P9IsRfBknySoR5nGAN4ifuUUq14822SKsJ9Dv0Wgwm9/WkYMpdgD1WbYSUJguKgG25AWaK9EgFUxz3cpI1eQwL+rIf92Uwo8o+rrawloYyZHURzjixltsYKgPj/e2ytP0Bvq196uVzkAAAAAElFTkSuQmCC",
 		    "genres": [
 		      "string"
 		    ]}}
