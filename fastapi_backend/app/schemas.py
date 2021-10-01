@@ -1,7 +1,7 @@
 from typing import List, Optional
 from datetime import date
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr
 
 class GenreBase(BaseModel):
 	name: str
@@ -37,7 +37,7 @@ class BookCreate(BookBase):
 
 class Book(BookBase):
 	id: int
-	authors: List['Author'] # Is it better to return author names instead?
+	authors: List['Author']
 	genres: List[Genre]
 
 	class Config:

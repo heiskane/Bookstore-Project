@@ -96,6 +96,8 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.Aut
 		else:
 			db_genres.append(db_genre)
 
+	book.genres = [genre for genre in db_genres]
+
 	db_authors = []
 	for author in authors:
 		db_author = get_author_by_name(db=db, name=author.name)
@@ -106,12 +108,9 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.Aut
 
 	image_file = decodebytes(book.image.encode('utf-8'))
 	book.image = image_file
-
-	# Empty out List[str] so that **book.dict() works
-	book.genres = []
+	
 	db_book = models.Book(**book.dict(), authors=db_authors)
 
-	db_book.genres = db_genres
 	db.add(db_book)
 	db.commit()
 	db.refresh(db_book)
