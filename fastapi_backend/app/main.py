@@ -1,16 +1,13 @@
 from typing import List, Optional
 
-from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from os import path, getcwd
-from shutil import copyfileobj
-from werkzeug.utils import secure_filename
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
