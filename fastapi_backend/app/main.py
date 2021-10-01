@@ -8,6 +8,9 @@ from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
+from base64 import decodebytes
+from binascii import Error
+from magic import from_buffer
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -195,6 +198,26 @@ def create_book(authors: List[schemas.AuthorCreate], book: schemas.BookCreate, d
 	db_book = crud.get_book_by_title(db, title=book.title)
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
+
+	try:
+		image_file = decodebytes(book.image.encode('utf-8'))
+	except Error:
+		raise HTTPException(status_code=400, detail="Decoding image failed")
+
+	file_type = from_buffer(image_file).split(',')[0]
+	if file_type != 'PNG image data':
+		raise HTTPException(status_code=400, detail='Wrong filetype for image (Has to be PNG)')
+	book.image = image_file
+
+	try:
+		book_file = decodebytes(book.file.encode('utf-8'))
+	except Error:
+		raise HTTPException(status_code=400, detail="Decoding file failed")
+
+	file_type = from_buffer(book_file).split(',')[0]
+	if file_type != 'PDF document':
+		raise HTTPException(status_code=400, detail="Wrong filetype for file (Has to be PDF)")
+	book.file = book_file
 
 	return crud.create_book(db=db, book=book, authors=authors)
 
