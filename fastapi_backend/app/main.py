@@ -204,6 +204,7 @@ def create_book(authors: List[schemas.AuthorCreate], book: schemas.BookCreate, d
 	except Error:
 		raise HTTPException(status_code=400, detail="Decoding image failed")
 
+	# https://github.com/ahupp/python-magic
 	file_type = from_buffer(image_file).split(',')[0]
 	if file_type != 'PNG image data':
 		raise HTTPException(status_code=400, detail='Wrong filetype for image (Has to be PNG)')
