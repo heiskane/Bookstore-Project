@@ -11,7 +11,8 @@ class GenreCreate(GenreBase):
 	# This must be here instead of 'Genre' class to avoid
 	# recursion error when genre and book show eachother
 	# On a second thought i might not need books here at all
-	books: List['Book'] = []
+	#books: List['Book'] = []
+	pass
 
 
 class Genre(GenreBase):
@@ -109,7 +110,7 @@ class Order(OrderBase):
 
 class Token(BaseModel):
 	access_token: str
-	token_type: str
+	token_type: str = "bearer"
 
 
 class TokenData(BaseModel):

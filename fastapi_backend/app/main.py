@@ -124,14 +124,15 @@ async def get_current_user_or_none(db: Session = Depends(get_db), token: str = D
 def get_ordered_books_token(token: str = Depends(optional_oauth2_scheme)):
 	if not token:
 		return None
+		
 	try:
 		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 		ordered_books: str = payload.get("ordered_book_ids")
 		if ordered_books is None:
 			return None
-		#token_data = schemas.TokenData(ordered_books=ordered_books)
 	except JWTError:
 		return None
+
 	return ordered_books
 
 
@@ -194,7 +195,7 @@ def read_author_books(author_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/books/", response_model=schemas.Book)
-def create_book(authors: List[schemas.AuthorCreate], book: schemas.BookCreate, db: Session = Depends(get_db)):
+def create_book(authors: List[str], book: schemas.BookCreate, db: Session = Depends(get_db)):
 	db_book = crud.get_book_by_title(db, title=book.title)
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
@@ -287,8 +288,10 @@ def read_user(username: str, db: Session = Depends(get_db)):
 @app.post("/login/", response_model=schemas.Token)
 async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
 	user = authenticate_user(db=db, username=form_data.username, password=form_data.password)
+
 	if not user:
 		raise HTTPException(status_code=401, detail="Login failed")
+
 	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 	access_token = create_access_token(
 		data = {
@@ -299,7 +302,10 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 			"is_active": user.is_active
 		}, expires_delta=access_token_expires
 	)
-	return {"access_token": access_token, "token_type": "bearer"}
+
+	token = schemas.Token(access_token=access_token)
+
+	return token
 
 
 @app.get("/orders/", response_model=List[schemas.Order])
@@ -327,7 +333,7 @@ def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_cu
 	for book in order.result.purchase_units[0].items:
 		ordered_books.append(crud.get_book_by_title(db = db, title = book.name))
 
-	# Maybe implement this in crud.py
+	# Maybe implement this in a function
 
 	if not curr_user:
 		access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -351,7 +357,6 @@ def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_cu
 		total_price = total_price
 	)
 
-	print("Adding order", order)
 	crud.create_order_record(db=db, order=order, client=curr_user, ordered_books=ordered_books)
 
 	return response

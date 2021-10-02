@@ -50,6 +50,21 @@ def create_genre(db: Session, genre: schemas.GenreCreate):
 	return db_genre
 
 
+def create_genres_if_not_exists(db: Session, genres: List[str]):
+	# Get existing genres and create the new ones
+	db_genres = []
+	for genre_name in genres:
+		db_genre = get_genre_by_name(db=db, name=genre_name)
+
+		if not db_genre:
+			db_genres.append(create_genre(db=db, genre=schemas.GenreCreate(name=genre_name)))
+			continue
+		
+		db_genres.append(db_genre)
+
+	return db_genres
+
+
 def get_authors(db: Session, skip: int = 0, limit: int = 100):
 	return db.query(models.Author).offset(skip).limit(limit).all()
 
@@ -68,11 +83,25 @@ def create_author(db: Session, author: schemas.AuthorCreate):
 	return db_author
 
 
-					# Maybe call skip 'page' and set offset as page * limit
-					# or let frontend decide pagesize
-					# Or rename 'skip' and 'limit' to 'page' and 'page_size'
-					# Then set offset as (page * pagesize) and limit as page_size
+def create_authors_if_not_exists(db: Session, authors: List[str]):
+	db_authors = []
+	for author_name in authors:
+		db_author = get_author_by_name(db=db, name=author_name)
+
+		if not db_author:
+			db_authors.append(create_author(db=db, author=schemas.AuthorCreate(name=author_name)))
+			continue
+
+		db_authors.append(db_author)
+
+	return db_authors
+
+
 def get_books(db: Session, skip: int = 0, limit: int = 100):
+	# Maybe call skip 'page' and set offset as page * limit
+	# or let frontend decide pagesize
+	# Or rename 'skip' and 'limit' to 'page' and 'page_size'
+	# Then set offset as (page * pagesize) and limit as page_size
 	return db.query(models.Book).offset(skip).limit(limit).all()
 
 
@@ -84,27 +113,15 @@ def get_book_by_title(db: Session, title: str):
 	return db.query(models.Book).filter(func.lower(models.Book.title) == title.lower()).first()
 
 
-def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.AuthorCreate]):
+def create_book(db: Session, book: schemas.BookCreate, authors: List[str]):
 	
 	# Get existing genres and create the new ones
-	db_genres = []
-	for genre_name in book.genres:
-		db_genre = get_genre_by_name(db=db, name=genre_name)
-		if not db_genre:
-			db_genres.append(create_genre(db=db, genre=schemas.GenreCreate(name=genre_name)))
-		else:
-			db_genres.append(db_genre)
+	db_genres = create_genres_if_not_exists(db=db, genres=book.genres)
 
-	book.genres = [genre for genre in db_genres]
+	book.genres = db_genres
 
-	db_authors = []
-	for author in authors:
-		db_author = get_author_by_name(db=db, name=author.name)
-		if not db_author:
-			db_authors.append(create_author(db=db, author=author))
-		else:
-			db_authors.append(db_author)
-	
+	db_authors = create_authors_if_not_exists(db=db, authors=authors)
+
 	db_book = models.Book(**book.dict(), authors=db_authors)
 
 	db.add(db_book)
@@ -114,7 +131,10 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.Aut
 
 
 
-def create_order_record(db: Session, order: schemas.OrderCreate, client: models.User, ordered_books: List[models.Book]):
+def create_order_record(
+		db: Session, order: schemas.OrderCreate,
+		client: models.User,
+		ordered_books: List[models.Book]):
 
 	db_order = models.Order(**order.dict())
 	db_order.client = client
