@@ -49,6 +49,12 @@ book_ownership = Table('book_ownership', Base.metadata,
 )
 
 
+ordered_books = Table("ordered_books", Base.metadata,
+	Column("order_id", ForeignKey("orders.id")),
+	Column("book_id", ForeignKey("books.id"))
+)
+
+
 class Book(Base):
 	__tablename__ = "books"
 
@@ -66,19 +72,25 @@ class Book(Base):
 	authors = relationship(
 		"Author",
 		secondary=book_author,
-		back_populates="books"
+		back_populates='books'
 	)
 
 	genres = relationship(
 		"Genre",
 		secondary=book_genre,
-		back_populates="books"
+		back_populates='books'
 	)
 
 	owners = relationship(
 		"User",
 		secondary=book_ownership,
 		back_populates='books'
+	)
+
+	orders = relationship(
+		"Order",
+		secondary=ordered_books,
+		back_populates='ordered_books'
 	)
 
 
@@ -92,8 +104,27 @@ class User(Base):
 	is_admin = Column(Boolean, index=True)
 	is_active = Column(Boolean, index=True)
 
+	orders = relationship("Order", back_populates="client")
+
 	books = relationship(
 		"Book",
 		secondary=book_ownership,
 		back_populates='owners'
+	)
+
+
+class Order(Base):
+	__tablename__ = "orders"
+
+	id = Column(Integer, primary_key=True, index=True)
+	order_date = Column(Date, index=True)
+	total_price = Column(Float, index=True)
+
+	client_user_id = Column(Integer, ForeignKey("users.id"))
+	client = relationship("User", back_populates="orders")
+
+	ordered_books = relationship(
+		"Book",
+		secondary=ordered_books,
+		back_populates="orders"
 	)

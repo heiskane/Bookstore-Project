@@ -7,7 +7,7 @@ from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from base64 import decodebytes
 from binascii import Error
 from magic import from_buffer
@@ -302,6 +302,11 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 	return {"access_token": access_token, "token_type": "bearer"}
 
 
+@app.get("/orders/", response_model=List[schemas.Order])
+def read_orders(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+	return crud.get_orders(db=db, skip=skip, limit=limit)
+
+
 @app.post("/checkout/paypal/order/create/")
 def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depends(get_db)):
 	books = []
@@ -337,5 +342,16 @@ def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_cu
 	curr_user.books += ordered_books
 	db.add(curr_user)
 	db.commit()
+	db.refresh(curr_user)
+
+	total_price = sum([book.price for book in ordered_books])
+
+	order = schemas.OrderCreate(
+		order_date = date.today(),
+		total_price = total_price
+	)
+
+	print("Adding order", order)
+	crud.create_order_record(db=db, order=order, client=curr_user, ordered_books=ordered_books)
 
 	return response

@@ -111,3 +111,20 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[schemas.Aut
 	db.commit()
 	db.refresh(db_book)
 	return db_book
+
+
+
+def create_order_record(db: Session, order: schemas.OrderCreate, client: models.User, ordered_books: List[models.Book]):
+
+	db_order = models.Order(**order.dict())
+	db_order.client = client
+	db_order.ordered_books = ordered_books
+
+	db.add(db_order)
+	db.commit()
+	db.refresh(db_order)
+
+	return db_order
+
+def get_orders(db: Session, skip: int = 0, limit: int = 100):
+	return db.query(models.Order).offset(skip).limit(limit).all()
