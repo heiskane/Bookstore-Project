@@ -78,7 +78,7 @@ def test_create_book():
 		"/books/",
 		json = {
 		  "authors": [
-		    {"name": "Test author1"}, {"name": "Test author2"}],
+		    "author1", "author2"],
 		  "book": {
 		    "title": "Test Book",
 		    "description": "string",
@@ -104,5 +104,5 @@ def test_get_book():
 	assert response.status_code == 200, response.text
 	data = response.json()
 	assert data["title"] == "Test Book"
-	assert data["authors"][0]["name"] == "Test author1"
-	assert data["authors"][1]["name"] == "Test author2"
+	assert data["authors"][0]["name"] == "author1"
+	assert data["authors"][1]["name"] == "author2"
