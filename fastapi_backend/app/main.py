@@ -124,7 +124,7 @@ async def get_current_user_or_none(db: Session = Depends(get_db), token: str = D
 def get_ordered_books_token(token: str = Depends(optional_oauth2_scheme)):
 	if not token:
 		return None
-		
+
 	try:
 		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 		ordered_books: str = payload.get("ordered_book_ids")
@@ -178,12 +178,22 @@ def read_authors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 	return authors
 
 
-@app.get("/authors/{author_id}", response_model=schemas.Author)
+@app.get("/authors/{author_id}/", response_model=schemas.Author)
 def read_author(author_id: int, db: Session = Depends(get_db)):
 	db_author = crud.get_author(db=db, author_id=author_id)
 	if not db_author:
 		raise HTTPException(status_code=404, detail="Author not found")
 	return db_author
+
+
+@app.delete("/authors/{author_id}/")
+def delete_author(author_id: int, db: Session = Depends(get_db)):
+	author = crud.get_author(db=db, author_id=author_id)
+	if not author:
+		raise HTTPException(status_code=404, detail="Author not found")
+
+	crud.delete_author(db=db, author=author)
+	return "asd"
 
 
 @app.get("/authors/{author_id}/books", response_model=List[schemas.Book])
@@ -235,6 +245,15 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
 	if not db_book:
 		raise HTTPException(status_code=404, detail="Book not found")
 	return db_book
+
+
+@app.delete("/books/{book_id}/")
+def delete_book(book_id: int, db: Session = Depends(get_db)):
+	book = crud.get_book(db=db, book_id=book_id)
+	if not book:
+		raise HTTPException(status_code=404, detail="Book not found")
+	crud.delete_book(db=db, book=book)
+	return
 
 
 @app.get("/books/{book_id}/download/")
@@ -352,6 +371,7 @@ def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_cu
 
 	total_price = sum([book.price for book in ordered_books])
 
+	# TODO: Track orders for anonymous users
 	order = schemas.OrderCreate(
 		order_date = date.today(),
 		total_price = total_price

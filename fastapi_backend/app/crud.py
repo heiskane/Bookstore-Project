@@ -83,6 +83,13 @@ def create_author(db: Session, author: schemas.AuthorCreate):
 	return db_author
 
 
+# https://stackoverflow.com/questions/26643727/python-sqlalchemy-deleting-with-the-session-object
+def delete_author(db: Session, author: models.Author):
+	db.delete(author)
+	db.commit()
+	return
+
+
 def create_authors_if_not_exists(db: Session, authors: List[str]):
 	db_authors = []
 	for author_name in authors:
@@ -111,6 +118,12 @@ def get_book(db: Session, book_id: int):
 
 def get_book_by_title(db: Session, title: str):
 	return db.query(models.Book).filter(func.lower(models.Book.title) == title.lower()).first()
+
+
+def delete_book(db: Session, book: models.Book):
+	db.delete(book)
+	db.commit()
+	return
 
 
 def create_book(db: Session, book: schemas.BookCreate, authors: List[str]):
