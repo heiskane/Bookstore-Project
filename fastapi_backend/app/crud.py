@@ -140,6 +140,17 @@ def delete_book(db: Session, book: models.Book):
 	return
 
 
+# https://stackoverflow.com/questions/63143731/update-sqlalchemy-orm-existing-model-from-posted-pydantic-model-in-fastapi
+def update_book(db: Session, book: models.Book, updated_book: schemas.BookUpdate):
+	for var, value in vars(updated_book).items():
+		setattr(book, var, value) if value else None
+
+	db.add(book)
+	db.commit()
+	db.refresh(book)
+	return book
+
+
 def create_book(db: Session, book: schemas.BookCreate, authors: List[str]):
 	
 	# Get existing genres and create the new ones
