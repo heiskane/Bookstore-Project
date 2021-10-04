@@ -1,30 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Book.css'
-import { useDispatch } from 'react-redux';
-import { addToBasket } from './slice'
 
-const Book = ({ book }) => {
-    const dispatch = useDispatch()
 
-    const saveToBasket = () => {
-        if ({ book }) {
-            dispatch(
-                addToBasket({
-                    book
-                })
-            )
+const Book = ({ id, title, authors, price }) => {
+    //const dispatch = useDispatch()
+    console.log(id, title, authors, price + ">>>FROM BOOK")
+    const [basket, setBasket] = useState([])
+
+    const [booktobuy, setBooktobuy] = useState({
+        id: '',
+        title: '',
+        authors: [],
+        price: ''
+    })
+
+    const saveToBasket = (e) => {
+        e.preventDefault();
+        if (id !== null) {
+            setBooktobuy({
+                id: id,
+                title: title,
+                authors: authors.name,
+                price: price
+            })
+            setBasket({ ...basket, booktobuy })
+            console.log("saveToBasket clicked 😝 ID is " + booktobuy.id)
+            console.log(basket)
+        } else {
+            alert("Book was not add")
         }
-        console.log("saveToBasket clicked")
+
     }
 
     return (
         <div className="book">
             <img src="https://s1.adlibris.com/images/59263007/valo-joka-ei-kadonnutkaan.jpg" alt="" />
             <div class="book__info">
-                <p>Name: {book.title}</p>
-                <p>Author: {book.authors[0].name}</p>
+                <p>Name: {title}</p>
+                <p>Author: {authors.map((author) => <li>{author.name}</li>)}</p>
                 <p className="book_price">Price:
-                    <strong> {book.price}</strong>
+                    <strong> {price}</strong>
                     <small> €</small>
                 </p>
             </div>
