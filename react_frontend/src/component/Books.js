@@ -19,6 +19,7 @@ const baseURL = "http://localhost:8000";
 
 export default function App() {
   const [books, setBooks] = React.useState(null);
+ 
 
   React.useEffect(() => {
     axios.get(baseURL + "/books")
@@ -48,7 +49,17 @@ export default function App() {
         justifyContent="center"
         alignItems="center"
         spacing={3}>
-        {books.map((book) => <Grid item xs={2}> <Item><Book book={book} /></Item> </Grid>)}
+        {books.map((book) => <Grid item xs={2}>
+          <Item >
+            <Book
+              key={book.id}
+              id={book.id}
+              title={book.title}
+              authors={book.authors}
+              price={book.price}
+            />
+          </Item>
+        </Grid>)}
       </Grid>
     </Box>
   );
