@@ -239,26 +239,11 @@ def create_book(authors: List[str], book: schemas.BookCreate, db: Session = Depe
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
 
-	try:
-		image_file = decodebytes(book.image.encode('utf-8'))
-	except Error:
-		raise HTTPException(status_code=400, detail="Decoding image failed")
-
 	# https://github.com/ahupp/python-magic
-	file_type = from_buffer(image_file).split(',')[0]
-	if file_type != 'PNG image data':
-		raise HTTPException(status_code=400, detail='Wrong filetype for image (Has to be PNG)')
-	book.image = image_file
-
-	try:
-		book_file = decodebytes(book.file.encode('utf-8'))
-	except Error:
-		raise HTTPException(status_code=400, detail="Decoding file failed")
-
-	file_type = from_buffer(book_file).split(',')[0]
-	if file_type != 'PDF document':
-		raise HTTPException(status_code=400, detail="Wrong filetype for file (Has to be PDF)")
-	book.file = book_file
+	#file_type = from_buffer(image_file).split(',')[0]
+	#if file_type != 'PNG image data':
+	#	raise HTTPException(status_code=400, detail='Wrong filetype for image (Has to be PNG)')
+	#book.image = image_file
 
 	return crud.create_book(db=db, book=book, authors=authors)
 

@@ -155,7 +155,6 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[str]):
 	
 	# Get existing genres and create the new ones
 	db_genres = create_genres_if_not_exists(db=db, genres=book.genres)
-
 	book.genres = db_genres
 
 	db_authors = create_authors_if_not_exists(db=db, authors=authors)

@@ -1,6 +1,10 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date
 from sqlalchemy import String, Float, Table, LargeBinary
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property
+
+from base64 import decodebytes
+from binascii import Error
 
 from .database import Base
 
@@ -66,8 +70,28 @@ class Book(Base):
 	publication_date = Column(Date, index=True)
 	#publisher = Column(String, index=True)
 	isbn = Column(String, index=True)
-	image = Column(LargeBinary, index=True)
-	file = Column(LargeBinary, index=True)
+
+	# https://gist.github.com/luhn/4170996
+	_image = Column(LargeBinary, index=True)
+
+	@hybrid_property
+	def image(self):
+		return self._image
+
+	@image.setter
+	def image(self, b64_image):
+		image_file = decodebytes(b64_image.encode('utf-8'))
+		self._image = image_file
+
+	_file = Column(LargeBinary, index=True)
+
+	@hybrid_property
+	def file(self):
+		return self._file
+
+	@file.setter
+	def file(self, b64_file):
+		self._file = decodebytes(b64_file.encode('utf-8'))
 
 	authors = relationship(
 		"Author",
