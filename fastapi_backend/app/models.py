@@ -93,6 +93,10 @@ class Book(Base):
 	def file(self, b64_file):
 		self._file = decodebytes(b64_file.encode('utf-8'))
 
+	# Add rating column?
+
+	reviews = relationship("Review", back_populates="book")
+
 	authors = relationship(
 		"Author",
 		secondary=book_author,
@@ -135,6 +139,23 @@ class User(Base):
 		secondary=book_ownership,
 		back_populates='owners'
 	)
+
+	reviews = relationship("Review", back_populates="user")
+
+
+class Review(Base):
+	__tablename__ = "reviews"
+
+	id = Column(Integer, primary_key=True, index=True)
+	rating = Column(Integer, index=True)
+	comment = Column(String, index=True)
+	edited = Column(Boolean, default=False, index=True)
+
+	user_id = Column(Integer, ForeignKey("users.id"))
+	user = relationship("User", back_populates="reviews")
+
+	book_id = Column(Integer, ForeignKey("books.id"))
+	book = relationship("Book", back_populates="reviews")
 
 
 class Order(Base):

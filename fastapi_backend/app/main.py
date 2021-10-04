@@ -309,6 +309,49 @@ def get_book_image(book_id: int, db: Session = Depends(get_db)):
 	return Response(book.image, media_type='image/png')
 
 
+@app.get("/books/{book_id}/reviews/", response_model=List[schemas.Review])
+def read_reviews(book_id: int, db: Session = Depends(get_db)):
+	book = crud.get_book(db=db, book_id=book_id)
+	if not book:
+		raise HTTPException(status_code=404, detail="Book not found")
+
+	return book.reviews
+
+
+@app.patch("/reviews/{review_id}/", response_model=schemas.Review)
+def update_review(
+		review_id: int,
+		updated_review: schemas.ReviewCreate,
+		curr_user: schemas.User = Depends(get_current_user),
+		db: Session = Depends(get_db)):
+	db_review = crud.get_review(db=db, review_id=review_id)
+	if not db_review:
+		raise HTTPException(status_code=404, detail="Review not found")
+
+	if not db_review.user == curr_user and not curr_user.is_admin:
+		raise HTTPException(status_code=403, detail="Unauthorized")
+
+	return crud.update_review(db=db, review=db_review, updated_review=updated_review)
+
+
+@app.delete("/reviews/{review_id}/")
+def delete_review(book_id: int, review_id: int, db: Session = Depends(get_db)):
+	review = crud.get_review(db=db, review_id=review_id)
+	return crud.delete_review(db=db, review=review)
+
+
+@app.post("/books/{book_id}/reviews/", response_model=schemas.Review)
+def review_book(
+		book_id: int,
+		review: schemas.ReviewCreate,
+		curr_user: schemas.User = Depends(get_current_user),
+		db: Session = Depends(get_db)):
+	book = crud.get_book(db=db, book_id=book_id)
+	if not book:
+		raise HTTPException(status_code=404, detail="Book not found")
+	return crud.create_review(db=db, review=review, user=curr_user, book=book)
+
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 	db_user = crud.get_user_by_name(db=db, username=user.username)

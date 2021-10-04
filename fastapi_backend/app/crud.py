@@ -167,6 +167,36 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[str]):
 	return db_book
 
 
+def create_review(db: Session, review: schemas.Review, user: models.User, book: models.Book):
+	db_review = models.Review(**review.dict())
+	db_review.user = user
+	db_review.book = book
+	db.add(db_review)
+	db.commit()
+	db.refresh(db_review)
+	return db_review
+
+
+def get_review(db: Session, review_id: int):
+	return db.query(models.Review).filter(models.Review.id == review_id).first()
+
+
+def update_review(db: Session, review: models.Review, updated_review: schemas.ReviewCreate):
+	for var, value in vars(updated_review).items():
+		setattr(review, var, value) if value else None
+
+	review.edited = True
+	db.add(review)
+	db.commit()
+	db.refresh(review)
+	return review
+
+
+def delete_review(db: Session, review: models.Review):
+	db.delete(review)
+	db.commit()
+	return
+
 
 def create_order_record(
 		db: Session, order: schemas.OrderCreate,

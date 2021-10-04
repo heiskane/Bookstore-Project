@@ -1,7 +1,7 @@
 from typing import List, Optional
 from datetime import date
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr, conint
 
 class GenreBase(BaseModel):
 	name: str
@@ -17,6 +17,43 @@ class GenreCreate(GenreBase):
 
 class Genre(GenreBase):
 	id: int
+
+	class Config:
+		orm_mode = True
+
+
+class UserBase(BaseModel):
+	username: constr(max_length=20) # https://pydantic-docs.helpmanual.io/usage/types/#constrained-types
+	email: Optional[EmailStr] = None # Maybe hide email somewhere
+
+
+class UserCreate(UserBase):
+	password: str
+
+
+class User(UserBase):
+	id: int
+	is_active: Optional[bool] = True
+	is_admin: Optional[bool] = False
+
+	class Config:
+		orm_mode = True
+
+
+class ReviewBase(BaseModel):
+	# https://pydantic-docs.helpmanual.io/usage/types/#constrained-types
+	rating: conint(lt=6)
+	comment: str
+
+
+class ReviewCreate(ReviewBase):
+	pass
+
+
+class Review(ReviewBase):
+	id: int
+	user: User
+	edited: bool
 
 	class Config:
 		orm_mode = True
@@ -84,24 +121,6 @@ class Author(AuthorBase):
 
 
 Book.update_forward_refs()
-
-
-class UserBase(BaseModel):
-	username: str
-	email: Optional[EmailStr] = None
-
-
-class UserCreate(UserBase):
-	password: str
-
-
-class User(UserBase):
-	id: int
-	is_active: Optional[bool] = True
-	is_admin: Optional[bool] = False
-
-	class Config:
-		orm_mode = True
 
 
 class OrderBase(BaseModel):
