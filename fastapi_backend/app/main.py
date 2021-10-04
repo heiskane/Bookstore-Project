@@ -192,8 +192,7 @@ def delete_author(author_id: int, db: Session = Depends(get_db)):
 	if not author:
 		raise HTTPException(status_code=404, detail="Author not found")
 
-	crud.delete_author(db=db, author=author)
-	return "asd"
+	return crud.delete_author(db=db, author=author)
 
 
 @app.get("/authors/{author_id}/books", response_model=List[schemas.Book])
@@ -202,6 +201,36 @@ def read_author_books(author_id: int, db: Session = Depends(get_db)):
 	if not db_author:
 		raise HTTPException(status_code=404, detail="Author not found")
 	return db_author.books
+
+
+@app.get("/genres/", response_model=List[schemas.Genre])
+def read_genres(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+	genres = crud.get_genres(db, skip=skip, limit=limit)
+	return genres
+
+
+@app.get("/genres/{genre_id}/", response_model=schemas.Genre)
+def read_genre(genre_id: int, db: Session = Depends(get_db)):
+	genre = crud.get_genre(db=db, genre_id=genre_id)
+	if not genre:
+		raise HTTPException(status_code=404, detail="Genre not found")
+	return genre
+
+
+@app.get("/genres/{genre_id}/books/", response_model=List[schemas.Book])
+def read_genre_books(genre_id: int, db: Session = Depends(get_db)):
+	genre = crud.get_genre(db=db, genre_id=genre_id)
+	if not genre:
+		raise HTTPException(status_code=404, detail="Genre not found")
+	return genre.books
+
+
+@app.delete("/genres/{genre_id}/")
+def delete_genre(genre_id: int, db: Session = Depends(get_db)):
+	genre = crud.get_genre(db=db, genre_id=genre_id)
+	if not genre:
+		raise HTTPException(status_code=404, detail="Genre not found")
+	return crud.delete_genre(db=db, genre=genre)
 
 
 @app.post("/books/", response_model=schemas.Book)
@@ -252,8 +281,7 @@ def delete_book(book_id: int, db: Session = Depends(get_db)):
 	book = crud.get_book(db=db, book_id=book_id)
 	if not book:
 		raise HTTPException(status_code=404, detail="Book not found")
-	crud.delete_book(db=db, book=book)
-	return
+	return crud.delete_book(db=db, book=book)
 
 
 @app.get("/books/{book_id}/download/")

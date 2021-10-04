@@ -36,10 +36,24 @@ def get_author(db: Session, author_id: int):
 	return db.query(models.Author).filter(models.Author.id == author_id).first()
 
 
+def get_genre(db: Session, genre_id: int):
+	return db.query(models.Genre).filter(models.Genre.id == genre_id).first()
+
+
+def get_genres(db: Session, skip: int = 0, limit: int = 100):
+	return db.query(models.Genre).offset(skip).limit(limit).all()
+
+
 def get_genre_by_name(db: Session, name: str):
 	return db.query(models.Genre).filter(
 		func.lower(models.Genre.name) == name.lower()
 	).first()
+
+
+def delete_genre(db: Session, genre: models.Genre):
+	db.delete(genre)
+	db.commit()
+	return
 
 
 def create_genre(db: Session, genre: schemas.GenreCreate):
