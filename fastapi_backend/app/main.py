@@ -8,9 +8,7 @@ from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, date
-from base64 import decodebytes
-from binascii import Error
-from magic import from_buffer
+#from magic import from_buffer
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine

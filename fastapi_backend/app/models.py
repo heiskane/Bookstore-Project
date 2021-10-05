@@ -4,7 +4,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from base64 import decodebytes
-from binascii import Error
 
 from .database import Base
 
