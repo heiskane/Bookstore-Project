@@ -1,5 +1,29 @@
 # FastAPI
 
+## Docker-Compose Deployment
+
+Make sure right docker-compose version is installed
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+Run backend
+```bash
+cd Bookstore-Project
+docker-compose build
+docker-compose up -d
+```
+
+Update backend
+```bash
+git pull
+docker-compose build
+docker-compose down
+docker-compose up -d
+```
+
+
 ## Uvicorn deployment (Development)
 ```bash
 git clone https://github.com/heiskane/Bookstore-Project.git
@@ -16,7 +40,7 @@ firefox http://localhost:8000/docs
 git clone https://github.com/heiskane/Bookstore-Project.git
 cd Bookstore-Project/fastapi_backend
 docker build -t bookstore_api .
-docker run -d --name bookstore_backend -p 8000:80 -e GUNICORN_CONF="/app/app/gunicorn_conf.py"  bookstore_api
+docker run -d --name bookstore_backend -p 8000:80 bookstore_api
 firefox http://localhost:8000/docs
 ```
 

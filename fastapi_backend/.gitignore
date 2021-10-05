@@ -4,4 +4,3 @@ bookstore_app.db
 test.db
 .pytest_cache
 .env
-books

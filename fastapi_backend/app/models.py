@@ -71,7 +71,7 @@ class Book(Base):
 	isbn = Column(String, index=True)
 
 	# https://gist.github.com/luhn/4170996
-	_image = Column(LargeBinary, index=True)
+	_image = Column(LargeBinary)
 
 	@hybrid_property
 	def image(self):
@@ -82,7 +82,7 @@ class Book(Base):
 		image_file = decodebytes(b64_image.encode('utf-8'))
 		self._image = image_file
 
-	_file = Column(LargeBinary, index=True)
+	_file = Column(LargeBinary)
 
 	@hybrid_property
 	def file(self):

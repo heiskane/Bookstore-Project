@@ -160,6 +160,18 @@ def auth_optional(curr_user: schemas.User = Depends(get_current_user_or_none)):
 	return curr_user
 
 
+@app.get("/drop_tables/")
+def drop_tables():
+	models.Base.metadata.drop_all(bind=engine, checkfirst=True)
+	return
+
+
+@app.get("/create_tables")
+def create_tables():
+	models.Base.metadata.create_all(bind=engine, checkfirst=True)
+	return
+
+
 # Fix pls
 @app.post("/authors/", response_model=schemas.Author)
 def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
