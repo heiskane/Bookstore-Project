@@ -2,10 +2,15 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from starlette.config import environ
+# Set testing environment variable before importing from database.py
+environ["TESTING"] = "True"
+
 from ..app.database import Base
 from ..app.main import app, get_db
 
 # Not sure if i will have time to implement all proper tests
+
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -15,7 +20,6 @@ engine = create_engine(
 )
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 # Drop all existing data first
 Base.metadata.drop_all(bind=engine)
