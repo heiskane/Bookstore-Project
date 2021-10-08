@@ -426,7 +426,7 @@ def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depen
 		db_book = crud.get_book(db=db, book_id=book_id)
 		books.append(db_book) if db_book else False
 
-	# Error if price is not above zero
+	# this errors if price is not above zero
 	return CreateOrder().create_order(books=books, debug=DEBUG)
 
 

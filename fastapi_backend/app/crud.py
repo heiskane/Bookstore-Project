@@ -12,7 +12,9 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated=["auto"])
 
 
 def get_user_by_name(db: Session, username: str):
-	return db.query(models.User).filter(func.lower(models.User.username) == username.lower()).first()
+	return db.query(models.User).filter(
+		func.lower(models.User.username) == username.lower()
+	).first()
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -184,7 +186,10 @@ def get_review(db: Session, review_id: int):
 
 
 def get_book_review_by_user(db: Session, book: models.Book, user: models.User):
-	return db.query(models.Review).filter(models.Review.user == user).first()
+	return db.query(models.Review).filter(
+		models.Review.user == user,
+		models.Review.book == book
+	).first()
 
 
 def update_review(db: Session, review: models.Review, updated_review: schemas.ReviewCreate):

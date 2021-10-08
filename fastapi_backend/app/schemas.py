@@ -43,7 +43,7 @@ class User(UserBase):
 
 class ReviewBase(BaseModel):
 	# https://pydantic-docs.helpmanual.io/usage/types/#constrained-types
-	rating: conint(lt=6)
+	rating: conint(gt=-1 ,lt=6)
 	comment: str
 
 
