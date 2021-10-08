@@ -2,7 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-
+# This fails to connect when running tests
+# Not sure how to ignore it
 SQLALCHEMY_DATABASE_URL = "postgresql://test_user:test_password@db/bookstore_db"
 
 engine = create_engine(

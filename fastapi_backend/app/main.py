@@ -33,6 +33,12 @@ origins = [
 	"*",
 ]
 
+# https://stackoverflow.com/questions/60680870/cors-issues-when-running-a-dockerised-fastapi-application
+# for some reason without an endpoint before CORS the cors fails in docker-compose
+@app.get("/")
+def health_check():
+	return {"detail": "I am aliiiiiive"}
+
 app.add_middleware(
 	CORSMiddleware,
 	allow_origins=origins,
