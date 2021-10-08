@@ -11,16 +11,16 @@ sudo chmod +x /usr/local/bin/docker-compose
 Run backend
 ```bash
 cd Bookstore-Project
-docker-compose build
-docker-compose up -d
+sudo docker-compose build
+sudo docker-compose up -d
 ```
 
 Update backend
 ```bash
 git pull
-docker-compose build
-docker-compose down
-docker-compose up -d
+sudo docker-compose build
+sudo docker-compose down
+sudo docker-compose up -d
 ```
 
 
