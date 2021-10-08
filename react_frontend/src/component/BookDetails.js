@@ -7,13 +7,11 @@ import DownloadButton from "./DownloadButton";
 export default function BookDetails() {
 
   const [book, setBook] = React.useState(null); 
-
   let { book_id } = useParams();
-
-  const baseURL = "http://127.0.0.1:8000"
+  const instance = axios.create();
 
   React.useEffect(() => {
-    axios.get(baseURL + "/books/" + book_id)
+    instance.get("/books/" + book_id)
       .catch(err => {
         console.log(err);
       })
@@ -62,7 +60,7 @@ export default function BookDetails() {
 
   return (
       <div className="book_details">
-        <img src={baseURL + "/books/" + book_id + "/image/"} alt="Book image" />
+        <img src={axios.defaults.baseURL + "/books/" + book_id + "/image/"} alt="Book image" />
         <h2>{book.title}</h2>
         <BookRating avg_rating={book.avg_rating}/>
         <BookAuthors authors={book.authors} />

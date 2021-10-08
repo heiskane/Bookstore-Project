@@ -36,7 +36,7 @@ const Book = ({ id, title, authors, price }) => {
         <div className="book">
             <img src="https://s1.adlibris.com/images/59263007/valo-joka-ei-kadonnutkaan.jpg" alt="" />
             <div class="book__info">
-                <p>Name: {title}</p>
+                <a href={"/books/" + id}>Name: {title}</a>
                 <p>Author: {authors.map((author) => <li>{author.name}</li>)}</p>
                 <p className="book_price">Price:
                     <strong> {price}</strong>

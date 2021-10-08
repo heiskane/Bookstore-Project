@@ -44,6 +44,7 @@ app.add_middleware(
 	allow_credentials=True,
 	allow_methods=["*"],
 	allow_headers=["*"],
+	expose_headers=["Content-Disposition"] # Allow frontend to get filename
 )
 
 
@@ -314,7 +315,10 @@ def download_book(
 		if book_id not in ordered_books:
 			raise HTTPException(status_code=403, detail="You have not bought this book")
 
-	headers = {"Content-Disposition": f"attachment; filename={book.title}.pdf"}
+	headers = {
+		"Content-Disposition": f"attachment; filename={book.title}.pdf",
+		"test": "test"
+	}
 	return Response(book.file, media_type='application/octet-stream', headers=headers)
 
 

@@ -31,7 +31,8 @@ class LoginForm extends React.Component {
   };
 
   handleSubmit(event) {
-    axios.post('http://localhost:8000/login/', new URLSearchParams({
+    const instance = axios.create();
+    instance.post('/login/', new URLSearchParams({
       username: this.state.username,
       password: this.state.password
     }), {

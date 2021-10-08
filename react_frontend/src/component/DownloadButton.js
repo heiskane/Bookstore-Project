@@ -9,7 +9,8 @@ export default function BuyButton(props) {
 	
 	function download_book() {
 		const book_id = props.book_id;
-		axios.get('http://localhost:8000/books/' + book_id + '/download/', {
+		const instance = axios.create();
+		instance.get('/books/' + book_id + '/download/', {
 			responseType: 'blob',
 			headers: {
 				'authorization': 'Bearer ' + token.jwt_token

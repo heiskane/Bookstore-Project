@@ -6,6 +6,12 @@ import Checkout from './component/Checkout';
 import Login from './component/Login';
 import BookDetails from './component/BookDetails'
 
+import axios from 'axios';
+
+// https://github.com/axios/axios#global-axios-defaults
+// Define baseURL for all api calls
+axios.defaults.baseURL = 'http://localhost:8000'
+
 function App() {
   return (
     <Router>

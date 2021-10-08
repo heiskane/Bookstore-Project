@@ -26,7 +26,8 @@ export default class RegisterForm extends React.Component {
   }
 
   handleSubmit(event) {
-    axios.post('http://localhost:8000/users/', {
+    const instance = axios.create();
+    instance.post('/users/', {
       username: this.state.username,
       email: this.state.email,
       password: this.state.password

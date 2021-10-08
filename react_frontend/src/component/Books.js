@@ -15,14 +15,13 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary
 }));
 
-const baseURL = "http://localhost:8000";
-
 export default function App() {
   const [books, setBooks] = React.useState(null);
  
 
   React.useEffect(() => {
-    axios.get(baseURL + "/books")
+    const instance = axios.create();
+    instance.get("/books/")
       .then((response) => {
         setBooks(response.data);
         console.log(books)
