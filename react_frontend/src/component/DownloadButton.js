@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
@@ -28,7 +28,7 @@ export default function BuyButton(props) {
 			fileDownload(response.data, filename);
 		})
 		.catch(err => {
-			if (err.response.status == 403) {
+			if (err.response.status === 403) {
 				alert("You are not allowed to download this book")
 			}
 		})

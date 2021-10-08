@@ -3,6 +3,7 @@ import axios from 'axios';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
+import { Redirect } from 'react-router-dom';
 
 // https://reactjs.org/docs/forms.html
 class LoginForm extends React.Component {
@@ -10,7 +11,8 @@ class LoginForm extends React.Component {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      redirectTo: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -48,9 +50,9 @@ class LoginForm extends React.Component {
           sameSite: 'strict' 
         });
       this.setState({ jwt_token: cookies.get("jwt_token") });
-      const user = jwt(jwt_token)
-      console.log(user)
-      alert("Login Successful")
+      const user = jwt(jwt_token);
+      console.log(user);
+      this.setState({ redirect: '/'});
     })
     .catch(err => {
       alert("Login failed")
@@ -61,6 +63,9 @@ class LoginForm extends React.Component {
 
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirectTo} />
+    }
     return (
       <form onSubmit={this.handleSubmit}>
         <label>

@@ -8,28 +8,44 @@ import { useCookies } from 'react-cookie';
 import jwt from 'jwt-decode';
 
 const Header = () => {
+  const [cookies, setCookie, removeCookie] = useCookies();
+  
   const handleAuthentication = () => {
 
   }
 
+  function handleLogout() {
+    removeCookie("jwt_token");
+  }
+
   const LoginOrUser = () => {
-    const [cookies] = useCookies();
     if (!cookies.jwt_token) {
       return (
-        <div
-          className="header__option"
-          onClick={handleAuthentication}
-        >
-          <span className="header__optionLineOne">Hello Guest</span>
-          <span className="header__optionLineTwo">Sign In</span>
-        </div>
+        <Link to="/login" className="header__link">
+          <div
+            className="header__option"
+            onClick={handleAuthentication}
+          >
+            <span className="header__optionLineOne">Hello Guest</span>
+            <span className="header__optionLineTwo">Sign In</span>
+          </div>
+        </Link>
       )
     } else {
       const username = jwt(cookies.jwt_token).sub
       return (
-        <div className="header__option">
-          <span className="header__optionLineOne">{"Hello " + username}</span>
-          <span className="header__optionLineTwo">This will be you profile button</span>
+        <div className="header__nav">
+          <Link to="/">
+            <div className="header__option">
+              <span className="header__optionLineOne">{"Hello " + username}</span>
+              <span className="header__optionLineTwo">This will be you profile button</span>
+            </div>
+          </Link>
+          <Link to="/login" onClick={() => handleLogout()}>
+            <div className="header__option">
+              <span className="header__optionLineTwo">Logout</span>
+            </div>
+          </Link>
         </div>
       )
     }
@@ -53,9 +69,7 @@ const Header = () => {
       </div>
 
       <div className="header__nav">
-        <Link to="/login" className="header__link">
-          <LoginOrUser />
-        </Link>
+        <LoginOrUser />
 
 
         <div className="header__option">
