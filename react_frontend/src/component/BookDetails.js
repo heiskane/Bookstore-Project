@@ -2,6 +2,7 @@ import React from "react";
 import './BookDetails.css'
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import DownloadButton from "./DownloadButton";
 
 export default function BookDetails() {
 
@@ -70,6 +71,7 @@ export default function BookDetails() {
         <p>Price: {book.price} €</p>
         <p>Language: {book.language}</p>
         <p>Publication Date: {book.publication_date}</p>
+        <DownloadButton book_id={book.id} />
       </div>
    );
 }

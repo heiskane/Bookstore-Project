@@ -39,7 +39,11 @@ class LoginForm extends React.Component {
     })
     .then((response) => {
       const { cookies } = this.props;
-      cookies.set("jwt_token", response.data.access_token, { path: "/" });
+      cookies.set("jwt_token", response.data.access_token,
+        { 
+          path: "/",
+          sameSite: 'strict' 
+        });
       this.setState({ jwt_token: cookies.get("jwt_token") });
     })
     .catch(err => {
