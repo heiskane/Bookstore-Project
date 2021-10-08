@@ -25,6 +25,10 @@ function App() {
             <Header />
             <Login />
           </Route>
+          <Route path="/register">
+            <Header />
+            <Login />
+          </Route>
           <Route path="/books/:book_id">
             <Header />
             <BookDetails />

@@ -1,14 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie'
 
 // https://reactjs.org/docs/forms.html
-class LoginForm extends React.Component {
+export default class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
+      email: '',
       password: ''
     };
 
@@ -26,24 +25,17 @@ class LoginForm extends React.Component {
     });
   }
 
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
-
   handleSubmit(event) {
-    axios.post('http://localhost:8000/login/', new URLSearchParams({
+    axios.post('http://localhost:8000/users/', {
       username: this.state.username,
+      email: this.state.email,
       password: this.state.password
-    }), {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
     .then((response) => {
-      const { cookies } = this.props;
-      cookies.set("jwt_token", response.data.access_token, { path: "/" });
-      this.setState({ jwt_token: cookies.get("jwt_token") });
+      alert("User created successfully")
     })
     .catch(err => {
-      alert("Login failed")
+      alert("Registeration failed")
       alert(JSON.stringify(err.response.data.detail))
     })
     event.preventDefault();
@@ -55,11 +47,19 @@ class LoginForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <label>
           Username:
-          <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
+          <input 
+            type="text" name="username" value={this.state.username}
+            onChange={this.handleChange} />
+        </label>
+        <label>
+          Email:
+          <input type="email" name="email" value={this.state.email}
+          onChange={this.handleChange} />
         </label>
         <label>
           Password:
-          <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
+          <input type="password" name="password" value={this.state.password}
+          onChange={this.handleChange} />
         </label>
         <input type="submit" value="Login" />
       </form>
@@ -68,4 +68,4 @@ class LoginForm extends React.Component {
 
 }
 
-export default withCookies(LoginForm);
+
