@@ -77,6 +77,7 @@ class BookCreate(BookBase):
 
 class Book(BookBase):
 	id: int
+	avg_rating: Optional[float]
 	authors: List['Author']
 	genres: List[Genre]
 

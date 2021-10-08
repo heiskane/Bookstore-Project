@@ -1,7 +1,18 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date
-from sqlalchemy import String, Float, Table, LargeBinary
+from sqlalchemy import (
+	Boolean,
+	Column,ForeignKey,
+	Integer,
+	Date, 
+	func,
+	String,
+	Float,
+	Table,
+	LargeBinary
+)
+
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy_utils import aggregated
 
 from base64 import decodebytes
 
@@ -70,6 +81,14 @@ class Book(Base):
 	#publisher = Column(String, index=True)
 	isbn = Column(String, index=True)
 
+	# https://sqlalchemy-utils.readthedocs.io/en/latest/aggregates.html#average-movie-rating
+	@aggregated('reviews', Column(Float))
+	def avg_rating(self):
+		return func.avg(Review.rating)
+
+	reviews = relationship("Review", back_populates="book")
+
+
 	# https://gist.github.com/luhn/4170996
 	_image = Column(LargeBinary)
 
@@ -92,9 +111,6 @@ class Book(Base):
 	def file(self, b64_file):
 		self._file = decodebytes(b64_file.encode('utf-8'))
 
-	# Add rating column?
-
-	reviews = relationship("Review", back_populates="book")
 
 	authors = relationship(
 		"Author",
