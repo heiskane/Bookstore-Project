@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from passlib.context import CryptContext
+from datetime import datetime
 
 from typing import List
 
@@ -25,6 +26,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 		password_hash = password_hash,
 		is_active = True,
 		is_admin = False,
+		register_date=datetime.today()
 	)
 	db.add(db_user)
 	db.commit()
@@ -179,6 +181,10 @@ def create_review(db: Session, review: schemas.Review, user: models.User, book: 
 
 def get_review(db: Session, review_id: int):
 	return db.query(models.Review).filter(models.Review.id == review_id).first()
+
+
+def get_book_review_by_user(db: Session, book: models.Book, user: models.User):
+	return db.query(models.Review).filter(models.Review.user == user).first()
 
 
 def update_review(db: Session, review: models.Review, updated_review: schemas.ReviewCreate):

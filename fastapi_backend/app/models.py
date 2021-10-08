@@ -146,6 +146,7 @@ class User(Base):
 	email = Column(String, index=True) # Set to unique later
 	is_admin = Column(Boolean, index=True)
 	is_active = Column(Boolean, index=True)
+	register_date = Column(Date, index=True)
 
 	orders = relationship("Order", back_populates="client")
 

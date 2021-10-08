@@ -361,9 +361,15 @@ def review_book(
 		review: schemas.ReviewCreate,
 		curr_user: schemas.User = Depends(get_current_user),
 		db: Session = Depends(get_db)):
+
 	book = crud.get_book(db=db, book_id=book_id)
 	if not book:
 		raise HTTPException(status_code=404, detail="Book not found")
+
+	db_review = crud.get_book_review_by_user(db=db, book=book, user=curr_user)
+	if db_review:
+		raise HTTPException(status_code=400, detail="You have already reviewed this book")
+
 	return crud.create_review(db=db, review=review, user=curr_user, book=book)
 
 

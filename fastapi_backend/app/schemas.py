@@ -35,6 +35,7 @@ class User(UserBase):
 	id: int
 	is_active: Optional[bool] = True
 	is_admin: Optional[bool] = False
+	register_date: date
 
 	class Config:
 		orm_mode = True
