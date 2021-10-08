@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import './Book.css'
+import React, { useState } from 'react';
+import './Book.css';
+import axios from 'axios';
 
 
 const Book = ({ id, title, authors, price }) => {
@@ -34,7 +35,7 @@ const Book = ({ id, title, authors, price }) => {
 
     return (
         <div className="book">
-            <img src="https://s1.adlibris.com/images/59263007/valo-joka-ei-kadonnutkaan.jpg" alt="" />
+            <img src={axios.defaults.baseURL + "/books/" + id + "/image/"} alt="" />
             <div class="book__info">
                 <a href={"/books/" + id}>Name: {title}</a>
                 <p>Author: {authors.map((author) => <li>{author.name}</li>)}</p>

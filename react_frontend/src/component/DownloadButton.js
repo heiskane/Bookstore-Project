@@ -5,7 +5,7 @@ import fileDownload from 'js-file-download';
 
 export default function BuyButton(props) {
 
-	const [token, setToken] = useCookies();
+	const [cookies] = useCookies();
 	
 	function download_book() {
 		const book_id = props.book_id;
@@ -13,7 +13,7 @@ export default function BuyButton(props) {
 		instance.get('/books/' + book_id + '/download/', {
 			responseType: 'blob',
 			headers: {
-				'authorization': 'Bearer ' + token.jwt_token
+				'authorization': 'Bearer ' + cookies.jwt_token
 			}
 		})
 		.then((response) => {

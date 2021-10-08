@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
+import jwt from 'jwt-decode';
 
 // https://reactjs.org/docs/forms.html
 class LoginForm extends React.Component {
@@ -40,12 +41,16 @@ class LoginForm extends React.Component {
     })
     .then((response) => {
       const { cookies } = this.props;
-      cookies.set("jwt_token", response.data.access_token,
-        { 
+      const jwt_token = response.data.access_token
+      cookies.set("jwt_token", jwt_token,
+        {
           path: "/",
           sameSite: 'strict' 
         });
       this.setState({ jwt_token: cookies.get("jwt_token") });
+      const user = jwt(jwt_token)
+      console.log(user)
+      alert("Login Successful")
     })
     .catch(err => {
       alert("Login failed")
