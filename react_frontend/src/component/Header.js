@@ -10,7 +10,7 @@ import { unset_user } from '../actions';
 
 const Header = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
-  const user = useSelector(state => state.user)
+  const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
 
   const handleAuthentication = () => {
@@ -24,7 +24,7 @@ const Header = () => {
   }
 
   const LoginOrUser = () => {
-    if (!user) {
+    if (!user_token) {
       return (
         <Link to="/login" className="header__link">
           <div
@@ -42,7 +42,7 @@ const Header = () => {
           <Link to="/">
             <div className="header__option">
               <span className="header__optionLineOne">
-                {"Hello " + user.sub}
+                {"Hello " + user_token.sub}
               </span>
               <span className="header__optionLineTwo">This will be you profile button</span>
             </div>
