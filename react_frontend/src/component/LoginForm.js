@@ -53,7 +53,6 @@ class LoginForm extends React.Component {
         });
       this.setState({ jwt_token: cookies.get("jwt_token") });
       const user_token = jwt(jwt_token);
-      console.log(user_token);
       this.props.signIn(user_token);
       this.setState({ redirect: '/'});
     })

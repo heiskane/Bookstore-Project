@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 
 const allReducers = combineReducers({
 	user_token: user_token,
-	shoppingCart: shoppingCart
+	shopping_cart: shoppingCart
 });
 
 export default allReducers;

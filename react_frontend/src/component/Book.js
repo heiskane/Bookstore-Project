@@ -13,7 +13,6 @@ const Book = ({ book }) => {
 
   const saveToBasket = (e) => {
     e.preventDefault();
-    console.log("Book to add:", book)
     dispatch(add_to_cart(book));
   }
 
