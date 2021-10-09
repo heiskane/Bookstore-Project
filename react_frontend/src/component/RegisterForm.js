@@ -4,6 +4,8 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
+import { set_user } from '../actions';
 
 // https://reactjs.org/docs/forms.html
 class RegisterForm extends React.Component {
@@ -51,7 +53,7 @@ class RegisterForm extends React.Component {
         });
       this.setState({ jwt_token: cookies.get("jwt_token") });
       const user = jwt(jwt_token);
-      console.log(user);
+      this.props.signIn(user);
       this.setState({ redirect: '/'});
     })
     .catch(err => {
@@ -91,4 +93,11 @@ class RegisterForm extends React.Component {
 
 }
 
-export default withCookies(RegisterForm);
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signIn: (user) => dispatch(set_user(user))
+    }
+};
+
+export default connect(null, mapDispatchToProps)(withCookies(RegisterForm));

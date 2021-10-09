@@ -4,6 +4,8 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
+import { set_user, unset_user } from '../actions/index.js';
 
 // https://reactjs.org/docs/forms.html
 class LoginForm extends React.Component {
@@ -52,11 +54,12 @@ class LoginForm extends React.Component {
       this.setState({ jwt_token: cookies.get("jwt_token") });
       const user = jwt(jwt_token);
       console.log(user);
+      this.props.signIn(user);
       this.setState({ redirect: '/'});
     })
     .catch(err => {
-      alert("Login failed")
-      alert(JSON.stringify(err.response.data.detail))
+      alert((err.response) ? JSON.stringify(err.response.data.detail) : "Login failed")
+      console.log(err)
     })
     event.preventDefault();
   }
@@ -83,4 +86,10 @@ class LoginForm extends React.Component {
 
 }
 
-export default withCookies(LoginForm);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signIn: (user) => dispatch(set_user(user))
+    }
+};
+
+export default connect(null, mapDispatchToProps)(withCookies(LoginForm));

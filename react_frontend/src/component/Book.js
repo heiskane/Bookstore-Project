@@ -37,7 +37,7 @@ const Book = ({ id, title, authors, price }) => {
   return (
     <div className="book">
       <img src={axios.defaults.baseURL + "/books/" + id + "/image/"} alt="" />
-      <div class="book__info">
+      <div className="book__info">
         <Link to={"/books/" + id}>
           <p>Name: {title}</p>
         </Link>

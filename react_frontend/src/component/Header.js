@@ -5,11 +5,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import { ShoppingBasket } from '@material-ui/icons';
 import HLG_Books from '../photos/HLG_Books.png'
 import { useCookies } from 'react-cookie';
-import jwt from 'jwt-decode';
+import { useSelector, useDispatch } from 'react-redux';
+import { unset_user } from '../actions';
 
 const Header = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
-  
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch();
+
   const handleAuthentication = () => {
 
   }
@@ -17,10 +20,11 @@ const Header = () => {
   function handleLogout() {
     // https://stackoverflow.com/questions/54861709/cookies-removeabc-not-working-in-reactjs/55593030
     removeCookie("jwt_token", { path: '/'});
+    dispatch(unset_user());
   }
 
   const LoginOrUser = () => {
-    if (!cookies.jwt_token) {
+    if (!user) {
       return (
         <Link to="/login" className="header__link">
           <div
@@ -33,12 +37,13 @@ const Header = () => {
         </Link>
       )
     } else {
-      const username = jwt(cookies.jwt_token).sub
       return (
         <div className="header__nav">
           <Link to="/">
             <div className="header__option">
-              <span className="header__optionLineOne">{"Hello " + username}</span>
+              <span className="header__optionLineOne">
+                {"Hello " + user.sub}
+              </span>
               <span className="header__optionLineTwo">This will be you profile button</span>
             </div>
           </Link>

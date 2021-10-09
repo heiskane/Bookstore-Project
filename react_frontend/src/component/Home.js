@@ -5,10 +5,10 @@ import Books from './Books'
 const Home = () => {
     return (
         <div className="home">
-            <div class="home__container">
+            <div className="home__container">
                 <img className="home__image" src="https://s2.adlibris.com/images/61500292/promo1280x270.jpg" alt=" " />
             </div>
-            <div class="home__row">
+            <div className="home__row">
                 {/*  Six books */}
                 <Books />
             </div>
