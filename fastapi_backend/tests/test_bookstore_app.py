@@ -46,15 +46,14 @@ def test_create_user():
 	)
 	assert response.status_code == 200, response.text
 	data = response.json()
-	assert data["username"] == "test_user"
+	assert data["access_token"]
+	assert data["token_type"] == "bearer"
 
 	response = client.post(
 		"/users/",
 		json={"username": "Test_User", "password": "test_password"}
 	)
 	assert response.status_code == 400, response.text
-	data = response.json()
-	assert data["detail"] == "Username taken"
 
 
 def test_login():
