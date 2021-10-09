@@ -15,7 +15,8 @@ const Header = () => {
   }
 
   function handleLogout() {
-    removeCookie("jwt_token");
+    // https://stackoverflow.com/questions/54861709/cookies-removeabc-not-working-in-reactjs/55593030
+    removeCookie("jwt_token", { path: '/'});
   }
 
   const LoginOrUser = () => {

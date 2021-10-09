@@ -28,7 +28,7 @@ export default function BuyButton(props) {
 			fileDownload(response.data, filename);
 		})
 		.catch(err => {
-			if (err.response.status === 403) {
+			if (err.response && err.response.status === 403) {
 				alert("You are not allowed to download this book")
 			}
 		})
