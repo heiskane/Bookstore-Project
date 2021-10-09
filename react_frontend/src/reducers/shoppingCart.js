@@ -2,13 +2,10 @@ const initialState = {
 	shopping_cart: []
 }
 
-const shoppingCart = (state = initialState, action) => {
+const shoppingCart = (state = [], action) => {
 	switch (action.type) {
 		case 'ADD_TO_CART':
-			return {
-				...state,
-				shopping_cart: [...state.shopping_cart, action.book],
-			}
+			return [...state, action.book];
 		default: return state;
 	}
 }

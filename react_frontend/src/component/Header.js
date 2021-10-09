@@ -24,7 +24,7 @@ const Header = () => {
   }
 
   const LoginOrUser = () => {
-    if (!user_token) {
+    if (!user_token.sub) {
       return (
         <Link to="/login" className="header__link">
           <div
