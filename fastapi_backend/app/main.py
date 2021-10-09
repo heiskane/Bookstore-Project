@@ -304,6 +304,9 @@ def download_book(
 
 	book = crud.get_book(db = db, book_id = book_id)
 
+	if book.price == 0:
+		return Response(book.file, media_type='application/octet-stream', headers=headers)
+
 	if not curr_user and not ordered_books:
 		raise HTTPException(status_code=403, detail="Unauthorized")
 
@@ -377,13 +380,29 @@ def review_book(
 	return crud.create_review(db=db, review=review, user=curr_user, book=book)
 
 
-@app.post("/users/", response_model=schemas.User)
+@app.post("/users/", response_model=schemas.Token)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 	db_user = crud.get_user_by_name(db=db, username=user.username)
 	if db_user:
 		raise HTTPException(status_code=400, detail="Username taken")
-	# create a cookie to login when registered
-	return crud.create_user(db=db, user=user)
+
+	created_user = crud.create_user(db=db, user=user)
+
+	# Login user when registered
+	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+	access_token = create_access_token(
+		data = {
+			"sub": created_user.username,
+			# Probably dont need to set is_admin and is_active
+			# Unless the frontend wants it
+			"is_admin": created_user.is_admin,
+			"is_active": created_user.is_active
+		}, expires_delta=access_token_expires
+	)
+
+	token = schemas.Token(access_token=access_token)
+
+	return token
 
 
 @app.get("/users/", response_model=List[schemas.User])

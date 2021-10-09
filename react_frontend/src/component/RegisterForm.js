@@ -1,8 +1,12 @@
 import React from 'react';
 import axios from 'axios';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie'
+import jwt from 'jwt-decode';
+import { Redirect } from 'react-router-dom';
 
 // https://reactjs.org/docs/forms.html
-export default class RegisterForm extends React.Component {
+class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,6 +29,10 @@ export default class RegisterForm extends React.Component {
     });
   }
 
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
   handleSubmit(event) {
     const instance = axios.create();
     instance.post('/users/', {
@@ -34,6 +42,17 @@ export default class RegisterForm extends React.Component {
     })
     .then((response) => {
       alert("User created successfully")
+      const { cookies } = this.props;
+      const jwt_token = response.data.access_token
+      cookies.set("jwt_token", jwt_token,
+        {
+          path: "/",
+          sameSite: 'strict' 
+        });
+      this.setState({ jwt_token: cookies.get("jwt_token") });
+      const user = jwt(jwt_token);
+      console.log(user);
+      this.setState({ redirect: '/'});
     })
     .catch(err => {
       alert("Registeration failed")
@@ -44,6 +63,9 @@ export default class RegisterForm extends React.Component {
 
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirectTo} />
+    }
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
@@ -69,4 +91,4 @@ export default class RegisterForm extends React.Component {
 
 }
 
-
+export default withCookies(RegisterForm);
