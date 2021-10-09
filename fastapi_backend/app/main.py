@@ -304,6 +304,10 @@ def download_book(
 
 	book = crud.get_book(db = db, book_id = book_id)
 
+	headers = {
+		"Content-Disposition": f"attachment; filename={book.title}.pdf",
+	}
+
 	if book.price == 0:
 		return Response(book.file, media_type='application/octet-stream', headers=headers)
 
@@ -318,10 +322,6 @@ def download_book(
 		if book_id not in ordered_books:
 			raise HTTPException(status_code=403, detail="You have not bought this book")
 
-	headers = {
-		"Content-Disposition": f"attachment; filename={book.title}.pdf",
-		"test": "test"
-	}
 	return Response(book.file, media_type='application/octet-stream', headers=headers)
 
 
