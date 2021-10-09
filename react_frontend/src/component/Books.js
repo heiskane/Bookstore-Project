@@ -24,7 +24,6 @@ export default function App() {
     instance.get("/books/")
       .then((response) => {
         setBooks(response.data);
-        console.log(books)
       });
   }, []);
 
@@ -35,14 +34,6 @@ export default function App() {
 
   return (
     <Box className="books" sx={{ flexGrow: 1 }}>
-      {/* <h1>Books</h1>
-      {books.map((book) => [
-        <p>Title: {book.title}</p>,
-        <p>Description: {book.description}</p>,
-        <p>Authors: {book.authors.map((author) => author.name)}</p>,
-        <p>Publication Date: {book.publication_date}</p>,
-        <br />
-      ])} */}
       <Grid container
         direction="row"
         justifyContent="center"
@@ -50,13 +41,7 @@ export default function App() {
         spacing={3}>
         {books.map((book) => <Grid item xs={2}>
           <Item >
-            <Book
-              key={book.id}
-              id={book.id}
-              title={book.title}
-              authors={book.authors}
-              price={book.price}
-            />
+            <Book book={book} />
           </Item>
         </Grid>)}
       </Grid>

@@ -5,7 +5,7 @@ import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { set_user, unset_user } from '../actions/index.js';
+import { set_user, unset_user } from '../actions';
 
 // https://reactjs.org/docs/forms.html
 class LoginForm extends React.Component {
@@ -52,9 +52,9 @@ class LoginForm extends React.Component {
           sameSite: 'strict' 
         });
       this.setState({ jwt_token: cookies.get("jwt_token") });
-      const user = jwt(jwt_token);
-      console.log(user);
-      this.props.signIn(user);
+      const user_token = jwt(jwt_token);
+      console.log(user_token);
+      this.props.signIn(user_token);
       this.setState({ redirect: '/'});
     })
     .catch(err => {
@@ -88,7 +88,7 @@ class LoginForm extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signIn: (user) => dispatch(set_user(user))
+        signIn: (user_token) => dispatch(set_user(user_token))
     }
 };
 
