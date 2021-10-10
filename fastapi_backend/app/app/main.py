@@ -6,11 +6,11 @@ from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from datetime import timedelta, date
-#from magic import from_buffer
 
 from app import crud, models, schemas
 from app.database import SessionLocal, engine
 from app.core import security
+from app.core.config import settings
 from app.PayPal.CreateOrder import CreateOrder
 from app.PayPal.CaptureOrder import CaptureOrder
 from app.PayPal.GetOrder import GetOrder
@@ -49,7 +49,6 @@ app.add_middleware(
 
 
 DEBUG = True
-ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
@@ -373,7 +372,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 	created_user = crud.create_user(db=db, user=user)
 
 	# Login user when registered
-	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+	access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
 	return {
 		"access_token": security.create_access_token(
@@ -400,7 +399,7 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 	if not user:
 		raise HTTPException(status_code=401, detail="Login failed")
 
-	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES) # Change later
+	access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES) # Change later
 
 	return {
 		"access_token": security.create_access_token(

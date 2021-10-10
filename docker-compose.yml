@@ -15,14 +15,8 @@ services:
     image: "postgres"
     ports:
       - 5432:5432
-    #env_file:
-    #  - ./fastapi_backend/.env
-    environment:
-      POSTGRES_USER: test_user
-      POSTGRES_PASSWORD: test_password
-      POSTGRES_SERVER: db
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: bookstore_db
+    env_file:
+      - .env
     volumes:
       - database-data:/var/lib/postgresql/data
 

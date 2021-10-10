@@ -49,9 +49,9 @@ Api documentation can be found at http://localhost:8000/docs
 
 ### Something to read
 
-* [Paypal Integration](paypal_integration.md)
-* [File Upload/Download](files.md)
-* [Images](images.md)
+* [Paypal Integration](stuff_to_read/paypal_integration.md)
+* [File Upload/Download](stuff_to_read/files.md)
+* [Images](stuff_to_read/images.md)
 
 
 ## Database Migrations
