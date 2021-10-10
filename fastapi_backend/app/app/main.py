@@ -1,16 +1,16 @@
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.responses import Response
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from jose import JWTError, jwt
 from datetime import timedelta, date
 
 from app import crud, models, schemas
-from app.database import SessionLocal, engine
+from app.database import engine
 from app.core import security
 from app.core.config import settings
+from app.api import deps
 from app.PayPal.CreateOrder import CreateOrder
 from app.PayPal.CaptureOrder import CaptureOrder
 from app.PayPal.GetOrder import GetOrder
@@ -50,18 +50,6 @@ app.add_middleware(
 
 DEBUG = True
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
-
-
-def get_db():
-	db = SessionLocal()
-	try:
-		yield db
-	finally:
-		db.close()
-
-
 def authenticate_user(db: Session, username: str, password: str):
 	db_user = crud.get_user_by_name(db=db, username=username)
 	if not db_user:
@@ -70,82 +58,19 @@ def authenticate_user(db: Session, username: str, password: str):
 		return False
 	return db_user
 
-
-# https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-	credentials_exception = HTTPException(
-		status_code=401,
-		detail="Could not validate credentials",
-		headers={"WWW-Authenticate": "Bearer"},
-	)
-	try:
-		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-		username: str = payload.get("sub")
-		if username is None:
-			raise credentials_exception
-		token_data = schemas.TokenData(username=username)
-	except JWTError:
-		raise credentials_exception
-	user = crud.get_user_by_name(db=db, username=token_data.username)
-	if user is None:
-		raise credentials_exception
-	return user
-
-
-# https://stackoverflow.com/questions/66254024/fastapi-optional-oauth2-authentication
-async def get_current_user_or_none(db: Session = Depends(get_db), token: str = Depends(optional_oauth2_scheme)):
-	if not token:
-		return None
-	try:
-		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-		username: str = payload.get("sub")
-		if username is None:
-			return None
-		token_data = schemas.TokenData(username=username)
-	except JWTError:
-		return None
-	user = crud.get_user_by_name(db=db, username=token_data.username)
-	return user
-
-
-def get_ordered_books_token(token: str = Depends(optional_oauth2_scheme)):
-	if not token:
-		return None
-
-	try:
-		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-		ordered_books: str = payload.get("ordered_book_ids")
-		if ordered_books is None:
-			return None
-	except JWTError:
-		return None
-
-	return ordered_books
-
-
-def require_admin(
-	token: str = Depends(oauth2_scheme),
-	db: Session = Depends(get_db),
-	user = Depends(get_current_user)):
-	
-	if not user.is_admin:
-		raise HTTPException(status_code=401, detail="Admin privileges required")
-	return user
-
-
 @app.get("/admin_required/", response_model=schemas.User)
-def admin_required(curr_user: schemas.User = Depends(require_admin)):
+def admin_required(curr_user: schemas.User = Depends(deps.require_admin)):
 	return curr_user
 
 
 # Require authentication
 @app.get("/auth_required/", response_model=schemas.User)
-def auth_required(curr_user: schemas.User = Depends(get_current_user)):
+def auth_required(curr_user: schemas.User = Depends(deps.get_current_user)):
 	return curr_user
 
 
 @app.get("/auth_optional/", response_model=schemas.User)
-def auth_optional(curr_user: schemas.User = Depends(get_current_user_or_none)):
+def auth_optional(curr_user: schemas.User = Depends(deps.get_current_user_or_none)):
 	return curr_user
 
 
@@ -163,7 +88,7 @@ def create_tables():
 
 # Fix pls
 @app.post("/authors/", response_model=schemas.Author)
-def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
+def create_author(author: schemas.AuthorCreate, db: Session = Depends(deps.get_db)):
 	# This endpoint might not be needed
 	db_author = crud.get_author_by_name(db=db, name=author.name)
 	if db_author:
@@ -172,13 +97,13 @@ def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/authors/", response_model=List[schemas.Author])
-def read_authors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_authors(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
 	authors = crud.get_authors(db, skip=skip, limit=limit)
 	return authors
 
 
 @app.get("/authors/{author_id}/", response_model=schemas.Author)
-def read_author(author_id: int, db: Session = Depends(get_db)):
+def read_author(author_id: int, db: Session = Depends(deps.get_db)):
 	db_author = crud.get_author(db=db, author_id=author_id)
 	if not db_author:
 		raise HTTPException(status_code=404, detail="Author not found")
@@ -186,7 +111,7 @@ def read_author(author_id: int, db: Session = Depends(get_db)):
 
 
 @app.delete("/authors/{author_id}/")
-def delete_author(author_id: int, db: Session = Depends(get_db)):
+def delete_author(author_id: int, db: Session = Depends(deps.get_db)):
 	author = crud.get_author(db=db, author_id=author_id)
 	if not author:
 		raise HTTPException(status_code=404, detail="Author not found")
@@ -195,7 +120,7 @@ def delete_author(author_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/authors/{author_id}/books", response_model=List[schemas.Book])
-def read_author_books(author_id: int, db: Session = Depends(get_db)):
+def read_author_books(author_id: int, db: Session = Depends(deps.get_db)):
 	db_author = crud.get_author(db=db, author_id=author_id)
 	if not db_author:
 		raise HTTPException(status_code=404, detail="Author not found")
@@ -203,13 +128,13 @@ def read_author_books(author_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/genres/", response_model=List[schemas.Genre])
-def read_genres(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_genres(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
 	genres = crud.get_genres(db, skip=skip, limit=limit)
 	return genres
 
 
 @app.get("/genres/{genre_id}/", response_model=schemas.Genre)
-def read_genre(genre_id: int, db: Session = Depends(get_db)):
+def read_genre(genre_id: int, db: Session = Depends(deps.get_db)):
 	genre = crud.get_genre(db=db, genre_id=genre_id)
 	if not genre:
 		raise HTTPException(status_code=404, detail="Genre not found")
@@ -217,7 +142,7 @@ def read_genre(genre_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/genres/{genre_id}/books/", response_model=List[schemas.Book])
-def read_genre_books(genre_id: int, db: Session = Depends(get_db)):
+def read_genre_books(genre_id: int, db: Session = Depends(deps.get_db)):
 	genre = crud.get_genre(db=db, genre_id=genre_id)
 	if not genre:
 		raise HTTPException(status_code=404, detail="Genre not found")
@@ -225,7 +150,7 @@ def read_genre_books(genre_id: int, db: Session = Depends(get_db)):
 
 
 @app.delete("/genres/{genre_id}/")
-def delete_genre(genre_id: int, db: Session = Depends(get_db)):
+def delete_genre(genre_id: int, db: Session = Depends(deps.get_db)):
 	genre = crud.get_genre(db=db, genre_id=genre_id)
 	if not genre:
 		raise HTTPException(status_code=404, detail="Genre not found")
@@ -233,7 +158,7 @@ def delete_genre(genre_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/books/", response_model=schemas.Book)
-def create_book(authors: List[str], book: schemas.BookCreate, db: Session = Depends(get_db)):
+def create_book(authors: List[str], book: schemas.BookCreate, db: Session = Depends(deps.get_db)):
 	db_book = crud.get_book_by_title(db, title=book.title)
 	if db_book:
 		raise HTTPException(status_code=400, detail="Book with this tile already exists")
@@ -248,12 +173,12 @@ def create_book(authors: List[str], book: schemas.BookCreate, db: Session = Depe
 
 
 @app.get("/books/", response_model=List[schemas.Book])
-def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
 	return crud.get_books(db=db, skip=skip, limit=limit)
 
 
 @app.get("/books/{book_id}", response_model=schemas.Book)
-def read_book(book_id: int, db: Session = Depends(get_db)):
+def read_book(book_id: int, db: Session = Depends(deps.get_db)):
 	db_book = crud.get_book(db=db, book_id=book_id)
 	if not db_book:
 		raise HTTPException(status_code=404, detail="Book not found")
@@ -262,7 +187,7 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
 
 # https://stackoverflow.com/questions/63143731/update-sqlalchemy-orm-existing-model-from-posted-pydantic-model-in-fastapi
 @app.patch("/books/{book_id}/", response_model=schemas.Book)
-def update_book(book_id: int, updated_book: schemas.BookUpdate, db: Session = Depends(get_db)):
+def update_book(book_id: int, updated_book: schemas.BookUpdate, db: Session = Depends(deps.get_db)):
 	db_book = crud.get_book(db=db, book_id=book_id)
 	if not db_book:
 		raise HTTPException(status_code=404, detail="Books not found")
@@ -271,7 +196,7 @@ def update_book(book_id: int, updated_book: schemas.BookUpdate, db: Session = De
 
 
 @app.delete("/books/{book_id}/")
-def delete_book(book_id: int, db: Session = Depends(get_db)):
+def delete_book(book_id: int, db: Session = Depends(deps.get_db)):
 	book = crud.get_book(db=db, book_id=book_id)
 	if not book:
 		raise HTTPException(status_code=404, detail="Book not found")
@@ -281,9 +206,9 @@ def delete_book(book_id: int, db: Session = Depends(get_db)):
 @app.get("/books/{book_id}/download/")
 def download_book(
 		book_id: int,
-		curr_user: schemas.User = Depends(get_current_user_or_none),
-		ordered_books: List = Depends(get_ordered_books_token),
-		db: Session = Depends(get_db)):
+		curr_user: schemas.User = Depends(deps.get_current_user_or_none),
+		ordered_books: List = Depends(deps.get_ordered_books_token),
+		db: Session = Depends(deps.get_db)):
 
 	book = crud.get_book(db = db, book_id = book_id)
 
@@ -309,13 +234,13 @@ def download_book(
 
 
 @app.get("/books/{book_id}/image/")
-def get_book_image(book_id: int, db: Session = Depends(get_db)):
+def get_book_image(book_id: int, db: Session = Depends(deps.get_db)):
 	book = crud.get_book(db = db, book_id = book_id)
 	return Response(book.image, media_type='image/png')
 
 
 @app.get("/books/{book_id}/reviews/", response_model=List[schemas.Review])
-def read_reviews(book_id: int, db: Session = Depends(get_db)):
+def read_reviews(book_id: int, db: Session = Depends(deps.get_db)):
 	book = crud.get_book(db=db, book_id=book_id)
 	if not book:
 		raise HTTPException(status_code=404, detail="Book not found")
@@ -327,8 +252,8 @@ def read_reviews(book_id: int, db: Session = Depends(get_db)):
 def update_review(
 		review_id: int,
 		updated_review: schemas.ReviewCreate,
-		curr_user: schemas.User = Depends(get_current_user),
-		db: Session = Depends(get_db)):
+		curr_user: schemas.User = Depends(deps.get_current_user),
+		db: Session = Depends(deps.get_db)):
 	db_review = crud.get_review(db=db, review_id=review_id)
 	if not db_review:
 		raise HTTPException(status_code=404, detail="Review not found")
@@ -340,7 +265,7 @@ def update_review(
 
 
 @app.delete("/reviews/{review_id}/")
-def delete_review(book_id: int, review_id: int, db: Session = Depends(get_db)):
+def delete_review(book_id: int, review_id: int, db: Session = Depends(deps.get_db)):
 	review = crud.get_review(db=db, review_id=review_id)
 	return crud.delete_review(db=db, review=review)
 
@@ -349,8 +274,8 @@ def delete_review(book_id: int, review_id: int, db: Session = Depends(get_db)):
 def review_book(
 		book_id: int,
 		review: schemas.ReviewCreate,
-		curr_user: schemas.User = Depends(get_current_user),
-		db: Session = Depends(get_db)):
+		curr_user: schemas.User = Depends(deps.get_current_user),
+		db: Session = Depends(deps.get_db)):
 
 	book = crud.get_book(db=db, book_id=book_id)
 	if not book:
@@ -364,7 +289,7 @@ def review_book(
 
 
 @app.post("/users/", response_model=schemas.Token)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
 	db_user = crud.get_user_by_name(db=db, username=user.username)
 	if db_user:
 		raise HTTPException(status_code=400, detail="Username taken")
@@ -383,17 +308,17 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/users/", response_model=List[schemas.User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
 	return crud.get_users(db=db, skip=skip, limit=limit)
 
 
 @app.get("/user/{username}", response_model=schemas.User)
-def read_user(username: str, db: Session = Depends(get_db)):
+def read_user(username: str, db: Session = Depends(deps.get_db)):
 	return crud.get_user_by_name(db=db, username=username)
 
 
 @app.post("/login/", response_model=schemas.Token)
-async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
 	user = authenticate_user(db=db, username=form_data.username, password=form_data.password)
 
 	if not user:
@@ -410,12 +335,12 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 
 
 @app.get("/orders/", response_model=List[schemas.Order])
-def read_orders(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_orders(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
 	return crud.get_orders(db=db, skip=skip, limit=limit)
 
 
 @app.post("/checkout/paypal/order/create/")
-def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depends(get_db)):
+def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depends(deps.get_db)):
 	books = []
 	for book_id in shopping_cart.book_ids:
 		db_book = crud.get_book(db=db, book_id=book_id)
@@ -426,7 +351,7 @@ def paypal_create_order(shopping_cart: schemas.ShoppingCart, db: Session = Depen
 
 
 @app.post("/checkout/paypal/order/{order_id}/capture/")
-def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_current_user_or_none), db: Session = Depends(get_db)):
+def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(deps.get_current_user_or_none), db: Session = Depends(deps.get_db)):
 	response = CaptureOrder().capture_order(order_id, debug=DEBUG)
 	order = GetOrder().get_order(order_id = order_id)
 
@@ -437,8 +362,8 @@ def paypal_capture_order(order_id: str, curr_user: schemas.User = Depends(get_cu
 	# Maybe implement this in a function
 
 	if not curr_user:
-		access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-		access_token = create_access_token(
+		access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+		access_token = security.create_access_token(
 			data = {
 				"sub": "anonymous",
 				"ordered_book_ids": [book.id for book in ordered_books],

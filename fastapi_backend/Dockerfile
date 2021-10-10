@@ -1,7 +1,5 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 
-ENV TESTING=i_hate_this_workaround
-
 WORKDIR /app/
 
 COPY app/requirements.txt requirements.txt
