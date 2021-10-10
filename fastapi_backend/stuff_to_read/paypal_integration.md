@@ -298,7 +298,7 @@ INFO:     127.0.0.1:60834 - "POST /checkout/paypal/order/44V630951H329442K/captu
 
 I also verified that the funds were transfered in [PayPals sandbox](https://www.sandbox.paypal.com/activities/)
 
-![paypal_transaction](img/paypal_transaction.png)
+![paypal_transaction](../img/paypal_transaction.png)
 
 ### Frontend
 

@@ -1,16 +1,16 @@
-from typing import List, Optional
+from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
-from passlib.context import CryptContext
-from datetime import datetime, timedelta, date
+from datetime import timedelta, date
 #from magic import from_buffer
 
 from app import crud, models, schemas
 from app.database import SessionLocal, engine
+from app.core import security
 from app.PayPal.CreateOrder import CreateOrder
 from app.PayPal.CaptureOrder import CaptureOrder
 from app.PayPal.GetOrder import GetOrder
@@ -48,16 +48,11 @@ app.add_middleware(
 )
 
 
-# Remember to change later and use .env
-SECRET_KEY = "a155c5104f0f8fcc9c2c2506588a218476c72fb0c40897f3f93d501c75c8db32"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 600
-
 DEBUG = True
+ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated=["auto"])
 
 
 def get_db():
@@ -68,24 +63,13 @@ def get_db():
 		db.close()
 
 
-def verify_password(password_plain: str, password_hash: str):
-	return pwd_context.verify(password_plain, password_hash)
-
-
 def authenticate_user(db: Session, username: str, password: str):
 	db_user = crud.get_user_by_name(db=db, username=username)
 	if not db_user:
 		return False
-	if not verify_password(password, db_user.password_hash):
+	if not security.verify_password(password, db_user.password_hash):
 		return False
 	return db_user
-
-
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = timedelta(minutes=30)):
-	to_encode = data.copy()
-	expire = datetime.utcnow() + expires_delta
-	to_encode.update({"exp": expire})
-	return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
 # https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
@@ -390,19 +374,13 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 	# Login user when registered
 	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-	access_token = create_access_token(
-		data = {
-			"sub": created_user.username,
-			# Probably dont need to set is_admin and is_active
-			# Unless the frontend wants it
-			"is_admin": created_user.is_admin,
-			"is_active": created_user.is_active
-		}, expires_delta=access_token_expires
-	)
 
-	token = schemas.Token(access_token=access_token)
-
-	return token
+	return {
+		"access_token": security.create_access_token(
+			created_user, expires_delta=access_token_expires
+		),
+		"token_type": "bearer"
+	}
 
 
 @app.get("/users/", response_model=List[schemas.User])
@@ -422,20 +400,14 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Sessi
 	if not user:
 		raise HTTPException(status_code=401, detail="Login failed")
 
-	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-	access_token = create_access_token(
-		data = {
-			"sub": user.username,
-			# Probably dont need to set is_admin and is_active
-			# Unless the frontend wants it
-			"is_admin": user.is_admin,
-			"is_active": user.is_active
-		}, expires_delta=access_token_expires
-	)
+	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES) # Change later
 
-	token = schemas.Token(access_token=access_token)
-
-	return token
+	return {
+		"access_token": security.create_access_token(
+			user, expires_delta=access_token_expires
+		),
+		"token_type": "bearer"
+	}
 
 
 @app.get("/orders/", response_model=List[schemas.Order])

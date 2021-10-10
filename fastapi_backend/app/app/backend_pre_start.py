@@ -4,7 +4,8 @@ from tenacity import after_log, before_log, retry, stop_after_attempt, wait_fixe
 
 from app.database import SessionLocal
 
-# Runs when testing is set to true
+# https://github.com/tiangolo/full-stack-fastapi-postgresql/blob/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app/app/backend_pre_start.py
+# Script from ^
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

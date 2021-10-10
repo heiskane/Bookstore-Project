@@ -165,4 +165,4 @@ def get_book_image(book_id: int, db: Session = Depends(get_db)):
 
 Note that im setting the `media_type` as `image/png`. This will probably mean that any other file type wont work so ill have to fix that at some point. Either way testing the image endpoint through the docs responds with the image i used so it all seems to work just fine.
 
-![image endpoint](img/image_endpoint.png)
+![image endpoint](../img/image_endpoint.png)
