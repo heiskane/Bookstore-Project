@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # Wait for database to be ready
-sleep 10;
+python /app/app/backend_pre_start.py
 
 # Create tables
-python /app/create_tables.py
+python /app/app/create_tables.py

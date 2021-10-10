@@ -9,11 +9,11 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, date
 #from magic import from_buffer
 
-from . import crud, models, schemas
-from .database import SessionLocal, engine
-from .PayPal.CreateOrder import CreateOrder
-from .PayPal.CaptureOrder import CaptureOrder
-from .PayPal.GetOrder import GetOrder
+from app import crud, models, schemas
+from app.database import SessionLocal, engine
+from app.PayPal.CreateOrder import CreateOrder
+from app.PayPal.CaptureOrder import CaptureOrder
+from app.PayPal.GetOrder import GetOrder
 
 models.Base.metadata.create_all(bind=engine, checkfirst=True)
 

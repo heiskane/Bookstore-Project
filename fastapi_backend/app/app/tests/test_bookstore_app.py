@@ -11,7 +11,6 @@ from ..app.main import app, get_db
 
 # Not sure if i will have time to implement all proper tests
 
-
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 
