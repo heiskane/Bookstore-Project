@@ -5,6 +5,9 @@ from pydantic import BaseSettings, PostgresDsn, validator
 # https://github.com/tiangolo/full-stack-fastapi-postgresql/blob/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app/app/core/config.py
 class Settings(BaseSettings):
 	"""Tries to read environment variables to set the settings"""
+
+	DEBUG: bool = True
+
 	SECRET_KEY: str
 	ALGORITHM: str = "HS256"
 	# 60 minutes * 24 hours * 8 days = 8 days

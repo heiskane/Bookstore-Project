@@ -24,10 +24,10 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 def create_user(db: Session, user: schemas.UserCreate):
 	password_hash = pwd_context.hash(user.password)
 	db_user = models.User(
-		username = user.username,
-		password_hash = password_hash,
-		is_active = True,
-		is_admin = False,
+		username=user.username,
+		password_hash=password_hash,
+		is_active=True,
+		is_admin=False,
 		register_date=datetime.today()
 	)
 	db.add(db_user)

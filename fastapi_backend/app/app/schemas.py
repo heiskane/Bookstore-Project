@@ -23,7 +23,8 @@ class Genre(GenreBase):
 
 
 class UserBase(BaseModel):
-	username: constr(min_length=5 ,max_length=20) # https://pydantic-docs.helpmanual.io/usage/types/#constrained-types
+	# https://pydantic-docs.helpmanual.io/usage/types/#constrained-types
+	username: constr(min_length=5, max_length=20)
 	email: Optional[EmailStr] = None # Maybe hide email somewhere
 
 
@@ -95,7 +96,6 @@ class BookUpdate(BaseModel):
 	isbn: Optional[str]
 	image: Optional[str]
 	file: Optional[str]
-
 
 
 # https://github.com/samuelcolvin/pydantic/issues/1333

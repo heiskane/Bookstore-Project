@@ -1,13 +1,14 @@
 from sqlalchemy import (
 	Boolean,
-	Column,ForeignKey,
+	Column,
 	Integer,
 	Date, 
 	func,
 	String,
 	Float,
 	Table,
-	LargeBinary
+	LargeBinary,
+	ForeignKey
 )
 
 from sqlalchemy.orm import relationship
