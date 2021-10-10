@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta, date
 
+from app.api.routers.api import api_router
 from app import crud, models, schemas
 from app.database import engine
 from app.core import security
@@ -58,32 +59,7 @@ def authenticate_user(db: Session, username: str, password: str):
 		return False
 	return db_user
 
-@app.get("/admin_required/", response_model=schemas.User)
-def admin_required(curr_user: schemas.User = Depends(deps.require_admin)):
-	return curr_user
-
-
-# Require authentication
-@app.get("/auth_required/", response_model=schemas.User)
-def auth_required(curr_user: schemas.User = Depends(deps.get_current_user)):
-	return curr_user
-
-
-@app.get("/auth_optional/", response_model=schemas.User)
-def auth_optional(curr_user: schemas.User = Depends(deps.get_current_user_or_none)):
-	return curr_user
-
-
-@app.get("/drop_tables/")
-def drop_tables():
-	models.Base.metadata.drop_all(bind=engine, checkfirst=True)
-	return
-
-
-@app.get("/create_tables")
-def create_tables():
-	models.Base.metadata.create_all(bind=engine, checkfirst=True)
-	return
+app.include_router(api_router)
 
 
 # Fix pls
