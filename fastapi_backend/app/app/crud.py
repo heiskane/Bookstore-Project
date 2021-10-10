@@ -175,6 +175,7 @@ def create_review(db: Session, review: schemas.Review, user: models.User, book: 
 	db_review = models.Review(**review.dict())
 	db_review.user = user
 	db_review.book = book
+	db_review.review_date = datetime.today()
 	db.add(db_review)
 	db.commit()
 	db.refresh(db_review)

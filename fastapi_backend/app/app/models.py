@@ -166,6 +166,7 @@ class Review(Base):
 	rating = Column(Integer, index=True)
 	comment = Column(String, index=True)
 	edited = Column(Boolean, default=False, index=True)
+	review_date = Column(Date, index=True)
 
 	user_id = Column(Integer, ForeignKey("users.id"))
 	user = relationship("User", back_populates="reviews")

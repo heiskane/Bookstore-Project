@@ -1,6 +1,7 @@
 # FastAPI
 
-## Docker-Compose Deployment
+## Deployment
+### Docker-Compose Deployment
 
 Make sure right docker-compose version is installed
 ```bash
@@ -24,7 +25,7 @@ sudo docker-compose up -d
 ```
 
 
-## Uvicorn deployment (Development)
+### Uvicorn deployment (Deprecated)
 ```bash
 git clone https://github.com/heiskane/Bookstore-Project.git
 cd Bookstore-Project/fastapi_backend
@@ -35,7 +36,7 @@ python3 -m uvicorn app.main:app --reload
 firefox http://localhost:8000/docs
 ```
 
-## Docker deployment
+### Docker deployment (Deprecated)
 ```bash
 git clone https://github.com/heiskane/Bookstore-Project.git
 cd Bookstore-Project/fastapi_backend
@@ -51,3 +52,14 @@ Api documentation can be found at http://localhost:8000/docs
 * [Paypal Integration](paypal_integration.md)
 * [File Upload/Download](files.md)
 * [Images](images.md)
+
+
+## Database Migrations
+
+Database migrations are done using alembic
+
+```bash
+alembic revision --autogenerate -m 'Add columb to blaa'
+```
+
+After this the docker-compose deployment will run `alembic upgrade head` to upgrade the database
