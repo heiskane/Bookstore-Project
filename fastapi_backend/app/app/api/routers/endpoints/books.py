@@ -44,7 +44,7 @@ def read_books(
     return crud.get_books(db=db, skip=skip, limit=limit)
 
 
-@router.get("/books/{book_id}", response_model=schemas.Book)
+@router.get("/books/{book_id}/", response_model=schemas.Book)
 def read_book(book_id: int, db: Session = Depends(deps.get_db)) -> Any:
     db_book = crud.get_book(db=db, book_id=book_id)
     if not db_book:

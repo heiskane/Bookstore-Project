@@ -1,5 +1,6 @@
 from datetime import timedelta
 from typing import Any
+from typing import Optional
 
 from fastapi import APIRouter
 from fastapi import Depends
@@ -8,6 +9,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app import crud
+from app import models
 from app import schemas
 from app.api import deps
 from app.core import security
@@ -16,12 +18,14 @@ from app.core.config import settings
 router = APIRouter()
 
 # Maybe put this somewhere else
-def authenticate_user(db: Session, username: str, password: str) -> Any:
+def authenticate_user(
+    db: Session, username: str, password: str
+) -> Optional[models.User]:
     db_user = crud.get_user_by_name(db=db, username=username)
     if not db_user:
-        return False
+        return None
     if not security.verify_password(password, db_user.password_hash):
-        return False
+        return None
     return db_user
 
 

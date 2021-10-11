@@ -3,11 +3,10 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import models
 from app.api.routers.api import api_router
-from app.database import engine
 
-models.Base.metadata.create_all(bind=engine, checkfirst=True)
+# Tables should be created with alembic instead of here
+# models.Base.metadata.create_all(bind=engine, checkfirst=True)
 
 description = """
 

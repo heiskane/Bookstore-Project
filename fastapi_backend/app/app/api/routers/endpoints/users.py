@@ -42,6 +42,6 @@ def read_users(
     return crud.get_users(db=db, skip=skip, limit=limit)
 
 
-@router.get("/user/{username}", response_model=schemas.User)
+@router.get("/users/{username}", response_model=schemas.User)
 def read_user(username: str, db: Session = Depends(deps.get_db)) -> Any:
     return crud.get_user_by_name(db=db, username=username)
