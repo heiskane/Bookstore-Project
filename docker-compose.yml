@@ -8,6 +8,7 @@ services:
       - 8000:80
     env_file:
       - .env
+    tty: true # GitHub workflow fix
     # Dev volume
     #volumes:
     #  - ./fastapi_backend/app:/app
