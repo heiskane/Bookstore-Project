@@ -1,15 +1,13 @@
 from fastapi import APIRouter
 
-from app.api.routers.endpoints import (
-    dev,
-    checkout,
-    books,
-    authors,
-    reviews,
-    users,
-    orders,
-    login,
-)
+from app.api.routers.endpoints import authors
+from app.api.routers.endpoints import books
+from app.api.routers.endpoints import checkout
+from app.api.routers.endpoints import dev
+from app.api.routers.endpoints import login
+from app.api.routers.endpoints import orders
+from app.api.routers.endpoints import reviews
+from app.api.routers.endpoints import users
 
 api_router = APIRouter()
 api_router.include_router(dev.router, tags=["dev"])

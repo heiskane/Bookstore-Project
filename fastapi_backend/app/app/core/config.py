@@ -1,5 +1,11 @@
-from typing import Optional, Dict, Any
-from pydantic import BaseSettings, PostgresDsn, validator
+from typing import Any
+from typing import Dict
+from typing import Optional
+
+from pydantic import BaseSettings
+from pydantic import PostgresDsn
+from pydantic import validator
+
 
 # https://pydantic-docs.helpmanual.io/usage/settings/
 # https://github.com/tiangolo/full-stack-fastapi-postgresql/blob/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app/app/core/config.py

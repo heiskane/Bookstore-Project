@@ -1,17 +1,18 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import func
-from passlib.context import CryptContext
 from datetime import datetime
-
 from typing import List
+from typing import Optional
 
-from . import models, schemas
+from passlib.context import CryptContext  # type: ignore[import]
+from sqlalchemy import func
+from sqlalchemy.orm import Session
 
+from . import models
+from . import schemas
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated=["auto"])
 
 
-def get_user_by_name(db: Session, username: str):
+def get_user_by_name(db: Session, username: str) -> Optional[models.User]:
     return (
         db.query(models.User)
         .filter(func.lower(models.User.username) == username.lower())
@@ -19,11 +20,11 @@ def get_user_by_name(db: Session, username: str):
     )
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
+def get_users(db: Session, skip: int = 0, limit: int = 100) -> List[models.User]:
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
-def create_user(db: Session, user: schemas.UserCreate):
+def create_user(db: Session, user: schemas.UserCreate) -> models.User:
     password_hash = pwd_context.hash(user.password)
     db_user = models.User(
         username=user.username,
@@ -38,19 +39,19 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-def get_author(db: Session, author_id: int):
+def get_author(db: Session, author_id: int) -> Optional[models.Author]:
     return db.query(models.Author).filter(models.Author.id == author_id).first()
 
 
-def get_genre(db: Session, genre_id: int):
+def get_genre(db: Session, genre_id: int) -> Optional[models.Genre]:
     return db.query(models.Genre).filter(models.Genre.id == genre_id).first()
 
 
-def get_genres(db: Session, skip: int = 0, limit: int = 100):
+def get_genres(db: Session, skip: int = 0, limit: int = 100) -> List[models.Genre]:
     return db.query(models.Genre).offset(skip).limit(limit).all()
 
 
-def get_genre_by_name(db: Session, name: str):
+def get_genre_by_name(db: Session, name: str) -> Optional[models.Genre]:
     return (
         db.query(models.Genre)
         .filter(func.lower(models.Genre.name) == name.lower())
@@ -58,13 +59,13 @@ def get_genre_by_name(db: Session, name: str):
     )
 
 
-def delete_genre(db: Session, genre: models.Genre):
+def delete_genre(db: Session, genre: models.Genre) -> None:
     db.delete(genre)
     db.commit()
     return
 
 
-def create_genre(db: Session, genre: schemas.GenreCreate):
+def create_genre(db: Session, genre: schemas.GenreCreate) -> models.Genre:
     db_genre = models.Genre(**genre.dict())
     db.add(db_genre)
     db.commit()
@@ -72,15 +73,17 @@ def create_genre(db: Session, genre: schemas.GenreCreate):
     return db_genre
 
 
-def create_genres_if_not_exists(db: Session, genres: List[str]):
+def create_genres_if_not_exists(
+    db: Session, genres: List[schemas.GenreCreate]
+) -> List[models.Genre]:
     # Get existing genres and create the new ones
     db_genres = []
-    for genre_name in genres:
-        db_genre = get_genre_by_name(db=db, name=genre_name)
+    for genre in genres:
+        db_genre = get_genre_by_name(db=db, name=genre.name)
 
         if not db_genre:
             db_genres.append(
-                create_genre(db=db, genre=schemas.GenreCreate(name=genre_name))
+                create_genre(db=db, genre=schemas.GenreCreate(name=genre.name))
             )
             continue
 
@@ -89,11 +92,11 @@ def create_genres_if_not_exists(db: Session, genres: List[str]):
     return db_genres
 
 
-def get_authors(db: Session, skip: int = 0, limit: int = 100):
+def get_authors(db: Session, skip: int = 0, limit: int = 100) -> List[models.Author]:
     return db.query(models.Author).offset(skip).limit(limit).all()
 
 
-def get_author_by_name(db: Session, name: str):
+def get_author_by_name(db: Session, name: str) -> Optional[models.Author]:
     return (
         db.query(models.Author)
         .filter(func.lower(models.Author.name) == name.lower())
@@ -101,7 +104,7 @@ def get_author_by_name(db: Session, name: str):
     )
 
 
-def create_author(db: Session, author: schemas.AuthorCreate):
+def create_author(db: Session, author: schemas.AuthorCreate) -> models.Author:
     db_author = get_author_by_name(db=db, name=author.name)
     if not db_author:
         db_author = models.Author(**author.dict())
@@ -112,13 +115,15 @@ def create_author(db: Session, author: schemas.AuthorCreate):
 
 
 # https://stackoverflow.com/questions/26643727/python-sqlalchemy-deleting-with-the-session-object
-def delete_author(db: Session, author: models.Author):
+def delete_author(db: Session, author: models.Author) -> None:
     db.delete(author)
     db.commit()
     return
 
 
-def create_authors_if_not_exists(db: Session, authors: List[str]):
+def create_authors_if_not_exists(
+    db: Session, authors: List[str]
+) -> List[models.Author]:
     db_authors = []
     for author_name in authors:
         db_author = get_author_by_name(db=db, name=author_name)
@@ -134,7 +139,7 @@ def create_authors_if_not_exists(db: Session, authors: List[str]):
     return db_authors
 
 
-def get_books(db: Session, skip: int = 0, limit: int = 100):
+def get_books(db: Session, skip: int = 0, limit: int = 100) -> List[models.Book]:
     # Maybe call skip 'page' and set offset as page * limit
     # or let frontend decide pagesize
     # Or rename 'skip' and 'limit' to 'page' and 'page_size'
@@ -142,11 +147,11 @@ def get_books(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Book).offset(skip).limit(limit).all()
 
 
-def get_book(db: Session, book_id: int):
+def get_book(db: Session, book_id: int) -> Optional[models.Book]:
     return db.query(models.Book).filter(models.Book.id == book_id).first()
 
 
-def get_book_by_title(db: Session, title: str):
+def get_book_by_title(db: Session, title: str) -> Optional[models.Book]:
     return (
         db.query(models.Book)
         .filter(func.lower(models.Book.title) == title.lower())
@@ -154,14 +159,16 @@ def get_book_by_title(db: Session, title: str):
     )
 
 
-def delete_book(db: Session, book: models.Book):
+def delete_book(db: Session, book: models.Book) -> None:
     db.delete(book)
     db.commit()
     return
 
 
 # https://stackoverflow.com/questions/63143731/update-sqlalchemy-orm-existing-model-from-posted-pydantic-model-in-fastapi
-def update_book(db: Session, book: models.Book, updated_book: schemas.BookUpdate):
+def update_book(
+    db: Session, book: models.Book, updated_book: schemas.BookUpdate
+) -> models.Book:
     for var, value in vars(updated_book).items():
         setattr(book, var, value) if value else None
 
@@ -171,15 +178,24 @@ def update_book(db: Session, book: models.Book, updated_book: schemas.BookUpdate
     return book
 
 
-def create_book(db: Session, book: schemas.BookCreate, authors: List[str]):
+def create_book(
+    db: Session,
+    book: schemas.BookCreate,
+    authors: List[str],
+    genres: List[schemas.GenreCreate],
+) -> models.Book:
 
     # Get existing genres and create the new ones
-    db_genres = create_genres_if_not_exists(db=db, genres=book.genres)
-    book.genres = db_genres
+    db_genres = create_genres_if_not_exists(db=db, genres=genres)
 
     db_authors = create_authors_if_not_exists(db=db, authors=authors)
 
-    db_book = models.Book(**book.dict(), authors=db_authors)
+    db_book = models.Book(**book.dict())
+
+    # MyPy doesnt Like this for some reason
+    # Probably just lack of support for orm stuff
+    db_book.genres = db_genres  # type: ignore[assignment]
+    db_book.authors = db_authors  # type: ignore[assignment]
 
     db.add(db_book)
     db.commit()
@@ -188,8 +204,8 @@ def create_book(db: Session, book: schemas.BookCreate, authors: List[str]):
 
 
 def create_review(
-    db: Session, review: schemas.Review, user: models.User, book: models.Book
-):
+    db: Session, review: schemas.ReviewCreate, user: models.User, book: models.Book
+) -> models.Review:
     db_review = models.Review(**review.dict())
     db_review.user = user
     db_review.book = book
@@ -200,11 +216,13 @@ def create_review(
     return db_review
 
 
-def get_review(db: Session, review_id: int):
+def get_review(db: Session, review_id: int) -> Optional[models.Review]:
     return db.query(models.Review).filter(models.Review.id == review_id).first()
 
 
-def get_book_review_by_user(db: Session, book: models.Book, user: models.User):
+def get_book_review_by_user(
+    db: Session, book: models.Book, user: models.User
+) -> Optional[models.Review]:
     return (
         db.query(models.Review)
         .filter(models.Review.user == user, models.Review.book == book)
@@ -214,7 +232,7 @@ def get_book_review_by_user(db: Session, book: models.Book, user: models.User):
 
 def update_review(
     db: Session, review: models.Review, updated_review: schemas.ReviewCreate
-):
+) -> models.Review:
     for var, value in vars(updated_review).items():
         setattr(review, var, value) if value else None
 
@@ -225,7 +243,7 @@ def update_review(
     return review
 
 
-def delete_review(db: Session, review: models.Review):
+def delete_review(db: Session, review: models.Review) -> None:
     db.delete(review)
     db.commit()
     return
@@ -236,11 +254,11 @@ def create_order_record(
     order: schemas.OrderCreate,
     client: models.User,
     ordered_books: List[models.Book],
-):
+) -> models.Order:
 
     db_order = models.Order(**order.dict())
     db_order.client = client
-    db_order.ordered_books = ordered_books
+    db_order.ordered_books = ordered_books  # type: ignore[assignment]
 
     db.add(db_order)
     db.commit()
@@ -249,5 +267,5 @@ def create_order_record(
     return db_order
 
 
-def get_orders(db: Session, skip: int = 0, limit: int = 100):
+def get_orders(db: Session, skip: int = 0, limit: int = 100) -> List[models.Order]:
     return db.query(models.Order).offset(skip).limit(limit).all()

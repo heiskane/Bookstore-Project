@@ -1,8 +1,10 @@
+from typing import Any
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routers.api import api_router
 from app import models
+from app.api.routers.api import api_router
 from app.database import engine
 
 models.Base.metadata.create_all(bind=engine, checkfirst=True)
@@ -25,7 +27,7 @@ origins = [
 # https://stackoverflow.com/questions/60680870/cors-issues-when-running-a-dockerised-fastapi-application
 # for some reason without an endpoint before CORS the cors fails in docker-compose
 @app.get("/")
-def health_check():
+def health_check() -> Any:
     return {"detail": "I am aliiiiiive"}
 
 

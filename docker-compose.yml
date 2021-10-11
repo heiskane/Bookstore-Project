@@ -9,8 +9,8 @@ services:
     env_file:
       - .env
     # Dev volume
-    #volumes:
-    #  - ./fastapi_backend/app:/app
+    volumes:
+      - ./fastapi_backend/app:/app
     depends_on:
       - db
 

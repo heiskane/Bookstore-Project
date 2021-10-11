@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from typing import Any
 
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
+from sqlalchemy.orm import Session
 
 from app import crud
 from app import schemas
@@ -15,7 +18,7 @@ def update_review(
     updated_review: schemas.ReviewCreate,
     curr_user: schemas.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
-):
+) -> Any:
     db_review = crud.get_review(db=db, review_id=review_id)
     if not db_review:
         raise HTTPException(status_code=404, detail="Review not found")
@@ -27,6 +30,10 @@ def update_review(
 
 
 @router.delete("/reviews/{review_id}/")
-def delete_review(book_id: int, review_id: int, db: Session = Depends(deps.get_db)):
+def delete_review(
+    book_id: int, review_id: int, db: Session = Depends(deps.get_db)
+) -> None:
     review = crud.get_review(db=db, review_id=review_id)
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
     return crud.delete_review(db=db, review=review)

@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Any
+from typing import List
+
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
-from typing import List
-
 from app import crud
+from app import models
 from app import schemas
 from app.api import deps
 
@@ -13,8 +17,11 @@ router = APIRouter()
 
 @router.post("/books/", response_model=schemas.Book)
 def create_book(
-    authors: List[str], book: schemas.BookCreate, db: Session = Depends(deps.get_db)
-):
+    authors: List[str],
+    genres: List[schemas.GenreCreate],
+    book: schemas.BookCreate,
+    db: Session = Depends(deps.get_db),
+) -> Any:
     db_book = crud.get_book_by_title(db, title=book.title)
     if db_book:
         raise HTTPException(
@@ -27,16 +34,18 @@ def create_book(
     # 	raise HTTPException(status_code=400, detail='Wrong filetype for image (Has to be PNG)')
     # book.image = image_file
 
-    return crud.create_book(db=db, book=book, authors=authors)
+    return crud.create_book(db=db, book=book, genres=genres, authors=authors)
 
 
 @router.get("/books/", response_model=List[schemas.Book])
-def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
+def read_books(
+    skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)
+) -> Any:
     return crud.get_books(db=db, skip=skip, limit=limit)
 
 
 @router.get("/books/{book_id}", response_model=schemas.Book)
-def read_book(book_id: int, db: Session = Depends(deps.get_db)):
+def read_book(book_id: int, db: Session = Depends(deps.get_db)) -> Any:
     db_book = crud.get_book(db=db, book_id=book_id)
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -47,7 +56,7 @@ def read_book(book_id: int, db: Session = Depends(deps.get_db)):
 @router.patch("/books/{book_id}/", response_model=schemas.Book)
 def update_book(
     book_id: int, updated_book: schemas.BookUpdate, db: Session = Depends(deps.get_db)
-):
+) -> Any:
     db_book = crud.get_book(db=db, book_id=book_id)
     if not db_book:
         raise HTTPException(status_code=404, detail="Books not found")
@@ -56,7 +65,7 @@ def update_book(
 
 
 @router.delete("/books/{book_id}/")
-def delete_book(book_id: int, db: Session = Depends(deps.get_db)):
+def delete_book(book_id: int, db: Session = Depends(deps.get_db)) -> Any:
     book = crud.get_book(db=db, book_id=book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -66,12 +75,15 @@ def delete_book(book_id: int, db: Session = Depends(deps.get_db)):
 @router.get("/books/{book_id}/download/")
 def download_book(
     book_id: int,
-    curr_user: schemas.User = Depends(deps.get_current_user_or_none),
+    curr_user: models.User = Depends(deps.get_current_user_or_none),
     ordered_books: List = Depends(deps.get_ordered_books_token),
     db: Session = Depends(deps.get_db),
-):
+) -> Response:
 
     book = crud.get_book(db=db, book_id=book_id)
+
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
 
     headers = {
         "Content-Disposition": f"attachment; filename={book.title}.pdf",
@@ -86,7 +98,7 @@ def download_book(
         raise HTTPException(status_code=403, detail="Unauthorized")
 
     if curr_user and not curr_user.is_admin:
-        if book not in curr_user.books:
+        if book not in curr_user.books:  # type: ignore[operator]
             raise HTTPException(status_code=403, detail="You do not own this book")
 
     if ordered_books:
@@ -97,13 +109,17 @@ def download_book(
 
 
 @router.get("/books/{book_id}/image/")
-def get_book_image(book_id: int, db: Session = Depends(deps.get_db)):
+def get_book_image(book_id: int, db: Session = Depends(deps.get_db)) -> Response:
     book = crud.get_book(db=db, book_id=book_id)
+
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+
     return Response(book.image, media_type="image/png")
 
 
 @router.get("/books/{book_id}/reviews/", response_model=List[schemas.Review])
-def read_reviews(book_id: int, db: Session = Depends(deps.get_db)):
+def read_reviews(book_id: int, db: Session = Depends(deps.get_db)) -> Any:
     book = crud.get_book(db=db, book_id=book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -115,9 +131,9 @@ def read_reviews(book_id: int, db: Session = Depends(deps.get_db)):
 def review_book(
     book_id: int,
     review: schemas.ReviewCreate,
-    curr_user: schemas.User = Depends(deps.get_current_user),
+    curr_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
-):
+) -> Any:
 
     book = crud.get_book(db=db, book_id=book_id)
     if not book:

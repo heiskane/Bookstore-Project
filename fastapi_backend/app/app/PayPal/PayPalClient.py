@@ -1,8 +1,12 @@
-from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
-from dotenv import load_dotenv
-from os import getenv
-
 import sys
+from os import getenv
+from typing import Any
+from typing import Dict
+from typing import List
+
+from dotenv import load_dotenv
+from paypalcheckoutsdk.core import PayPalHttpClient
+from paypalcheckoutsdk.core import SandboxEnvironment
 
 load_dotenv()
 
@@ -11,7 +15,7 @@ CLIENT_SECRET = getenv("PAYPAL-SANDBOX-CLIENT-SECRET")
 
 # https://developer.paypal.com/docs/checkout/reference/server-integration/setup-sdk/
 class PayPalClient:
-    def __init__(self):
+    def __init__(self) -> None:
         self.client_id = CLIENT_ID
         self.client_secret = CLIENT_SECRET
 
@@ -27,7 +31,7 @@ class PayPalClient:
 			credentials have access. """
         self.client = PayPalHttpClient(self.environment)
 
-    def object_to_json(self, json_data):
+    def object_to_json(self, json_data: str) -> Dict[str, Any]:
         """
         Function to print all json data in an organized readable manner
         """
@@ -49,8 +53,8 @@ class PayPalClient:
             )
         return result
 
-    def array_to_json_array(self, json_array):
-        result = []
+    def array_to_json_array(self, json_array: List[Any]) -> List[str]:
+        result: List[str] = []
         if isinstance(json_array, list):
             for item in json_array:
                 result.append(
@@ -62,5 +66,5 @@ class PayPalClient:
                 )
         return result
 
-    def is_primittive(self, data):
+    def is_primittive(self, data: str) -> bool:
         return isinstance(data, str) or isinstance(data, str) or isinstance(data, int)

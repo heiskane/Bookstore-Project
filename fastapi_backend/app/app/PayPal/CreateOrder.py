@@ -1,9 +1,14 @@
 # 1. Import the PayPal SDK client that was created in `Set up Server-Side SDK`.
-from paypalcheckoutsdk.orders import OrdersCreateRequest
+from decimal import Decimal
+from typing import Any
+from typing import Dict
 from typing import List
+
+from paypalcheckoutsdk.orders import OrdersCreateRequest
 
 from ..models import Book
 from .PayPalClient import PayPalClient
+
 
 # https://developer.paypal.com/docs/business/checkout/server-side-api-calls/create-order/
 class CreateOrder(PayPalClient):
@@ -12,7 +17,7 @@ class CreateOrder(PayPalClient):
     """This is the sample function to create an order. It uses the
     JSON body returned by buildRequestBody() to create an order."""
 
-    def create_order(self, books: List[Book], debug=False):
+    def create_order(self, books: List[Book], debug: bool = False) -> str:
         request = OrdersCreateRequest()
         request.prefer("return=representation")
         # 3. Call PayPal to set up a transaction
@@ -41,10 +46,10 @@ class CreateOrder(PayPalClient):
 		request body to "CAPTURE" for capture intent flow."""
 
     @staticmethod
-    def build_request_body(books: List[Book]):
+    def build_request_body(books: List[Book]) -> Dict[str, Any]:
         """Method to create body with CAPTURE intent"""
         books_json = []
-        total_price = 0
+        total_price = Decimal(0)
         for book in books:
             total_price += book.price
             books_json.append(
@@ -83,9 +88,3 @@ class CreateOrder(PayPalClient):
                 }
             ],
         }
-
-
-"""This is the driver function that invokes the createOrder function to create
-	 a sample order."""
-if __name__ == "__main__":
-    CreateOrder().create_order(debug=True)

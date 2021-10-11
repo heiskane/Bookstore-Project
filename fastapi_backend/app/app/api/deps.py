@@ -1,14 +1,18 @@
 from typing import Generator
+from typing import Optional
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends
+from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError  # type: ignore[import]
+from jose import jwt
 from sqlalchemy.orm import Session
-from jose import JWTError, jwt
 
-from app.database import SessionLocal
-from app.core.config import settings
 from app import crud
+from app import models
 from app import schemas
+from app.core.config import settings
+from app.database import SessionLocal
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
@@ -25,7 +29,7 @@ def get_db() -> Generator:
 # https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
 async def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
-):
+) -> models.User:
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
@@ -50,7 +54,7 @@ async def get_current_user(
 # https://stackoverflow.com/questions/66254024/fastapi-optional-oauth2-authentication
 async def get_current_user_or_none(
     db: Session = Depends(get_db), token: str = Depends(optional_oauth2_scheme)
-):
+) -> Optional[models.User]:
     if not token:
         return None
     try:
@@ -63,11 +67,13 @@ async def get_current_user_or_none(
         token_data = schemas.TokenData(username=username)
     except JWTError:
         return None
-    user = crud.get_user_by_name(db=db, username=token_data.username)
+    user = crud.get_user_by_name(db=db, username=token_data.username)  # type: ignore[arg-type]
     return user
 
 
-def get_ordered_books_token(token: str = Depends(optional_oauth2_scheme)):
+def get_ordered_books_token(
+    token: str = Depends(optional_oauth2_scheme),
+) -> Optional[str]:
     if not token:
         return None
 
@@ -87,8 +93,8 @@ def get_ordered_books_token(token: str = Depends(optional_oauth2_scheme)):
 def require_admin(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
-    user=Depends(get_current_user),
-):
+    user: models.User = Depends(get_current_user),
+) -> Optional[models.User]:
 
     if not user.is_admin:
         raise HTTPException(status_code=401, detail="Admin privileges required")

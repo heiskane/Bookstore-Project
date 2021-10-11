@@ -1,7 +1,10 @@
-from typing import List
 from datetime import timedelta
+from typing import Any
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app import crud
@@ -14,7 +17,7 @@ router = APIRouter()
 
 
 @router.post("/users/", response_model=schemas.Token)
-def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
+def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)) -> Any:
     db_user = crud.get_user_by_name(db=db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username taken")
@@ -33,10 +36,12 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
 
 
 @router.get("/users/", response_model=List[schemas.User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
+def read_users(
+    skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)
+) -> Any:
     return crud.get_users(db=db, skip=skip, limit=limit)
 
 
 @router.get("/user/{username}", response_model=schemas.User)
-def read_user(username: str, db: Session = Depends(deps.get_db)):
+def read_user(username: str, db: Session = Depends(deps.get_db)) -> Any:
     return crud.get_user_by_name(db=db, username=username)

@@ -1,6 +1,8 @@
 # 1. Import the PayPal SDK client created in `Set up Server-Side SDK` section.
-from .PayPalClient import PayPalClient
 from paypalcheckoutsdk.orders import OrdersCaptureRequest
+
+from .PayPalClient import PayPalClient
+
 
 # https://developer.paypal.com/docs/business/checkout/server-side-api-calls/capture-order/
 class CaptureOrder(PayPalClient):
@@ -9,7 +11,7 @@ class CaptureOrder(PayPalClient):
     """this sample function performs payment capture on the order.
     Approved order ID should be passed as an argument to this function"""
 
-    def capture_order(self, order_id, debug=False):
+    def capture_order(self, order_id: str, debug: bool = False) -> str:
         """Method to capture order using order_id"""
         request = OrdersCaptureRequest(order_id)
         # 3. Call PayPal to capture an order

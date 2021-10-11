@@ -1,6 +1,7 @@
 # 1. Import the PayPal SDK client that was created in `Set up Server-Side SDK`.
-from .PayPalClient import PayPalClient
 from paypalcheckoutsdk.orders import OrdersGetRequest
+
+from .PayPalClient import PayPalClient
 
 
 class GetOrder(PayPalClient):
@@ -8,7 +9,7 @@ class GetOrder(PayPalClient):
     # 2. Set up your server to receive a call from the client
     """You can use this function to retrieve an order by passing order ID as an argument"""
 
-    def get_order(self, order_id):
+    def get_order(self, order_id: str) -> str:
         """Method to get order"""
         request = OrdersGetRequest(order_id)
         # 3. Call PayPal to get the transaction
