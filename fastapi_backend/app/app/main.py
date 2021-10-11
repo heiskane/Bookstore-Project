@@ -19,22 +19,23 @@ app = FastAPI(description=description)
 # Allowed origins required to allow react to communicate from "diffrent origin"
 # Will have to chech if a subdomain is "diffrent origin"
 origins = [
-	"*",
+    "*",
 ]
 
 # https://stackoverflow.com/questions/60680870/cors-issues-when-running-a-dockerised-fastapi-application
 # for some reason without an endpoint before CORS the cors fails in docker-compose
 @app.get("/")
 def health_check():
-	return {"detail": "I am aliiiiiive"}
+    return {"detail": "I am aliiiiiive"}
+
 
 app.add_middleware(
-	CORSMiddleware,
-	allow_origins=origins,
-	allow_credentials=True,
-	allow_methods=["*"],
-	allow_headers=["*"],
-	expose_headers=["Content-Disposition"] # Allow frontend to get filename
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["Content-Disposition"],  # Allow frontend to get filename
 )
 
 app.include_router(api_router)

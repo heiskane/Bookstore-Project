@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
 from app.api.routers.endpoints import (
-	dev,
-	checkout,
-	books,
-	authors,
-	reviews,
-	users,
-	orders,
-	login
+    dev,
+    checkout,
+    books,
+    authors,
+    reviews,
+    users,
+    orders,
+    login,
 )
 
 api_router = APIRouter()

@@ -12,4 +12,4 @@ router = APIRouter()
 
 @router.get("/orders/", response_model=List[schemas.Order])
 def read_orders(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db)):
-	return crud.get_orders(db=db, skip=skip, limit=limit)
+    return crud.get_orders(db=db, skip=skip, limit=limit)
