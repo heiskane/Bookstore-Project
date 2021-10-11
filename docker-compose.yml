@@ -8,6 +8,9 @@ services:
       - 8000:80
     env_file:
       - .env
+    # Dev volume
+    #volumes:
+    #  - ./fastapi_backend/app:/app
     depends_on:
       - db
 

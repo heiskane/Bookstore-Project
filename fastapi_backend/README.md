@@ -1,6 +1,14 @@
 # FastAPI
 
+## Something to read
+
+* [Paypal Integration](stuff_to_read/paypal_integration.md)
+* [File Upload/Download](stuff_to_read/files.md)
+* [Images](stuff_to_read/images.md)
+
+
 ## Deployment
+
 ### Docker-Compose Deployment
 
 Make sure right docker-compose version is installed
@@ -24,34 +32,15 @@ sudo docker-compose down
 sudo docker-compose up -d
 ```
 
+## Testing
 
-### Uvicorn deployment (Deprecated)
-```bash
-git clone https://github.com/heiskane/Bookstore-Project.git
-cd Bookstore-Project/fastapi_backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python3 -m uvicorn app.main:app --reload
-firefox http://localhost:8000/docs
-```
+Currently there is very limited tests but to run run them make sure you have the backend running and use the following command
 
-### Docker deployment (Deprecated)
 ```bash
-git clone https://github.com/heiskane/Bookstore-Project.git
-cd Bookstore-Project/fastapi_backend
-docker build -t bookstore_api .
-docker run -d --name bookstore_backend -p 8000:80 bookstore_api
-firefox http://localhost:8000/docs
+docker-compose exec api /app/tests-start.sh
 ```
 
 Api documentation can be found at http://localhost:8000/docs
-
-### Something to read
-
-* [Paypal Integration](stuff_to_read/paypal_integration.md)
-* [File Upload/Download](stuff_to_read/files.md)
-* [Images](stuff_to_read/images.md)
 
 
 ## Database Migrations

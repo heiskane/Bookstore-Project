@@ -2,13 +2,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from starlette.config import environ
-
-# Set testing environment variable before importing from database.py
-environ["TESTING"] = "True"
-
-from ..app.database import Base
-from ..app.main import app, get_db
+from app.database import Base
+from app.main import app
+from app.api.deps import get_db
 
 # Not sure if i will have time to implement all proper tests
 
