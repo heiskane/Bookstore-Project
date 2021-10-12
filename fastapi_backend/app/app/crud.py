@@ -194,6 +194,7 @@ def create_book(
 
     # MyPy doesnt Like this for some reason
     # Probably just lack of support for orm stuff
+    # TODO: Fix bug when genres or authors has duplicates
     db_book.genres = db_genres  # type: ignore[assignment]
     db_book.authors = db_authors  # type: ignore[assignment]
 
