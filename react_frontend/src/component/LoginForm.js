@@ -6,7 +6,8 @@ import jwt from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { set_user, unset_user } from '../actions';
-
+import './LoginForm.css'
+import Button from '@mui/material/Button';
 // https://reactjs.org/docs/forms.html
 class LoginForm extends React.Component {
   constructor(props) {
@@ -43,23 +44,23 @@ class LoginForm extends React.Component {
     }), {
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
-    .then((response) => {
-      const { cookies } = this.props;
-      const jwt_token = response.data.access_token
-      cookies.set("jwt_token", jwt_token,
-        {
-          path: "/",
-          sameSite: 'strict' 
-        });
-      this.setState({ jwt_token: cookies.get("jwt_token") });
-      const user_token = jwt(jwt_token);
-      this.props.signIn(user_token);
-      this.setState({ redirect: '/'});
-    })
-    .catch(err => {
-      alert((err.response) ? JSON.stringify(err.response.data.detail) : "Login failed")
-      console.log(err)
-    })
+      .then((response) => {
+        const { cookies } = this.props;
+        const jwt_token = response.data.access_token
+        cookies.set("jwt_token", jwt_token,
+          {
+            path: "/",
+            sameSite: 'strict'
+          });
+        this.setState({ jwt_token: cookies.get("jwt_token") });
+        const user_token = jwt(jwt_token);
+        this.props.signIn(user_token);
+        this.setState({ redirect: '/' });
+      })
+      .catch(err => {
+        alert((err.response) ? JSON.stringify(err.response.data.detail) : "Login failed")
+        console.log(err)
+      })
     event.preventDefault();
   }
 
@@ -69,16 +70,22 @@ class LoginForm extends React.Component {
       return <Redirect to={this.state.redirectTo} />
     }
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
+      <form
+        className="loginForm"
+        onSubmit={this.handleSubmit}>
+        <label className="loginForm__lable">
           Username:
-          <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
+          <span>
+            <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
+          </span>
         </label>
-        <label>
+        <label className="loginForm__lable">
           Password:
-          <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
+          <span>
+            <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
+          </span>
         </label>
-        <input type="submit" value="Login" />
+        <Button type="submit" variant="contained">Login</Button>
       </form>
     )
   }
@@ -86,9 +93,9 @@ class LoginForm extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        signIn: (user_token) => dispatch(set_user(user_token))
-    }
+  return {
+    signIn: (user_token) => dispatch(set_user(user_token))
+  }
 };
 
 export default connect(null, mapDispatchToProps)(withCookies(LoginForm));

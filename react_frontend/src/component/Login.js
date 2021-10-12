@@ -1,21 +1,37 @@
 import React from 'react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import './Login.css';
+import Box from '@mui/material/Box';
 
 const Login = () => {
 
 
 
   return (
-    <div>
-      <div className="login">
+    <div className="login">
+      <Box
+        className="login__login"
+        sx={{
+          width: 300,
+          height: 300,
+
+        }}
+      >
         <h1>Login</h1>
         <LoginForm />
-      </div>
-      <div className="register">
+      </Box>
+      <Box
+        className="login__register"
+        sx={{
+          width: 300,
+          height: 300,
+
+        }}
+      >
         <h1>Register</h1>
         <RegisterForm />
-      </div>
+      </Box>
     </div>
   )
 }

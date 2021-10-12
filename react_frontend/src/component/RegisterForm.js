@@ -6,6 +6,8 @@ import jwt from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { set_user } from '../actions';
+import "./RegisterForm.css";
+import Button from '@mui/material/Button';
 
 // https://reactjs.org/docs/forms.html
 class RegisterForm extends React.Component {
@@ -42,24 +44,24 @@ class RegisterForm extends React.Component {
       email: this.state.email,
       password: this.state.password
     })
-    .then((response) => {
-      alert("User created successfully")
-      const { cookies } = this.props;
-      const jwt_token = response.data.access_token
-      cookies.set("jwt_token", jwt_token,
-        {
-          path: "/",
-          sameSite: 'strict' 
-        });
-      this.setState({ jwt_token: cookies.get("jwt_token") });
-      const user = jwt(jwt_token);
-      this.props.signIn(user);
-      this.setState({ redirect: '/'});
-    })
-    .catch(err => {
-      alert("Registeration failed")
-      alert(JSON.stringify(err.response.data.detail))
-    })
+      .then((response) => {
+        alert("User created successfully")
+        const { cookies } = this.props;
+        const jwt_token = response.data.access_token
+        cookies.set("jwt_token", jwt_token,
+          {
+            path: "/",
+            sameSite: 'strict'
+          });
+        this.setState({ jwt_token: cookies.get("jwt_token") });
+        const user = jwt(jwt_token);
+        this.props.signIn(user);
+        this.setState({ redirect: '/' });
+      })
+      .catch(err => {
+        alert("Registeration failed")
+        alert(JSON.stringify(err.response.data.detail))
+      })
     event.preventDefault();
   }
 
@@ -69,24 +71,32 @@ class RegisterForm extends React.Component {
       return <Redirect to={this.state.redirectTo} />
     }
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
+      <form
+        className="registerForm"
+        onSubmit={this.handleSubmit}>
+        <label className="registerForm__lable">
           Username:
-          <input 
-            type="text" name="username" value={this.state.username}
-            onChange={this.handleChange} />
+          <span>
+            <input
+              type="text" name="username" value={this.state.username}
+              onChange={this.handleChange} />
+          </span>
         </label>
-        <label>
+        <label className="registerForm__lable">
           Email:
-          <input type="email" name="email" value={this.state.email}
-          onChange={this.handleChange} />
+          <span>
+            <input type="email" name="email" value={this.state.email}
+              onChange={this.handleChange} />
+          </span>
         </label>
         <label>
           Password:
-          <input type="password" name="password" value={this.state.password}
-          onChange={this.handleChange} />
+          <span>
+            <input type="password" name="password" value={this.state.password}
+              onChange={this.handleChange} />
+          </span>
         </label>
-        <input type="submit" value="Login" />
+        <Button type="submit" variant="contained">Register</Button>
       </form>
     )
   }
@@ -95,9 +105,9 @@ class RegisterForm extends React.Component {
 
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        signIn: (user) => dispatch(set_user(user))
-    }
+  return {
+    signIn: (user) => dispatch(set_user(user))
+  }
 };
 
 export default connect(null, mapDispatchToProps)(withCookies(RegisterForm));
