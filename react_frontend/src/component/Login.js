@@ -15,7 +15,6 @@ const Login = () => {
         sx={{
           width: 300,
           height: 300,
-
         }}
       >
         <h1>Login</h1>
@@ -26,7 +25,6 @@ const Login = () => {
         sx={{
           width: 300,
           height: 300,
-
         }}
       >
         <h1>Register</h1>
