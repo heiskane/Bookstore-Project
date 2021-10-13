@@ -1619,10 +1619,10 @@
     "prop-types" "^15.7.2"
     "react-is" "^16.8.0 || ^17.0.0"
 
-"@mui/core@5.0.0-alpha.48":
-  "integrity" "sha512-H/QQwKsr2EqPAnP35DGDpWihk5BOFYGhO52rIHb3XKOfoUjDCrCHBy2kvr3dLWJDmJXr/QzYj3AX10n5XzlaMg=="
-  "resolved" "https://registry.npmjs.org/@mui/core/-/core-5.0.0-alpha.48.tgz"
-  "version" "5.0.0-alpha.48"
+"@mui/core@5.0.0-alpha.50":
+  "integrity" "sha512-szmmzbyAjEQku17IoEWs7t77n0Kr4zVnT5fREfMd+CnCA4YDifr68ccGJfWaeoGp5Zw/JmfKjQJXLY4GgT6i/g=="
+  "resolved" "https://registry.npmjs.org/@mui/core/-/core-5.0.0-alpha.50.tgz"
+  "version" "5.0.0-alpha.50"
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@emotion/is-prop-valid" "^1.1.0"
@@ -1631,14 +1631,21 @@
     "prop-types" "^15.7.2"
     "react-is" "^17.0.2"
 
-"@mui/material@^5.0.1":
-  "integrity" "sha512-+/JJzRcORUf5MiZnzuqsPFRgxm3/0CUi1wE97ZQ2y7r+EnDVsjJLcjAH9Q9GY3k9zkPIpYb9Hig/+HT6AGZRnQ=="
-  "resolved" "https://registry.npmjs.org/@mui/material/-/material-5.0.1.tgz"
-  "version" "5.0.1"
+"@mui/icons-material@^5.0.3":
+  "integrity" "sha512-Lktn+4GNnXdVrOCUUvNNvOD9VyrGazWBsJy0BQeQgBe/+IjFMdlcNrDEUIlGlA5ZXOq7Mr/Mv9Os02mgF65jiw=="
+  "resolved" "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.0.3.tgz"
+  "version" "5.0.3"
   dependencies:
     "@babel/runtime" "^7.15.4"
-    "@mui/core" "5.0.0-alpha.48"
-    "@mui/system" "^5.0.1"
+
+"@mui/material@^5.0.0-rc.0", "@mui/material@^5.0.3":
+  "integrity" "sha512-Qj2hwSi63qrYRJuHrUFdN83lCT6HXyLzpCniDTvK7NlqXCnpy4F3Gg0hRJTnO4hNqTTBV+SCOKTSbfuzHl/dnQ=="
+  "resolved" "https://registry.npmjs.org/@mui/material/-/material-5.0.3.tgz"
+  "version" "5.0.3"
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    "@mui/core" "5.0.0-alpha.50"
+    "@mui/system" "^5.0.3"
     "@mui/types" "^7.0.0"
     "@mui/utils" "^5.0.1"
     "@popperjs/core" "^2.4.4"
@@ -1668,10 +1675,10 @@
     "@emotion/cache" "^11.4.0"
     "prop-types" "^15.7.2"
 
-"@mui/system@^5.0.1":
-  "integrity" "sha512-pGNKUpjK5hm4apZAUZu7LugemBPoZnNvNNCI2miI/BXxqyx41mL9+iT9p6Qe9uDOh8Z6GUbLIzvOjSTP+ECRZw=="
-  "resolved" "https://registry.npmjs.org/@mui/system/-/system-5.0.1.tgz"
-  "version" "5.0.1"
+"@mui/system@^5.0.3":
+  "integrity" "sha512-pNkW9p6Dj/ch3YCKjvrXrBhKsAyJ1/l273Q0hh60hhTKHJXgKBVONQ8r7l1fFHtufI0NNz6UGMVJooIXg4JJtA=="
+  "resolved" "https://registry.npmjs.org/@mui/system/-/system-5.0.3.tgz"
+  "version" "5.0.3"
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@mui/private-theming" "^5.0.1"

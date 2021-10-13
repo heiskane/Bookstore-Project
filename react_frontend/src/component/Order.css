@@ -1,4 +1,10 @@
 .order__card {
   display: flex;
   flex-direction: row;
+  flex: 3;
+}
+
+.order__delete {
+  margin-left: 30px;
+  margin-top: 100px;
 }
