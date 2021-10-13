@@ -5,7 +5,7 @@ import Order from './Order'
 
 const ShoppingCart = () => {
     const orders = useSelector(state => state.shopping_cart);
-    //console.log("FROM SHOPPINGCART>>>" + shopping_cart)
+    // console.log("FROM SHOPPINGCART>>>" + orders)
 
     return (
         <div>

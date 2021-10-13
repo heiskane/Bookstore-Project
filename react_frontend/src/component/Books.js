@@ -17,13 +17,14 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function App() {
   const [books, setBooks] = React.useState(null);
- 
+
 
   React.useEffect(() => {
     const instance = axios.create();
     instance.get("/books/")
       .then((response) => {
         setBooks(response.data);
+        console.log(books)
       });
   }, []);
 
