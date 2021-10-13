@@ -19,7 +19,7 @@ const Header = () => {
 
   function handleLogout() {
     // https://stackoverflow.com/questions/54861709/cookies-removeabc-not-working-in-reactjs/55593030
-    removeCookie("jwt_token", { path: '/'});
+    removeCookie("jwt_token", { path: '/' });
     dispatch(unset_user());
   }
 
@@ -83,12 +83,15 @@ const Header = () => {
           <span className="header__optionLineTwo">&Oders</span>
         </div>
 
+        <Link to="/shoppingcart">
 
-        <div className="header__optionBasket">
-          <ShoppingBasket />
-          <span className="header__optionLineTwo header__basketCount">0</span>
-        </div>
+          <div className="header__optionBasket">
 
+            <ShoppingBasket />
+            <span className="header__optionLineTwo header__basketCount">0</span>
+
+          </div>
+        </Link>
       </div>
     </div>
   )
