@@ -6,37 +6,30 @@
   z-index: 1;
 }
 
-.book img {
-  max-height: 100%;
-  width: 100%;
-  object-fit: fill;
-  margin-bottom: 15px;
-  margin-left: 6px;
-  margin-right: 6px;
-  position: relative;
-  flex-basis: calc(33.33333% - 12px);
-}
-
 .book__info {
   margin-bottom: 5px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
+  margin-top: 20px;
 }
 
 .book__price {
   margin-top: 5px;
 }
 
-.book button {
+.book Button {
   display: block;
-  background-color: #df1111;
+  background-color: #18813b;
   border: 1px solid;
   margin-top: 10px;
-  border-color: #df1111;
+  border-color: #18813b;
   color: white;
   border-radius: 3px;
-  font-size: medium;
-  width: 70%;
-  margin-left: 34px;
+  font-size: x-small;
+  width: 100%;
+}
+
+.book__link {
+  text-decoration: none;
 }

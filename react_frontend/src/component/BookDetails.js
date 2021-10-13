@@ -3,10 +3,15 @@ import './BookDetails.css'
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import DownloadButton from "./DownloadButton";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
 
 export default function BookDetails() {
 
-  const [book, setBook] = React.useState(null); 
+  const [book, setBook] = React.useState(null);
   let { book_id } = useParams();
   const instance = axios.create();
 
@@ -26,7 +31,7 @@ export default function BookDetails() {
   }, []);
 
   if (!book) return null;
-  
+
   function BookRating(props) {
     const avg_rating = props.avg_rating;
     // Make nice looking starts or something here
@@ -59,10 +64,16 @@ export default function BookDetails() {
   }
 
   return (
-      <div className="book_details">
-        <img src={axios.defaults.baseURL + "/books/" + book_id + "/image/"} alt="Book image" />
+    <div className="book_details">
+      <Card>
+        <CardMedia
+          component="img"
+          height="340px"
+          image={axios.defaults.baseURL + "/books/" + book_id + "/image/"}
+          alt="Book cover"
+        />
         <h2>{book.title}</h2>
-        <BookRating avg_rating={book.avg_rating}/>
+        <BookRating avg_rating={book.avg_rating} />
         <BookAuthors authors={book.authors} />
         <BookGenres genres={book.genres} />
         <p>{book.description}</p>
@@ -70,8 +81,9 @@ export default function BookDetails() {
         <p>Language: {book.language}</p>
         <p>Publication Date: {book.publication_date}</p>
         <DownloadButton book_id={book.id} />
-      </div>
-   );
+      </Card>
+    </div>
+  );
 }
 
 
