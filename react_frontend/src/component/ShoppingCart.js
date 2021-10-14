@@ -8,6 +8,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Subtotal from './Subtotal';
 
 const bull = (
     <Box
@@ -32,21 +33,9 @@ const ShoppingCart = () => {
                     }
                 </div>
             </div>
-
-            <Card class="shoppingcart__right" sx={{ minWidth: 275 }}>
-                <CardContent>
-                    <Typography>
-                        Subtotal
-                    </Typography>
-                    <Typography>
-                        €
-                    </Typography>
-                </CardContent>
-                {/* checkout button */}
-                <CardActions>
-                    <Button size="small">Proceed to Checkout</Button>
-                </CardActions>
-            </Card>
+            <div class="shoppingcart__right">
+                <Subtotal />
+            </div>
         </div>
     )
 }

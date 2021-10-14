@@ -1,0 +1,9 @@
+.subtotal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.subtotal__checkout {
+  background-color: green;
+}
