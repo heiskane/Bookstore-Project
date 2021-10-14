@@ -22,12 +22,13 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+
 export default function Order({ order }) {
 
   console.log("Order>>>" + order)
   return (
 
-    <Card className="order__card" sx={{ display: 'flex', maxWidth: 500, marginBottom: 1 }} >
+    <Card className="order__card" sx={{ display: 'flex', maxWidth: 500, borderBottom: '1px solid grey' }} >
       <CardMedia
         className="order__cardMedia"
         component="img"
@@ -48,8 +49,11 @@ export default function Order({ order }) {
         </Typography>
       </CardContent>
 
-      <CardActions className="order__delete">
-        <Button size="small" variant="contained" startIcon={<DeleteIcon />}>
+      <CardActions className="order__delete" >
+        <Button
+          size="small"
+          variant="contained"
+          startIcon={<DeleteIcon />}>
           DELETE
         </Button>
       </CardActions>

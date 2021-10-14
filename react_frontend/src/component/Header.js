@@ -12,6 +12,7 @@ const Header = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
   const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
+  const shoppingcart = useSelector(state => state.shopping_cart);
 
   const handleAuthentication = () => {
 
@@ -83,13 +84,11 @@ const Header = () => {
           <span className="header__optionLineTwo">&Oders</span>
         </div>
 
-        <Link to="/shoppingcart">
-
+        <Link to="/shoppingcart" className="header__link">
           <div className="header__optionBasket">
 
             <ShoppingBasket />
-            <span className="header__optionLineTwo header__basketCount">0</span>
-
+            <span className="header__optionLineTwo header__basketCount">{shoppingcart.length}</span>
           </div>
         </Link>
       </div>

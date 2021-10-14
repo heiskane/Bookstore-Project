@@ -70,3 +70,7 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.header__link {
+  text-decoration: none;
+}
