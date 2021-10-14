@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import shoppingCart from '../reducers/shoppingCart';
+import BuyButton from './BuyButton';
 
 const Subtotal = () => {
     const shoppingcart = useSelector(state => state.shopping_cart);
@@ -30,8 +31,10 @@ const Subtotal = () => {
             </CardContent>
             {/* checkout button */}
             <CardActions>
-                <Button size="small" variant="contained" className="subtotal__checkout">Proceed to Checkout</Button>
+                <span>Safe Pay with</span>
+                <BuyButton />
             </CardActions>
+
         </Card>
 
     )
