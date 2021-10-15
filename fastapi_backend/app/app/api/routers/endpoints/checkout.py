@@ -53,12 +53,8 @@ def paypal_capture_order(
 
     if not curr_user:
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = security.create_access_token(
-            user={
-                "sub": "anonymous",
-                "ordered_book_ids": [book.id for book in ordered_books],
-            },
-            expires_delta=access_token_expires,
+        access_token = security.create_anon_buyer_token(
+            ordered_books, expires_delta=access_token_expires,
         )
         return {"access_token": access_token, "token_type": "bearer"}
 

@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
-import typer
-from typing import Optional, List
-from pydantic import BaseModel
-from datetime import date
-import requests
 import base64 as b64
+from datetime import date
+from typing import List
+from typing import Optional
+
+import requests
+import typer
+from pydantic import BaseModel
+
 
 def main(
     title: str = typer.Option(..., prompt=True),

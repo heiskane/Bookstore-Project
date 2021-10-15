@@ -49,7 +49,7 @@ class CreateOrder(PayPalClient):
     def build_request_body(books: List[Book]) -> Dict[str, Any]:
         """Method to create body with CAPTURE intent"""
         books_json = []
-        total_price = Decimal(0)
+        total_price = 0 # Use float
         for book in books:
             total_price += book.price
             books_json.append(

@@ -17,7 +17,7 @@ export default class BuyButton extends React.Component {
 							method: 'post',
 							headers: { 'Content-Type': 'application/json' },
 							body: JSON.stringify(
-								{ "book_ids": [8, 9, 1] } // Put book IDs here from shopping cart
+								{ "book_ids": [11, 12] } // Put book IDs here from shopping cart
 							)
 						}).then(function(res) {
 							return res.json();
@@ -35,7 +35,7 @@ export default class BuyButton extends React.Component {
 						}).then(function(orderData) {
 							console.log(orderData);
 						});
-					}}
+					}} // TODO: If user not logged in set jwt_token from response
 				/>
 			</PayPalScriptProvider>
 		);
