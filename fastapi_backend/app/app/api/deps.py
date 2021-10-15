@@ -6,8 +6,8 @@ from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError  # type: ignore[import]
 from jose import jwt
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from app import crud
 from app import models
@@ -30,7 +30,8 @@ def get_db() -> Generator:
 
 async def get_async_db() -> AsyncSession:
     async with async_session() as session:
-        yield session
+        async with session.begin():
+            yield session
 
 
 # https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/

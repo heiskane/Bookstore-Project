@@ -14,6 +14,4 @@ router = APIRouter()
 
 @router.get("/async_books/", response_model=List[schemas.Book])
 async def read_books(session: AsyncSession = Depends(deps.get_async_db)) -> Any:
-    books = await async_crud.get_all_books(session=session)
-    print("BOOKS:", books)
-    return books
+    return await async_crud.get_all_books(session=session)

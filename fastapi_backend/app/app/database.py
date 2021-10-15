@@ -7,7 +7,7 @@ from app.core.config import settings
 engine = create_engine(
     # Experiment with pool_size later
     settings.SQLALCHEMY_DATABASE_URI,
-    pool_size=100,
+    pool_size=50,
     max_overflow=0,
 )
 
