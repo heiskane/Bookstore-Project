@@ -1,5 +1,4 @@
 # 1. Import the PayPal SDK client that was created in `Set up Server-Side SDK`.
-from decimal import Decimal
 from typing import Any
 from typing import Dict
 from typing import List
@@ -49,7 +48,7 @@ class CreateOrder(PayPalClient):
     def build_request_body(books: List[Book]) -> Dict[str, Any]:
         """Method to create body with CAPTURE intent"""
         books_json = []
-        total_price = 0 # Use float
+        total_price = 0  # Use float
         for book in books:
             total_price += book.price
             books_json.append(

@@ -1,9 +1,10 @@
 from datetime import datetime
 from datetime import timedelta
+from typing import List
 
 from jose import jwt  # type: ignore[import]
 from passlib.context import CryptContext  # type: ignore[import]
-from typing import Dict, List
+
 from app import models
 from app.core.config import settings
 
@@ -39,7 +40,7 @@ def create_anon_buyer_token(books: List[models.Book], expires_delta: timedelta) 
     to_encode = {
         "exp": expire,
         "sub": "anonymous",
-        "ordered_book_ids": [ book.id for book in books ],
+        "ordered_book_ids": [book.id for book in books],
     }
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM

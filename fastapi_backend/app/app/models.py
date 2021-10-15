@@ -108,6 +108,8 @@ class Book(Base):
         "Order", secondary=ordered_books, back_populates="ordered_books"
     )
 
+    __mapper_args__ = {"eager_defaults": True}
+
 
 class Author(Base):
     __tablename__ = "authors"

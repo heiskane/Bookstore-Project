@@ -47,7 +47,7 @@ def test_find_user_by_name(client: TestClient) -> None:
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["username"] == "test_user"
-    assert data["is_active"] == True
+    assert data["is_active"]
 
 
 def test_list_users(client: TestClient) -> None:
