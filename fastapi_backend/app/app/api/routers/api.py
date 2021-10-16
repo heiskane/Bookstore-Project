@@ -8,6 +8,7 @@ from app.api.routers.endpoints import dev
 from app.api.routers.endpoints import genres
 from app.api.routers.endpoints import login
 from app.api.routers.endpoints import orders
+from app.api.routers.endpoints import profile
 from app.api.routers.endpoints import reviews
 from app.api.routers.endpoints import users
 
@@ -15,6 +16,7 @@ api_router = APIRouter()
 api_router.include_router(dev.router, tags=["dev"])
 api_router.include_router(login.router, tags=["login"])
 api_router.include_router(users.router, tags=["users"])
+api_router.include_router(profile.router, tags=["profile"])
 api_router.include_router(books.router, tags=["books"])
 api_router.include_router(async_books.router, tags=["async_books"])
 api_router.include_router(reviews.router, tags=["reviews"])

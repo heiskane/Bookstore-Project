@@ -30,7 +30,7 @@ def authenticate_user(
 
 
 @router.post("/login/", response_model=schemas.Token)
-async def login_user(
+def login_user(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)
 ) -> Any:
     user = authenticate_user(

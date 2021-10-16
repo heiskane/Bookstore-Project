@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app import crud
+from app import models
 from app import schemas
 from app.api import deps
 
@@ -16,7 +17,7 @@ router = APIRouter()
 def update_review(
     review_id: int,
     updated_review: schemas.ReviewCreate,
-    curr_user: schemas.User = Depends(deps.get_current_user),
+    curr_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
 ) -> Any:
     db_review = crud.get_review(db=db, review_id=review_id)
