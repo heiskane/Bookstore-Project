@@ -9,6 +9,7 @@ import BookDetails from './component/BookDetails'
 
 import axios from 'axios';
 import ShoppingCart from './component/ShoppingCart';
+import Orders from './component/Orders';
 
 // https://github.com/axios/axios#global-axios-defaults
 // Define baseURL for all api calls
@@ -45,6 +46,11 @@ function App() {
           <Route path="/shoppingcart">
             <Header />
             <ShoppingCart />
+          </Route>
+
+          <Route path="/orders">
+            <Header />
+            <Orders />
           </Route>
 
         </Switch>

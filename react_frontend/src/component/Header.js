@@ -7,6 +7,7 @@ import HLG_Books from '../photos/HLG_Books.png'
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { unset_user } from '../actions';
+import Orders from './Orders';
 
 const Header = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -40,7 +41,7 @@ const Header = () => {
     } else {
       return (
         <div className="header__nav">
-          <Link to="/">
+          <Link to="/" className="header__link">
             <div className="header__option">
               <span className="header__optionLineOne">
                 {"Hello " + user_token.sub}
@@ -48,7 +49,7 @@ const Header = () => {
               <span className="header__optionLineTwo">This will be you profile button</span>
             </div>
           </Link>
-          <Link to="/login" onClick={() => handleLogout()}>
+          <Link to="/login" onClick={() => handleLogout()} className="header__link">
             <div className="header__option">
               <span className="header__optionLineTwo">Logout</span>
             </div>
@@ -75,14 +76,13 @@ const Header = () => {
         <SearchIcon className="header__searchIcon"></SearchIcon>
       </div>
 
-      <div className="header__nav">
+      <div className="header__nav ">
         <LoginOrUser />
 
 
-        <div className="header__option">
-          <span className="header__optionLineOne">Returns</span>
-          <span className="header__optionLineTwo">&Oders</span>
-        </div>
+        <Link to="/orders" className="header__link" >
+          <span className="header__optionLineTwo">Oders</span>
+        </Link>
 
         <Link to="/shoppingcart" className="header__link">
           <div className="header__optionBasket">
