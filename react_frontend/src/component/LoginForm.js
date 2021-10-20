@@ -3,7 +3,7 @@ import axios from 'axios';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { set_user, unset_user } from '../actions';
 import './LoginForm.css'
@@ -86,6 +86,9 @@ class LoginForm extends React.Component {
           </span>
         </label>
         <Button type="submit" variant="contained">Login</Button>
+        <Link to="/forgetPassword" className="loginForm__forgetPassword">
+          Forgot password?
+        </Link>
       </form>
     )
   }

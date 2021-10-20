@@ -26,3 +26,16 @@
   border: 1px solid #4caf50;
   border-radius: 5px;
 }
+.login__middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login__middleline {
+  border-left-color: grey;
+  border-left-style: solid;
+  border-left-width: 2px;
+  height: 150px;
+}

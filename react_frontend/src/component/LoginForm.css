@@ -20,3 +20,8 @@ span {
 Button {
   float: right;
 }
+
+.loginForm__forgetPassword {
+  text-decoration: none;
+  margin-top: 20px;
+}
