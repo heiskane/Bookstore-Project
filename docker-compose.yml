@@ -17,7 +17,7 @@ services:
 
   db:
     image: "postgres"
-    command: postgres -c 'max_connections=150'
+    command: postgres -c 'max_connections=400'
     ports:
       - 5432:5432
     env_file:

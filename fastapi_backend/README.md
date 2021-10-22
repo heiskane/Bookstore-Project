@@ -7,6 +7,7 @@
 * [Images](stuff_to_read/images.md)
 * [Async Database](stuff_to_read/async_database.md)
 * [Alembic database migrations](stuff_to_read/alembic_database_migrations.md)
+* [Performance tuning experiment](stuff_to_read/performance_tuning_experiment.md)
 
 
 ## Deployment
