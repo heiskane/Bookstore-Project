@@ -6,6 +6,7 @@
 * [File Upload/Download](stuff_to_read/files.md)
 * [Images](stuff_to_read/images.md)
 * [Async Database](stuff_to_read/async_database.md)
+* [Alembic database migrations](stuff_to_read/alembic_database_migrations.md)
 
 
 ## Deployment
