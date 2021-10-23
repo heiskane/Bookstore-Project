@@ -205,6 +205,23 @@ def create_book(
     return db_book
 
 
+def toggle_wishlist_book(db: Session, book: models.Book, user: models.User):
+    if not user.wishlist:
+        wishlist = models.Wishlist()
+        user.wishlist = wishlist
+
+    if book not in user.wishlist.books:
+        # Book needs to be iterable for some reason
+        user.wishlist.books.append(book)
+    else:
+        # https://stackoverflow.com/questions/10378468/deleting-an-object-from-collection-in-sqlalchemy
+        user.wishlist.books.remove(book)
+
+    db.add(user)
+    db.commit()
+    return
+
+
 def create_review(
     db: Session, review: schemas.ReviewCreate, user: models.User, book: models.Book
 ) -> models.Review:

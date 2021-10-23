@@ -146,3 +146,16 @@ def review_book(
         )
 
     return crud.create_review(db=db, review=review, user=curr_user, book=book)
+
+
+@router.get("/books/{book_id}/wishlist/")
+def wishlist_book(
+    book_id: int,
+    curr_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    book = crud.get_book(db=db, book_id=book_id)
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+
+    return crud.toggle_wishlist_book(db=db, book=book, user=curr_user)

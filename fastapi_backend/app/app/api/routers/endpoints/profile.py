@@ -3,14 +3,23 @@ from typing import List
 
 from fastapi import APIRouter
 from fastapi import Depends
+from sqlalchemy.orm import Session
 
 from app import models
 from app import schemas
-from app.api.deps import get_current_user
+from app.api import deps
 
 router = APIRouter()
 
 
 @router.get("/profile/library/", response_model=List[schemas.Book])
-def get_user_library(curr_user: models.User = Depends(get_current_user)) -> Any:
+def get_user_library(curr_user: models.User = Depends(deps.get_current_user)) -> Any:
     return curr_user.books
+
+
+@router.get("/profile/wishlist/", response_model=schemas.Wishlist)
+def get_user_wishlist(
+    curr_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    return curr_user.wishlist

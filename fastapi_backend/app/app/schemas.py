@@ -144,6 +144,14 @@ class Order(OrderBase):
         orm_mode = True
 
 
+class Wishlist(BaseModel):
+    id: int
+    books: List[Book]
+
+    class Config:
+        orm_mode = True
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"

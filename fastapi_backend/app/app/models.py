@@ -56,6 +56,13 @@ ordered_books = Table(
     Column("book_id", ForeignKey("books.id")),
 )
 
+wishlisted_books = Table(
+    "wishlisted_books",
+    Base.metadata,
+    Column("wishlist_id", ForeignKey("wishlists.id")),
+    Column("book_id", ForeignKey("books.id")),
+)
+
 
 class Book(Base):
     __tablename__ = "books"
@@ -108,6 +115,10 @@ class Book(Base):
         "Order", secondary=ordered_books, back_populates="ordered_books"
     )
 
+    wishlists = relationship(
+        "Wishlist", secondary=wishlisted_books, back_populates="books"
+    )
+
     # __mapper_args__ = {"eager_defaults": True}
 
 
@@ -136,6 +147,8 @@ class User(Base):
     books = relationship("Book", secondary=book_ownership, back_populates="owners")
 
     reviews = relationship("Review", back_populates="user")
+
+    wishlist = relationship("Wishlist", back_populates="user", uselist=False)
 
 
 class Review(Base):
@@ -167,3 +180,14 @@ class Order(Base):
     ordered_books = relationship(
         "Book", secondary=ordered_books, back_populates="orders"
     )
+
+
+class Wishlist(Base):
+    __tablename__ = "wishlists"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User", back_populates="wishlist")
+
+    books = relationship("Book", secondary=wishlisted_books, back_populates="wishlists")
