@@ -5,6 +5,7 @@ from typing import List
 
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app import crud
@@ -29,6 +30,9 @@ def paypal_create_order(
         db_book = crud.get_book(db=db, book_id=book_id)
         books.append(db_book) if db_book else False
 
+    total_price = sum([book.price for book in books])
+    if total_price <= 0:
+        raise HTTPException(status_code=400, detail="Price must be above 0")
     # this errors if price is not above zero
     return CreateOrder().create_order(books=books, debug=settings.DEBUG)
 
@@ -61,7 +65,7 @@ def paypal_capture_order(
         crud.create_order_record(
             db=db,
             order_date=date.today(),
-            total_price=total_price,
+            total_price=total_price,  # type: ignore[arg-type]
             ordered_books=ordered_books,
         )
         return {"access_token": access_token, "token_type": "bearer"}
@@ -74,7 +78,7 @@ def paypal_capture_order(
     crud.create_order_record(
         db=db,
         order_date=date.today(),
-        total_price=total_price,
+        total_price=total_price,  # type: ignore[arg-type]
         client=curr_user,
         ordered_books=ordered_books,
     )
