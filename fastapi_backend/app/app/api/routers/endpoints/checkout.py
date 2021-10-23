@@ -51,11 +51,18 @@ def paypal_capture_order(
 
     # Maybe implement this in a function
 
+    total_price = sum([book.price for book in ordered_books])
     if not curr_user:
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = security.create_anon_buyer_token(
             ordered_books,
             expires_delta=access_token_expires,
+        )
+        crud.create_order_record(
+            db=db,
+            order_date=date.today(),
+            total_price=total_price,
+            ordered_books=ordered_books,
         )
         return {"access_token": access_token, "token_type": "bearer"}
 
@@ -64,15 +71,12 @@ def paypal_capture_order(
     db.commit()
     db.refresh(curr_user)
 
-    total_price = sum([book.price for book in ordered_books])
-
-    # TODO: Track orders for anonymous users
-    order_to_db: schemas.OrderCreate = schemas.OrderCreate(
-        order_date=date.today(), total_price=total_price
-    )
-
     crud.create_order_record(
-        db=db, order=order_to_db, client=curr_user, ordered_books=ordered_books
+        db=db,
+        order_date=date.today(),
+        total_price=total_price,
+        client=curr_user,
+        ordered_books=ordered_books,
     )
 
     return response

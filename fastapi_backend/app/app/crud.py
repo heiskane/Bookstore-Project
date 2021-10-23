@@ -1,3 +1,4 @@
+from datetime import date
 from datetime import datetime
 from typing import List
 from typing import Optional
@@ -252,14 +253,18 @@ def delete_review(db: Session, review: models.Review) -> None:
 
 def create_order_record(
     db: Session,
-    order: schemas.OrderCreate,
-    client: models.User,
+    order_date: date,
+    total_price: float,
     ordered_books: List[models.Book],
+    client: Optional[models.User] = None,
 ) -> models.Order:
 
-    db_order = models.Order(**order.dict())
-    db_order.client = client
-    db_order.ordered_books = ordered_books  # type: ignore[assignment]
+    db_order = models.Order(
+        order_date=order_date, total_price=total_price, ordered_books=ordered_books
+    )
+
+    if client:
+        db_order.client = client
 
     db.add(db_order)
     db.commit()

@@ -135,13 +135,9 @@ class OrderBase(BaseModel):
     total_price: float
 
 
-class OrderCreate(OrderBase):
-    pass
-
-
 class Order(OrderBase):
     id: int
-    client: User
+    client: Optional[User]
     ordered_books: List[Book]
 
     class Config:
