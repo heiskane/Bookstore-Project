@@ -2,11 +2,19 @@ import { Link } from 'react-router-dom'
 import React from 'react'
 import './Header.css'
 import SearchIcon from '@material-ui/icons/Search';
-import { ShoppingBasket } from '@material-ui/icons';
 import HLG_Books from '../photos/HLG_Books.png'
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { unset_user } from '../actions';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Box from '@mui/material/Box'
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+import MenuIcon from '@mui/icons-material/Menu';
 import Orders from './Orders';
 
 const Header = () => {
@@ -14,10 +22,6 @@ const Header = () => {
   const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
   const shoppingcart = useSelector(state => state.shopping_cart);
-
-  const handleAuthentication = () => {
-
-  }
 
   function handleLogout() {
     // https://stackoverflow.com/questions/54861709/cookies-removeabc-not-working-in-reactjs/55593030
@@ -28,71 +32,88 @@ const Header = () => {
   const LoginOrUser = () => {
     if (!user_token.sub) {
       return (
-        <Link to="/login" className="header__link">
-          <div
-            className="header__option"
-            onClick={handleAuthentication}
-          >
-            <span className="header__optionLineOne">Hello Guest</span>
-            <span className="header__optionLineTwo">Sign In</span>
-          </div>
-        </Link>
+        <Button
+          color='inherit'
+          component={Link}
+          to="/login"
+        >
+          Login
+        </Button>
       )
     } else {
       return (
         <div className="header__nav">
-          <Link to="/" className="header__link">
-            <div className="header__option">
-              <span className="header__optionLineOne">
-                {"Hello " + user_token.sub}
-              </span>
-              <span className="header__optionLineTwo">This will be you profile button</span>
-            </div>
-          </Link>
-          <Link to="/login" onClick={() => handleLogout()} className="header__link">
-            <div className="header__option">
-              <span className="header__optionLineTwo">Logout</span>
-            </div>
-          </Link>
+          <Button
+            color='inherit'
+            onClick={() => alert("Profile page not yet implemented")}
+            component={Link}
+            to="/"
+          >
+            {user_token.sub}
+          </Button>
+          <Button
+            color='inherit'
+            onClick={() => handleLogout()}
+            component={Link}
+            to="/login"
+          >
+            Logout
+          </Button>
         </div>
       )
     }
   }
 
   return (
-    <div className="header">
+    <Box sx={{ flexGrow: 1 }}>
 
-      {/* logo on the left -> img */}
-      {/* Search box */}
-      {/* 3 links */}
-      {/* Shopping Basket icon with number */}
+      <AppBar position='static'> 
 
+      {/*
       <Link to="/">
         <img className="header__logo" src={HLG_Books} alt="HLG_Books logo" />
       </Link>
+      */}
+        <Toolbar>
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{
+              flexGrow: 1,
+              textDecoration: 'none',
+              color: 'inherit' }}>
+            HLG Bookstore
+          </Typography>
 
-      <div className="header__search">
-        <input type="text" className="header__searchInput" />
-        <SearchIcon className="header__searchIcon"></SearchIcon>
-      </div>
+          <LoginOrUser />
 
-      <div className="header__nav ">
-        <LoginOrUser />
+          <Button
+            color='inherit'
+            component={Link}
+            to="/orders"
+          >My Books</Button>
 
-
-        <Link to="/orders" className="header__link" >
-          <span className="header__optionLineTwo">My Books</span>
-        </Link>
-
-        <Link to="/shoppingcart" className="header__link">
-          <div className="header__optionBasket">
-
-            <ShoppingBasket />
-            <span className="header__optionLineTwo header__basketCount">{shoppingcart.length}</span>
-          </div>
-        </Link>
-      </div>
-    </div>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <IconButton
+            sx={{/* width: '48px' */}}
+            size="large"
+            color="inherit"
+            component={Link}
+            to="/shoppingcart"
+          >
+            <Badge
+              sx={{ overflow: 'visible' }}
+              overlap="circular"
+              badgeContent={shoppingcart.length}
+              color="error">
+              <ShoppingCartOutlinedIcon />
+            </Badge>
+          </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </Box>
   )
 }
 

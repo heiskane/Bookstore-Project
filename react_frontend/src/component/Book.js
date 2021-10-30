@@ -15,6 +15,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
+import Paper from '@mui/material/Paper';
 import DownloadButton from "./DownloadButton";
 import ReadBookButton from './ReadBookButton';
 
@@ -76,36 +77,38 @@ const Book = ({ book }) => {
   }
 
   return (
-    <Card sx={{
-      maxWidth: 345
-    }} className="book">
-      <CardActionArea>
-        <Link to={"/books/" + book.id} className="book__link">
-          <CardMedia
-            component="img"
-            height="140"
-            image={axios.defaults.baseURL + "/books/" + book.id + "/image/"}
-            alt="book"
-          />
-          <CardContent className="book__info">
-            <Typography variant="h5" component="div">
-              {book.title}
-            </Typography>
-            <BookAuthors authors={book.authors} />
-            <BookGenres genres={book.genres} />
-            <Typography>
-              {"Price: " + book.price + "€"}
-            </Typography>
-          </CardContent>
-        </Link>
-      </CardActionArea>
-      <CardActions sx={{
-        display: 'flex',
-        justifyContent: 'space-between' 
-      }}>
-        <ActionButton price={book.price} />
-      </CardActions>
-    </Card>
+    <Paper elevation={4}>
+      <Card sx={{
+        maxWidth: 345
+      }} className="book">
+        <CardActionArea>
+          <Link to={"/books/" + book.id} className="book__link">
+            <CardMedia
+              component="img"
+              height="140"
+              image={axios.defaults.baseURL + "/books/" + book.id + "/image/"}
+              alt="book"
+            />
+            <CardContent>
+              <Typography variant="h5" component="div">
+                {book.title}
+              </Typography>
+              <BookAuthors authors={book.authors} />
+              <BookGenres genres={book.genres} />
+              <Typography>
+                {"Price: " + book.price + "€"}
+              </Typography>
+            </CardContent>
+          </Link>
+        </CardActionArea>
+        <CardActions sx={{
+          display: 'flex',
+          justifyContent: book.price > 0 ? 'center' : 'space-around'
+        }}>
+          <ActionButton price={book.price} />
+        </CardActions>
+      </Card>
+    </Paper>
   )
 }
 
