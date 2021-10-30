@@ -18,9 +18,6 @@ export default function BookDetails() {
 
   React.useEffect(() => {
     instance.get("/books/" + book_id)
-      .catch(err => {
-        console.log(err);
-      })
       .then((response) => {
         if (response) {
           setBook(response.data);
@@ -28,6 +25,9 @@ export default function BookDetails() {
         } else {
           console.log("Fetching book failed")
         }
+      })
+      .catch(err => {
+        console.log(err);
       });
   }, []);
 
@@ -56,7 +56,7 @@ export default function BookDetails() {
 
     if (genres.length > 1) {
       return (
-        <p>Genres: {genres.map((genre) => genre.name + "")}</p>
+        <p>Genres: {genres.map((genre) => genre.name + " ")}</p>
       )
     }
 

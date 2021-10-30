@@ -18,18 +18,6 @@
   margin-top: 5px;
 }
 
-.book Button {
-  display: block;
-  background-color: #18813b;
-  border: 1px solid;
-  margin-top: 10px;
-  border-color: #18813b;
-  color: white;
-  border-radius: 3px;
-  font-size: x-small;
-  width: 100%;
-}
-
 .book__link {
   text-decoration: none;
 }

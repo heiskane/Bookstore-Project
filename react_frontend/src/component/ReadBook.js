@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
-import { StyleSheet } from '@react-pdf/renderer';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 import axios from 'axios';
 import Button from '@mui/material/Button';
@@ -18,11 +17,6 @@ export default function ReadBook() {
 
 	let { book_id } = useParams();
 	const [cookies] = useCookies();
-
-	const styles = StyleSheet.create({
-		page: { backgroundColor: 'tomato' },
-		section: { color: 'white', textAlign: 'center', margin: 30 }
-	});
 
 	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {

@@ -2,6 +2,8 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
+import Button from '@mui/material/Button';
+
 
 export default function BuyButton(props) {
 
@@ -36,7 +38,10 @@ export default function BuyButton(props) {
 	}
 
 	return (
-		<button onClick={() => {download_book()}}>Download</button>
+		<Button
+			variant="contained"
+			onClick={() => {download_book()}}
+		>Download</Button>
 	)
 
 }

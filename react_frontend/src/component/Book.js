@@ -10,6 +10,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import DownloadButton from "./DownloadButton";
+
 
 const Book = ({ book }) => {
 
@@ -19,6 +21,32 @@ const Book = ({ book }) => {
   const saveToBasket = (e) => {
     e.preventDefault();
     dispatch(add_to_cart(book));
+  }
+
+  function ActionButton(props) {
+    if (props.price > 0) {
+      return (
+        <Button 
+          type="submit"
+          variant="contained"
+          onClick={saveToBasket}
+        >
+          Add to Cart
+        </Button>
+      )
+    } else {
+      return (
+        <CardActions>
+          <Button
+            variant="contained"
+            component={Link}
+            to={"/read_book/" + book.id}
+          >Read
+          </Button>
+          <DownloadButton book_id={book.id} />
+        </CardActions>
+      )
+    }
   }
 
   return (
@@ -40,8 +68,7 @@ const Book = ({ book }) => {
           </p>
         </CardContent>
       </Link>
-      {/*  <button type="button" onClick={saveToBasket}>Add to Basket</button> */}
-      <Button type="submit" variant="contained" onClick={saveToBasket}>Add to basekt</Button>
+      <ActionButton price={book.price} />
     </Card>
   )
 }

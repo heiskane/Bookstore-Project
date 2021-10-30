@@ -24,7 +24,6 @@ export default function App() {
     instance.get("/books/")
       .then((response) => {
         setBooks(response.data);
-        console.log(books)
       });
   }, []);
 
