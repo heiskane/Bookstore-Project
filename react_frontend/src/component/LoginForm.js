@@ -7,7 +7,16 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { set_user, unset_user } from '../actions';
 import './LoginForm.css'
+
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+
 // https://reactjs.org/docs/forms.html
 class LoginForm extends React.Component {
   constructor(props) {
@@ -70,26 +79,51 @@ class LoginForm extends React.Component {
       return <Redirect to={this.state.redirectTo} />
     }
     return (
-      <form
-        className="loginForm"
-        onSubmit={this.handleSubmit}>
-        <label className="loginForm__lable">
-          Username:
-          <span>
-            <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-          </span>
-        </label>
-        <label className="loginForm__lable">
-          Password:
-          <span>
-            <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-          </span>
-        </label>
-        <Button type="submit" variant="contained">Login</Button>
-        <Link to="/forgetPassword" className="loginForm__forgetPassword">
-          Forgot password?
-        </Link>
-      </form>
+      <Paper
+        elevation={8}
+      >
+        <form
+          onSubmit={this.handleSubmit}
+        >
+          <Grid
+            container
+            flexDirection='column' 
+            justifyContent='center'
+            alignItems='center'
+            padding={10}
+            spacing={2}
+          >
+            <Typography variant="h2">Login</Typography>
+            <Grid item>
+              <TextField
+                label="Username"
+                type="text"
+                name="username"
+                required
+                value={this.state.username}
+                onChange={this.handleChange} />
+            </Grid>
+
+            <Grid item>
+              <TextField
+                label="Password"
+                type="password"
+                name="password"
+                value={this.state.password}
+                onChange={this.handleChange} />
+            </Grid>
+
+            <Grid item>
+              <Button type="submit" variant="contained">Login</Button>
+            </Grid>
+
+            <Link to="/forgetPassword" className="loginForm__forgetPassword">
+              Forgot password?
+            </Link>
+
+          </Grid>
+        </form>
+      </Paper>
     )
   }
 

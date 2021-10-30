@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
+import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import DownloadButton from "./DownloadButton";
+import DownloadButton from './DownloadButton';
+import ReadBookButton from './ReadBookButton';
 
 
 const OwnedBook = ({ book }) => {
@@ -46,30 +48,30 @@ const OwnedBook = ({ book }) => {
 
   return (
     <Card className="book">
-      <Link to={"/books/" + book.id} className="book__link">
-        <CardMedia
-          component="img"
-          height="340"
-          image={axios.defaults.baseURL + "/books/" + book.id + "/image/"}
-          alt="book"
-        />
-      </Link>
-      <CardContent className="book__info">
-        <Typography>{book.title}</Typography>
-        <BookRating avg_rating={book.avg_rating} />
-        <BookAuthors authors={book.authors} />
-        <BookGenres genres={book.genres} />
-        <CardActions>
-          <Button
-            variant="contained"
-            component={Link}
-            to={"/read_book/" + book.id}
-          >
-              Read Book
-          </Button>
-          <DownloadButton book_id={book.id} />
-        </CardActions>
-      </CardContent>
+      <CardActionArea>
+        <Link
+          to={"/books/" + book.id} className="book__link">
+          <CardMedia
+            component="img"
+            height="340"
+            image={axios.defaults.baseURL + "/books/" + book.id + "/image/"}
+            alt="book"
+          />
+          <CardContent className="book__info">
+            <Typography>{book.title}</Typography>
+            <BookRating avg_rating={book.avg_rating} />
+            <BookAuthors authors={book.authors} />
+            <BookGenres genres={book.genres} />
+          </CardContent>
+        </Link>
+      </CardActionArea>
+      <CardActions sx={{
+        display: 'flex',
+        justifyContent: 'space-between' 
+      }}>
+        <ReadBookButton book_id={book.id} />
+        <DownloadButton book_id={book.id} />
+      </CardActions>
     </Card>
   )
 }

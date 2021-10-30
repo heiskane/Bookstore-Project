@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState} from 'react'
 import "./Orders.css"
 import axios from "axios";
 import { useCookies } from 'react-cookie';
@@ -47,11 +47,21 @@ const Orders = () => {
 	}
 
 	return (
-		<div className="book_details">
-			{books.map((book) => 
-				<OwnedBook key={book.title} book={book} />
-			)}
-		</div>
+		<Box>
+			<Grid
+				container
+				direction="row" 
+				justifyContent="center"
+				alignItems="baseline"
+				spacing={2}
+			>
+				{books.map((book) => 
+					<Grid item xs={2}>
+						<OwnedBook key={book.title} book={book} />
+					</Grid>
+				)}
+			</Grid>
+		</Box>
 	)
 }
 

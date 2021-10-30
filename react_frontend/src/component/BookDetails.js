@@ -9,6 +9,9 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import ReadBookButton from './ReadBookButton';
 
 export default function BookDetails() {
 
@@ -65,26 +68,39 @@ export default function BookDetails() {
   }
 
   return (
-    <div className="book_details">
-      <Card>
+    <Box sx={{
+      display: 'flex',
+      justifyContent: 'center'
+    }}>
+      <Card  sx={{
+        maxWidth: 600,
+        maxHeight: "100vh"
+      }} className="book">
         <CardMedia
           component="img"
           height="340px"
           image={axios.defaults.baseURL + "/books/" + book_id + "/image/"}
           alt="Book cover"
         />
-        <h2>{book.title}</h2>
+        <Typography  variant="h5" component="div">
+          {book.title}
+        </Typography>
         <BookRating avg_rating={book.avg_rating} />
         <BookAuthors authors={book.authors} />
         <BookGenres genres={book.genres} />
-        <p>{book.description}</p>
-        <p>Price: {book.price} €</p>
-        <p>Language: {book.language}</p>
-        <p>Publication Date: {book.publication_date}</p>
-        <Link to={"/read_book/" + book.id}>Read Book</Link>
-        <DownloadButton book_id={book.id} />
+        <Typography>Description: {book.description}</Typography>
+        <Typography>Price: {book.price} €</Typography>
+        <Typography>Language: {book.language}</Typography>
+        <Typography>Publication Date: {book.publication_date}</Typography>
+        <CardActions sx={{
+          display: 'flex',
+          justifyContent: 'space-between' 
+        }}>
+          <ReadBookButton book_id={book.id} />
+          <DownloadButton book_id={book.id} />
+        </CardActions>
       </Card>
-    </div>
+    </Box>
   );
 }
 

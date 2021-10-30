@@ -10,16 +10,7 @@ const Login = () => {
 
   return (
     <div className="login">
-      <Box
-        className="login__login"
-        sx={{
-          width: 300,
-          height: 300,
-        }}
-      >
-        <h1>Login</h1>
-        <LoginForm />
-      </Box>
+      <LoginForm />
       <div className="login__middle">
         <div className="login__middleline">
         </div>
@@ -27,16 +18,9 @@ const Login = () => {
         <div className="login__middleline">
         </div>
       </div>
-      <Box
-        className="login__register"
-        sx={{
-          width: 300,
-          height: 300,
-        }}
-      >
-        <h1>Register</h1>
-        <RegisterForm />
-      </Box>
+      
+      <RegisterForm />
+
     </div>
   )
 }

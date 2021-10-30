@@ -3,11 +3,15 @@ import axios from 'axios';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { set_user } from '../actions';
 import "./RegisterForm.css";
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 
 // https://reactjs.org/docs/forms.html
 class RegisterForm extends React.Component {
@@ -71,33 +75,56 @@ class RegisterForm extends React.Component {
       return <Redirect to={this.state.redirectTo} />
     }
     return (
-      <form
-        className="registerForm"
-        onSubmit={this.handleSubmit}>
-        <label className="registerForm__lable">
-          Username:
-          <span>
-            <input
-              type="text" name="username" value={this.state.username}
-              onChange={this.handleChange} />
-          </span>
-        </label>
-        <label className="registerForm__lable">
-          Email:
-          <span>
-            <input type="email" name="email" value={this.state.email}
-              onChange={this.handleChange} />
-          </span>
-        </label>
-        <label>
-          Password:
-          <span>
-            <input type="password" name="password" value={this.state.password}
-              onChange={this.handleChange} />
-          </span>
-        </label>
-        <Button type="submit" variant="contained">Register</Button>
-      </form>
+      <Paper
+        elevation={8}
+      >
+        <form
+          onSubmit={this.handleSubmit}
+        >
+          <Grid
+            container
+            flexDirection='column' 
+            justifyContent='center'
+            alignItems='center'
+            padding={10}
+            spacing={2}
+          >
+            <Typography variant="h2">Register</Typography>
+            <Grid item>
+              <TextField
+                label="Username"
+                type="text"
+                name="username"
+                required
+                value={this.state.username}
+                onChange={this.handleChange} />
+            </Grid>
+
+            <Grid item>
+              <TextField
+                label="email"
+                type="email"
+                name="email"
+                value={this.state.email}
+                onChange={this.handleChange}/>
+            </Grid>
+
+            <Grid item>
+              <TextField
+                label="Password"
+                type="password"
+                name="password"
+                value={this.state.password}
+                onChange={this.handleChange} />
+            </Grid>
+
+            <Grid item>
+              <Button type="submit" variant="contained">Login</Button>
+            </Grid>
+
+          </Grid>
+        </form>
+      </Paper>
     )
   }
 

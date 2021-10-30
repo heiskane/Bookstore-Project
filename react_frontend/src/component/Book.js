@@ -7,10 +7,16 @@ import { add_to_cart } from '../actions';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
+import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
 import DownloadButton from "./DownloadButton";
+import ReadBookButton from './ReadBookButton';
 
 
 const Book = ({ book }) => {
@@ -36,39 +42,69 @@ const Book = ({ book }) => {
       )
     } else {
       return (
-        <CardActions>
-          <Button
-            variant="contained"
-            component={Link}
-            to={"/read_book/" + book.id}
-          >Read
-          </Button>
+        <>
+          <ReadBookButton book_id={book.id} />
           <DownloadButton book_id={book.id} />
-        </CardActions>
+        </>
       )
     }
   }
 
+  function BookAuthors(props) {
+    const authors = props.authors;
+
+    if (authors.length > 1) {
+      return (
+        <Typography>Authors: {authors.map((author) => author.name + " ")}</Typography>
+      )
+    }
+
+    return (<Typography>Author: {authors[0].name}</Typography>)
+  }
+
+  function BookGenres(props) {
+    const genres = props.genres;
+
+    if (genres.length > 1) {
+      return (
+        <Typography>Genres: {genres.map((genre) => genre.name + " ")}</Typography>
+      )
+    }
+
+    return (<Typography>Genre: {genres[0].name}</Typography>)
+
+  }
+
   return (
-    <Card sx={{ maxWidth: 345 }} className="book">
-      <Link to={"/books/" + book.id} className="book__link">
-        <CardMedia
-          component="img"
-          height="140"
-          image={axios.defaults.baseURL + "/books/" + book.id + "/image/"}
-          alt="book"
-        />
-        <CardContent className="book__info">
-
-          <Typography>{book.title}</Typography>
-
-          <p>Author: {book.authors.map((author) => <li key={author.name}>{author.name}</li>)}</p>
-          <p className="book_price">Price: {book.price}
-            <small>€</small>
-          </p>
-        </CardContent>
-      </Link>
-      <ActionButton price={book.price} />
+    <Card sx={{
+      maxWidth: 345
+    }} className="book">
+      <CardActionArea>
+        <Link to={"/books/" + book.id} className="book__link">
+          <CardMedia
+            component="img"
+            height="140"
+            image={axios.defaults.baseURL + "/books/" + book.id + "/image/"}
+            alt="book"
+          />
+          <CardContent className="book__info">
+            <Typography variant="h5" component="div">
+              {book.title}
+            </Typography>
+            <BookAuthors authors={book.authors} />
+            <BookGenres genres={book.genres} />
+            <Typography>
+              {"Price: " + book.price + "€"}
+            </Typography>
+          </CardContent>
+        </Link>
+      </CardActionArea>
+      <CardActions sx={{
+        display: 'flex',
+        justifyContent: 'space-between' 
+      }}>
+        <ActionButton price={book.price} />
+      </CardActions>
     </Card>
   )
 }
