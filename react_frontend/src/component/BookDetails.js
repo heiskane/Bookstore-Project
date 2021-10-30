@@ -1,8 +1,9 @@
 import React from "react";
 import './BookDetails.css'
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import DownloadButton from "./DownloadButton";
+import ReadBook from "./ReadBook";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -80,6 +81,7 @@ export default function BookDetails() {
         <p>Price: {book.price} €</p>
         <p>Language: {book.language}</p>
         <p>Publication Date: {book.publication_date}</p>
+        <Link to={"/read_book/" + book.id}>Read Book</Link>
         <DownloadButton book_id={book.id} />
       </Card>
     </div>

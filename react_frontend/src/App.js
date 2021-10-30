@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Header from './component/Header';
 import Home from './component/Home';
 import Checkout from './component/Checkout';
 import Login from './component/Login';
-import BookDetails from './component/BookDetails'
+import BookDetails from './component/BookDetails';
+import ReadBook from './component/ReadBook';
 
 import axios from 'axios';
 import ShoppingCart from './component/ShoppingCart';
@@ -42,6 +43,10 @@ function App() {
           <Route path="/books/:book_id">
             <Header />
             <BookDetails />
+          </Route>
+          <Route path="/read_book/:book_id">
+            <Header />
+            <ReadBook />
           </Route>
 
           <Route path="/shoppingcart">
