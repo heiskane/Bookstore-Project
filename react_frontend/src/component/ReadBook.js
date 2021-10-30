@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
-//import { Document, Page } from 'react-pdf';
+import { StyleSheet } from '@react-pdf/renderer';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 import axios from 'axios';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 export default function ReadBook() {
 
@@ -15,9 +19,10 @@ export default function ReadBook() {
 	let { book_id } = useParams();
 	const [cookies] = useCookies();
 
-	function onDocumentLoadSuccess({ numPages }) {
-	setNumPages(numPages);
-	}
+	const styles = StyleSheet.create({
+		page: { backgroundColor: 'tomato' },
+		section: { color: 'white', textAlign: 'center', margin: 30 }
+	});
 
 	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {
@@ -33,19 +38,60 @@ export default function ReadBook() {
 			response.data.arrayBuffer()
 				.then(buffer => setBook({data: new Uint8Array(buffer)}))
 		})
+		.catch((err) => {
+			return
+		})
 	}, []);
 
 
+	function onDocumentLoadSuccess({ numPages }) {
+		setNumPages(numPages);
+	}
+
+	function nextPage() {
+		if (pageNumber < numPages) {
+			setPageNumber(pageNumber + 1)
+		}
+	}
+
+	function previousPage() {
+		if (pageNumber > 1) {
+			setPageNumber(pageNumber - 1)
+		}
+	}
+
+	if (!book) {
+		return (
+			<Alert severity="error">
+				<AlertTitle>Error</AlertTitle>
+				You probably dont own this book or my code broke
+			</Alert>
+		)
+	}
+
 	return (
-		<div>
+		<Box
+		  display="flex"
+		  flexDirection="column" 
+		  justifyContent="center"
+		  alignItems="center"
+		  minHeight="100vh"
+		>
 			<Document
 				file={book}
 				onLoadSuccess={onDocumentLoadSuccess}
 			>
 				<Page pageNumber={pageNumber} />
 			</Document>
+			<Box
+			  display="flex"
+			  flexDirection="row"
+			>
+				<Button variant="outlined" onClick={previousPage}>&lt;</Button>
+				<Button variant="outlined" onClick={nextPage}>&gt;</Button>
+			</Box>
 			<p>Page {pageNumber} of {numPages}</p>
-		</div>
+		</Box>
 	)
 
 }
