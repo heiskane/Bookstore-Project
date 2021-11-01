@@ -3,8 +3,8 @@ import axios from 'axios';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
-import { Redirect, Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { set_user } from '../actions';
 import "./RegisterForm.css";
 import Button from '@mui/material/Button';

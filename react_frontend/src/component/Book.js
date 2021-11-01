@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Book.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -11,10 +11,6 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import Paper from '@mui/material/Paper';
 import DownloadButton from "./DownloadButton";
 import ReadBookButton from './ReadBookButton';

@@ -13,7 +13,6 @@ export default function ReadBook() {
 	const [numPages, setNumPages] = useState(null);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [book, setBook] = useState();
-	const [uint8Book, setUint8Book] = useState();
 
 	let { book_id } = useParams();
 	const [cookies] = useCookies();

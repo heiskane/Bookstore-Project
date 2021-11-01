@@ -2,7 +2,6 @@ import React from 'react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import './Login.css';
-import Box from '@mui/material/Box';
 
 const Login = () => {
 

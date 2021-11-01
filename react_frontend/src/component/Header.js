@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
 import './Header.css'
-import SearchIcon from '@material-ui/icons/Search';
-import HLG_Books from '../photos/HLG_Books.png'
+//import HLG_Books from '../photos/HLG_Books.png'
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { unset_user } from '../actions';
@@ -14,11 +13,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
-import MenuIcon from '@mui/icons-material/Menu';
-import Orders from './Orders';
 
 const Header = () => {
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [removeCookie] = useCookies();
   const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
   const shoppingcart = useSelector(state => state.shopping_cart);

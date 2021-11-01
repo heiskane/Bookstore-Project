@@ -4,16 +4,13 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
 import jwt from 'jwt-decode';
 import { Redirect, Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
-import { set_user, unset_user } from '../actions';
+import { connect } from 'react-redux';
+import { set_user } from '../actions';
 import './LoginForm.css'
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 

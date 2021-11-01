@@ -6,7 +6,6 @@ import App from './App';
 import { Provider } from 'react-redux'
 import { CookiesProvider } from 'react-cookie';
 import { createStore } from 'redux';
-import user from './reducers/user';
 import allReducers from './reducers';
 
 const store = createStore(
