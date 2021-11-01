@@ -41,9 +41,11 @@ export default function App() {
         justifyContent="center"
         alignItems="center"
         spacing={3}>
-        {books.map((book) => <Grid item xs={2}>
-          <Book book={book} />
-        </Grid>)}
+        {books.map((book) =>
+          <Grid item xs={12} sm={6} md={3} lg={2}>
+            <Book book={book} />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

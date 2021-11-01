@@ -20,7 +20,6 @@ axios.defaults.baseURL = 'http://localhost:8000'
 function App() {
   return (
     <Router>
-      <div className="app">
 
         <Switch>
           <Route exact path="/">
@@ -65,8 +64,6 @@ function App() {
           </Route>
 
         </Switch>
-
-      </div>
 
     </Router>
   );
