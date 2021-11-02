@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Header.css'
 //import HLG_Books from '../photos/HLG_Books.png'
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
-import { unset_user } from '../actions';
+import { unset_user, set_user } from '../actions';
+import jwt from 'jwt-decode';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Box from '@mui/material/Box'
 import AppBar from '@mui/material/AppBar';
@@ -19,6 +20,15 @@ const Header = () => {
   const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
   const shoppingcart = useSelector(state => state.shopping_cart);
+
+  const setUser = () => {
+    dispatch(set_user(jwt(cookies.jwt_token)));
+  }
+
+  useEffect(() => {
+    setUser()
+  }, []);
+
 
   function handleLogout() {
     // https://stackoverflow.com/questions/54861709/cookies-removeabc-not-working-in-reactjs/55593030
