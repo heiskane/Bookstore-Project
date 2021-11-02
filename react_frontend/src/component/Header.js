@@ -40,17 +40,17 @@ const Header = () => {
   const LoginOrUser = () => {
     if (!user_token.sub) {
       return (
-        <Button
-          color='inherit'
-          component={Link}
-          to="/login"
-        >
-          Login
-        </Button>
+          <Button
+            color='inherit'
+            component={Link}
+            to="/login"
+          >
+            Login
+          </Button>
       )
     } else {
       return (
-        <div className="header__nav">
+        <>
           <Button
             color='inherit'
             onClick={() => alert("Profile page not yet implemented")}
@@ -74,7 +74,7 @@ const Header = () => {
           >
             Logout
           </Button>
-        </div>
+        </>
       )
     }
   }
@@ -101,13 +101,9 @@ const Header = () => {
             HLG Bookstore
           </Typography>
 
-          <LoginOrUser />
-
-
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <LoginOrUser />
           <IconButton
-            sx={{/* width: '48px' */}}
-            size="large"
             color="inherit"
             component={Link}
             to="/shoppingcart"
