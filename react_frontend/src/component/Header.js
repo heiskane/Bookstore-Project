@@ -16,7 +16,9 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 
 const Header = () => {
-  const [cookies, removeCookie] = useCookies();
+  // This seems to give 'removeCookies' as the third option
+  // Do 'cookies' AND 'setCookies' have to be included as well
+  const [cookies, setCookie, removeCookie] = useCookies();
   const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
   const shoppingcart = useSelector(state => state.shopping_cart);
@@ -28,8 +30,9 @@ const Header = () => {
   }, []);
 
 
-  function handleLogout() {
+  function handleLogout(e) {
     // https://stackoverflow.com/questions/54861709/cookies-removeabc-not-working-in-reactjs/55593030
+    e.preventDefault();
     removeCookie("jwt_token", { path: '/' });
     dispatch(unset_user());
   }
@@ -56,9 +59,16 @@ const Header = () => {
           >
             {user_token.sub}
           </Button>
+
           <Button
             color='inherit'
-            onClick={() => handleLogout()}
+            component={Link}
+            to="/orders"
+          >My Books</Button>
+
+          <Button
+            color='inherit'
+            onClick={handleLogout}
             component={Link}
             to="/login"
           >
@@ -93,11 +103,6 @@ const Header = () => {
 
           <LoginOrUser />
 
-          <Button
-            color='inherit'
-            component={Link}
-            to="/orders"
-          >My Books</Button>
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
           <IconButton
