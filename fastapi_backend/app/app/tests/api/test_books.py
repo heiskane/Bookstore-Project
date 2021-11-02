@@ -101,6 +101,18 @@ def test_review_book(client: TestClient, auth_header: str) -> None:
     )
 
 
+def test_wishlist_book(client: TestClient, auth_header: str) -> None:
+    response = client.get("/books/1/wishlist/", headers=auth_header)
+    assert response.status_code == 200, response.text
+
+    response = client.get("/books/1/wishlist/", headers=auth_header)
+    assert response.status_code == 200, response.text
+
+    response = client.get("/books/69/wishlist/", headers=auth_header)
+    assert response.status_code == 404, response.text
+
+
 def test_delete_book(client: TestClient, admin_auth_header: str) -> None:
     response = client.delete("/books/1/", headers=admin_auth_header)
     assert response.status_code == 200, response.text
+

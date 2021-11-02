@@ -32,7 +32,7 @@ export default function App() {
         alignItems="center"
         spacing={3}>
         {books.map((book) =>
-          <Grid item xs={12} sm={6} md={3} lg={2}>
+          <Grid item xs={12} sm={8} md={6} lg={3} xl={2}>
             <Book book={book} />
           </Grid>
         )}

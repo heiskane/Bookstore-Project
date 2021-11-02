@@ -2,10 +2,11 @@ import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import { useCookies } from 'react-cookie';
 
 const BuyButton = () => {
 
-
+	const [cookies] = useCookies();
 
 	const shoppingcart = useSelector(state => state.shopping_cart);
 	const [ids, setIds] = useState([])
@@ -41,7 +42,10 @@ const BuyButton = () => {
 
 				onApprove={(data, actions) => {
 					return fetch('http://localhost:8000/checkout/paypal/order/' + data.orderID + '/capture/', {
-						method: 'post'
+						method: 'post',
+						headers: {
+							'Authorization': 'Bearer ' + cookies.jwt_token
+						}						
 					}).then(function (res) {
 						return res.json();
 					}).then(function (orderData) {
