@@ -32,9 +32,15 @@ const BuyButton = () => {
 						body: JSON.stringify(
 							{ "book_ids": ids } // Put book IDs here from shopping cart
 						)
-					}).then(function (res) {
-						return res.json();
-					}).then(function (orderData) {
+					})
+					.then((res) => {
+						if (!res.ok) {
+							throw new Error('Something went wrong');
+						} else {
+							return res.json();
+						}
+					})
+					.then(function (orderData) {
 						// Maybe deal with this server-side
 						return orderData.result.id;
 					});
@@ -52,6 +58,10 @@ const BuyButton = () => {
 						console.log(orderData);
 					});
 				}} // TODO: If user not logged in set jwt_token from response
+
+				onError={(error) => {
+					alert("Something went wrong :(")
+				}}
 			/>
 		</PayPalScriptProvider>
 	);
