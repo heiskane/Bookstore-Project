@@ -56,7 +56,7 @@ const Orders = () => {
 				spacing={2}
 			>
 				{books.map((book) => 
-					<Grid item xs={2}>
+					<Grid item xs={12} sm={8} md={6} lg={3} xl={2}>
 						<OwnedBook key={book.title} book={book} />
 					</Grid>
 				)}

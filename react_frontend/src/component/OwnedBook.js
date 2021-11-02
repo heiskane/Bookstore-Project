@@ -46,7 +46,7 @@ const OwnedBook = ({ book }) => {
   }
 
   return (
-    <Card className="book">
+    <Card>
       <CardActionArea>
         <Link
           to={"/books/" + book.id} className="book__link">
