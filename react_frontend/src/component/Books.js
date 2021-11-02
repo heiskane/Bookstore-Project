@@ -25,11 +25,13 @@ export default function App() {
   // https://dev.to/njdevelopment/help-with-react-map-through-json-data-beh
 
   return (
-    <Box className="books" sx={{ flexGrow: 1 }}>
+    <Box sx={{
+      flexGrow: 1,
+    }}>
       <Grid container
         direction="row"
-        justifyContent="center"
-        alignItems="center"
+        justifyContent='space-around' 
+        alignItems='center' 
         spacing={3}>
         {books.map((book) =>
           <Grid item xs={12} sm={8} md={6} lg={3} xl={2}>

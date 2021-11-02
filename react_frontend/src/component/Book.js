@@ -73,10 +73,7 @@ const Book = ({ book }) => {
   }
 
   return (
-    <Paper elevation={4}>
-      <Card sx={{
-        maxWidth: 345
-      }} className="book">
+      <Card>
         <CardActionArea>
           <Link to={"/books/" + book.id} className="book__link">
             <CardMedia
@@ -104,7 +101,6 @@ const Book = ({ book }) => {
           <ActionButton price={book.price} />
         </CardActions>
       </Card>
-    </Paper>
   )
 }
 

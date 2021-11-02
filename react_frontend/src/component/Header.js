@@ -21,12 +21,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const shoppingcart = useSelector(state => state.shopping_cart);
 
-  const setUser = () => {
-    dispatch(set_user(jwt(cookies.jwt_token)));
-  }
-
   useEffect(() => {
-    setUser()
+    if (cookies.jwt_token) {
+      dispatch(set_user(jwt(cookies.jwt_token)));
+    }
   }, []);
 
 
