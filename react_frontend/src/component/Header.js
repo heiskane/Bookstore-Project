@@ -15,7 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 
 const Header = () => {
-  const [removeCookie] = useCookies();
+  const [cookies, removeCookie] = useCookies();
   const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
   const shoppingcart = useSelector(state => state.shopping_cart);
