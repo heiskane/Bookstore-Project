@@ -9,7 +9,10 @@ const Login = () => {
 
   return (
     <div className="login">
-      <LoginForm />
+      <div className="login__loginForm">
+        <LoginForm />
+      </div>
+     
       <div className="login__middle">
         <div className="login__middleline">
         </div>
@@ -17,8 +20,12 @@ const Login = () => {
         <div className="login__middleline">
         </div>
       </div>
+
+      <div className="login__registerForm">
+        <RegisterForm />
+      </div>
       
-      <RegisterForm />
+  
 
     </div>
   )

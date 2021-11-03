@@ -77,6 +77,7 @@ class LoginForm extends React.Component {
     }
     return (
       <Paper
+        className="loginForm"
         elevation={8}
       >
         <form

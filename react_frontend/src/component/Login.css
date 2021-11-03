@@ -3,9 +3,10 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  background-color: rgb(51, 87, 110);
 }
 
-.login__login {
+.login__loginForm , .login__registerForm  {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,16 +17,7 @@
   border-radius: 5px;
 }
 
-.login__register {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: aquamarine;
-  margin: 70px;
-  border: 1px solid #4caf50;
-  border-radius: 5px;
-}
+
 .login__middle {
   display: flex;
   flex-direction: column;

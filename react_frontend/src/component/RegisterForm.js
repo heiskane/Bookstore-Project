@@ -77,6 +77,7 @@ class RegisterForm extends React.Component {
     return (
       <Paper
         elevation={8}
+        className="registerForm"
       >
         <form
           onSubmit={this.handleSubmit}

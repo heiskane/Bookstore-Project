@@ -3,7 +3,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 500px;
+  width: 350px;
+  height: 500px;
   overflow: hidden;
 }
 .loginForm input {
