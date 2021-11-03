@@ -8,12 +8,12 @@ const BuyButton = () => {
 
 	const [cookies] = useCookies();
 
-	const shoppingcart = useSelector(state => state.shopping_cart);
+	const shoppingCart = useSelector(state => state.shopping_cart);
 	const [ids, setIds] = useState([])
 
 	useEffect(() => {
-		shoppingcart?.map((item) => { ids.push(item.id) })
-		console.log("ids>>><" + ids)
+		shoppingCart?.map((item) => { ids.push(item.id) })
+		console.log("ids in the BuyButton>>><" + ids)
 	}, [])
 
 	return (

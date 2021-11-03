@@ -6,4 +6,5 @@ const shoppingCart = (state = [], action) => {
 	}
 }
 
+
 export default shoppingCart;

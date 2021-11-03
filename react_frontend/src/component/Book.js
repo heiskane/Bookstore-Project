@@ -14,17 +14,27 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import DownloadButton from "./DownloadButton";
 import ReadBookButton from './ReadBookButton';
+import { useEffect, useState } from 'react';
 
 
 const Book = ({ book }) => {
 
-  const shoppingCart = useSelector(state => state.shoppingCart);
+  const shoppingCart = useSelector(state => state.shopping_Cart);
   const dispatch = useDispatch();
+
+  const [ids, setIds] = useState([])
 
   const saveToBasket = (e) => {
     e.preventDefault();
-    dispatch(add_to_cart(book));
+    //console.log("bookid>>>🤣" + book.id)
+    if(ids.indexOf(book.id) === -1 ){
+    dispatch(add_to_cart(book))
+    ids.push(book.id)
+    }else{
+      alert("Item is already in shopping cart")
+    }
   }
+    
 
   function ActionButton(props) {
     if (props.price > 0) {
