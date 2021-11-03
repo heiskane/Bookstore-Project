@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import "./Order.css";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDispatch } from "react-redux";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,8 +22,15 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function Order({ order }) {
+  const dispatch = useDispatch()
 
-  console.log("Order>>>" + order)
+  const removeFromCart = () =>{
+    dispatch({
+      type: "REMOVE_FROM_SHOPPINGCART",
+      id: order.id,
+    });
+  }
+
   return (
 
     <Card className="order__card" sx={{ display: 'flex', maxWidth: 500, borderBottom: '1px solid grey' }} >
@@ -50,7 +58,10 @@ export default function Order({ order }) {
         <Button
           size="small"
           variant="contained"
-          startIcon={<DeleteIcon />}>
+          startIcon={<DeleteIcon />}
+          onClick={removeFromCart}
+          
+          >
           DELETE
         </Button>
       </CardActions>
