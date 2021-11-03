@@ -1,11 +1,11 @@
 import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
 
 const BuyButton = () => {
-
+	const dispatch = useDispatch();
 	const [cookies] = useCookies();
 
 	const shoppingCart = useSelector(state => state.shopping_cart);
@@ -33,17 +33,17 @@ const BuyButton = () => {
 							{ "book_ids": ids } // Put book IDs here from shopping cart
 						)
 					})
-					.then((res) => {
-						if (!res.ok) {
-							throw new Error('Something went wrong');
-						} else {
-							return res.json();
-						}
-					})
-					.then(function (orderData) {
-						// Maybe deal with this server-side
-						return orderData.result.id;
-					});
+						.then((res) => {
+							if (!res.ok) {
+								throw new Error('Something went wrong');
+							} else {
+								return res.json();
+							}
+						})
+						.then(function (orderData) {
+							// Maybe deal with this server-side
+							return orderData.result.id;
+						});
 				}}
 
 				onApprove={(data, actions) => {
@@ -51,10 +51,10 @@ const BuyButton = () => {
 						method: 'post',
 						headers: {
 							'Authorization': 'Bearer ' + cookies.jwt_token
-						}						
-					}).then(function (res) {
-						return res.json();
-					}).then(function (orderData) {
+						}
+					}).then(
+						dispatch({ type: 'EMPTY_SHOPPINGCART' })
+					).then(function (orderData) {
 						console.log(orderData);
 					});
 				}} // TODO: If user not logged in set jwt_token from response
