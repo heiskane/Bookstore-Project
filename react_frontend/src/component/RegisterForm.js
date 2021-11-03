@@ -119,7 +119,7 @@ class RegisterForm extends React.Component {
             </Grid>
 
             <Grid item>
-              <Button type="submit" variant="contained">Login</Button>
+              <Button type="submit" variant="contained">Register</Button>
             </Grid>
 
           </Grid>
