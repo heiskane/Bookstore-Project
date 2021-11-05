@@ -29,10 +29,9 @@ def create_book(
         )
 
     uniq = list(set(authors))
-    authors.sort()
 
-    if uniq != authors:
-        raise HTTPException(status_code=400, detail="Duplicate authors not allowed")
+    if len(uniq) != len(authors):
+        raise HTTPException(status_code=400, detail=f"Duplicate authors not allowed. authors: {authors}, uniq: {uniq}")
 
     return crud.create_book(db=db, book=book, genres=genres, authors=authors)
 
