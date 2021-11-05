@@ -28,6 +28,7 @@ def paypal_create_order(
 
     # Exclude duplicates
     uniq = list(set(shopping_cart.book_ids))
+    shopping_cart.book_ids.sort()
 
     if shopping_cart.book_ids != uniq:
         raise HTTPException(status_code=400, detail="Duplicate products not allowed in shopping cart")
