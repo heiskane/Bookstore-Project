@@ -33,8 +33,8 @@ def main(
     response = requests.post(
         "http://localhost:8000/books/",
         json={
-          "authors": [author_name for author_name in authors.split(" ")],
-          "genres": [{"name": genre_name} for genre_name in genres.split(" ")],
+          "authors": [author_name for author_name in authors.split(",")],
+          "genres": [{"name": genre_name} for genre_name in genres.split(",")],
           "book": {
             "title": title,
             "description": description,

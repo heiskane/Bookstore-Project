@@ -62,7 +62,7 @@ const Book = ({ book }) => {
 
     if (authors.length > 1) {
       return (
-        <Typography>Authors: {authors.map((author) => author.name + " ")}</Typography>
+        <Typography>Authors: {authors.map((author) => author.name + ", ")}</Typography>
       )
     }
 
@@ -74,7 +74,7 @@ const Book = ({ book }) => {
 
     if (genres.length > 1) {
       return (
-        <Typography>Genres: {genres.map((genre) => genre.name + " ")}</Typography>
+        <Typography>Genres: {genres.map((genre) => genre.name + ", ")}</Typography>
       )
     }
 

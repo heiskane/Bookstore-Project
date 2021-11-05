@@ -31,7 +31,9 @@ def paypal_create_order(
     shopping_cart.book_ids.sort()
 
     if shopping_cart.book_ids != uniq:
-        raise HTTPException(status_code=400, detail="Duplicate products not allowed in shopping cart")
+        raise HTTPException(
+            status_code=400, detail="Duplicate products not allowed in shopping cart"
+        )
 
     books = []
     for book_id in shopping_cart.book_ids:
@@ -60,7 +62,6 @@ def paypal_capture_order(
         if not db_book:
             continue
         ordered_books.append(db_book)
-
 
     # Maybe implement this in a function
 

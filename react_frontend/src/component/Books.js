@@ -30,8 +30,8 @@ export default function App() {
     }}>
       <Grid container
         direction="row"
-        justifyContent='space-around' 
-        alignItems='center' 
+        justifyContent='space-between' 
+        alignItems='flex-start' 
         spacing={3}>
         {books.map((book) =>
           <Grid item xs={12} sm={8} md={6} lg={3} xl={2}>

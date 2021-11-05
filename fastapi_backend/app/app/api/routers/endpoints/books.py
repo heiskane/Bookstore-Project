@@ -28,11 +28,11 @@ def create_book(
             status_code=400, detail="Book with this tile already exists"
         )
 
-    # https://github.com/ahupp/python-magic
-    # file_type = from_buffer(image_file).split(',')[0]
-    # if file_type != 'PNG image data':
-    # 	raise HTTPException(status_code=400, detail='Wrong filetype for image (Has to be PNG)')
-    # book.image = image_file
+    uniq = list(set(authors))
+    authors.sort()
+
+    if uniq != authors:
+        raise HTTPException(status_code=400, detail="Duplicate authors not allowed")
 
     return crud.create_book(db=db, book=book, genres=genres, authors=authors)
 

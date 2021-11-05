@@ -115,4 +115,3 @@ def test_wishlist_book(client: TestClient, auth_header: str) -> None:
 def test_delete_book(client: TestClient, admin_auth_header: str) -> None:
     response = client.delete("/books/1/", headers=admin_auth_header)
     assert response.status_code == 200, response.text
-
