@@ -3,6 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 const BuyButton = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const BuyButton = () => {
       <PayPalButtons
         style={{ layout: "horizontal" }}
         createOrder={(data, actions) => {
-          return fetch('http://localhost:8000/checkout/paypal/order/create/', {
+          return fetch(axios.defaults.baseURL + '/checkout/paypal/order/create/', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
@@ -47,7 +48,7 @@ const BuyButton = () => {
         }}
 
         onApprove={(data, actions) => {
-          return fetch('http://localhost:8000/checkout/paypal/order/' + data.orderID + '/capture/', {
+          return fetch(axios.defaults.baseURL + '/checkout/paypal/order/' + data.orderID + '/capture/', {
             method: 'post',
             headers: {
               'Authorization': 'Bearer ' + cookies.jwt_token
