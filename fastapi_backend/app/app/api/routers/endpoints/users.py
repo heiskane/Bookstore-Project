@@ -37,12 +37,18 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)) ->
 
 @router.get("/users/", response_model=List[schemas.User])
 def read_users(
-    skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_db),
-    curr_user: schemas.User = Depends(deps.require_admin)
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin),
 ) -> Any:
     return crud.get_users(db=db, skip=skip, limit=limit)
 
 
 @router.get("/users/{username}", response_model=schemas.User)
-def read_user(username: str, db: Session = Depends(deps.get_db), curr_user: schemas.User = Depends(deps.require_admin)) -> Any:
+def read_user(
+    username: str,
+    db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin),
+) -> Any:
     return crud.get_user_by_name(db=db, username=username)

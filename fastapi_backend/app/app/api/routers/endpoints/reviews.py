@@ -32,8 +32,10 @@ def update_review(
 
 @router.delete("/reviews/{review_id}/")
 def delete_review(
-    book_id: int, review_id: int, db: Session = Depends(deps.get_db),
-    curr_user: schemas.User = Depends(deps.require_admin)
+    book_id: int,
+    review_id: int,
+    db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin),
 ) -> None:
     review = crud.get_review(db=db, review_id=review_id)
     if not review:

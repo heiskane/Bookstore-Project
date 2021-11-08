@@ -42,14 +42,14 @@ def test_login(client: TestClient) -> None:
     assert response.status_code == 401, response.text
 
 
-def test_find_user_by_name(client: TestClient) -> None:
-    response = client.get("/users/test_user")
+def test_find_user_by_name(client: TestClient, admin_auth_header: str) -> None:
+    response = client.get("/users/test_user", headers=admin_auth_header)
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["username"] == "test_user"
     assert data["is_active"]
 
 
-def test_list_users(client: TestClient) -> None:
-    response = client.get("/users")
+def test_list_users(client: TestClient, admin_auth_header: str) -> None:
+    response = client.get("/users", headers=admin_auth_header)
     assert response.status_code == 200, response.text

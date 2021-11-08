@@ -1,9 +1,10 @@
 from fastapi.testclient import TestClient
 
 
-def test_create_book(client: TestClient) -> None:
+def test_create_book(client: TestClient, admin_auth_header: str) -> None:
     response = client.post(
         "/books/",
+        headers=admin_auth_header,
         json={
             "authors": ["author1", "author2"],
             "genres": [{"name": "string"}],
@@ -24,9 +25,10 @@ def test_create_book(client: TestClient) -> None:
     assert data["title"] == "Test Book"
 
 
-def test_create_duplicate_book(client: TestClient) -> None:
+def test_create_duplicate_book(client: TestClient, admin_auth_header: str) -> None:
     response = client.post(
         "/books/",
+        headers=admin_auth_header,
         json={
             "authors": ["author1", "author2"],
             "genres": [{"name": "string"}],
@@ -66,9 +68,10 @@ def test_get_book_image(client: TestClient) -> None:
     assert response.status_code == 200
 
 
-def test_update_book(client: TestClient) -> None:
+def test_update_book(client: TestClient, admin_auth_header: str) -> None:
     response = client.patch(
         "/books/1/",
+        headers=admin_auth_header,
         json={
             "title": "new title",
             "description": "new description",
@@ -88,8 +91,8 @@ def test_update_book(client: TestClient) -> None:
     assert data["isbn"] == "string"
 
 
-def test_update_book_404(client: TestClient) -> None:
-    response = client.patch("/books/69/", json={})
+def test_update_book_404(client: TestClient, admin_auth_header: str) -> None:
+    response = client.patch("/books/69/", headers=admin_auth_header, json={})
     assert response.status_code == 404, response.text
 
 
