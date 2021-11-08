@@ -38,7 +38,8 @@ def read_genre_books(genre_id: int, db: Session = Depends(deps.get_db)) -> Any:
 
 
 @router.delete("/genres/{genre_id}/")
-def delete_genre(genre_id: int, db: Session = Depends(deps.get_db)) -> None:
+def delete_genre(genre_id: int, db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin)) -> None:
     genre = crud.get_genre(db=db, genre_id=genre_id)
     if not genre:
         raise HTTPException(status_code=404, detail="Genre not found")

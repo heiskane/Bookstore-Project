@@ -21,6 +21,7 @@ def create_book(
     genres: List[schemas.GenreCreate],
     book: schemas.BookCreate,
     db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin)
 ) -> Any:
     db_book = crud.get_book_by_title(db, title=book.title)
     if db_book:
@@ -54,7 +55,8 @@ def read_book(book_id: int, db: Session = Depends(deps.get_db)) -> Any:
 # https://stackoverflow.com/questions/63143731/update-sqlalchemy-orm-existing-model-from-posted-pydantic-model-in-fastapi
 @router.patch("/books/{book_id}/", response_model=schemas.Book)
 def update_book(
-    book_id: int, updated_book: schemas.BookUpdate, db: Session = Depends(deps.get_db)
+    book_id: int, updated_book: schemas.BookUpdate, db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin)
 ) -> Any:
     db_book = crud.get_book(db=db, book_id=book_id)
     if not db_book:
@@ -64,7 +66,8 @@ def update_book(
 
 
 @router.delete("/books/{book_id}/")
-def delete_book(book_id: int, db: Session = Depends(deps.get_db)) -> Any:
+def delete_book(book_id: int, db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin)) -> Any:
     book = crud.get_book(db=db, book_id=book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")

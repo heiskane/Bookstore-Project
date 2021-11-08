@@ -30,12 +30,12 @@ def auth_optional(
 
 
 @router.get("/drop_tables/")
-def drop_tables() -> None:
+def drop_tables(curr_user: schemas.User = Depends(deps.require_admin)) -> None:
     models.Base.metadata.drop_all(bind=engine, checkfirst=True)
     return
 
 
 @router.get("/create_tables")
-def create_tables() -> None:
+def create_tables(curr_user: schemas.User = Depends(deps.require_admin)) -> None:
     models.Base.metadata.create_all(bind=engine, checkfirst=True)
     return

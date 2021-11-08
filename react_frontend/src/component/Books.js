@@ -13,7 +13,7 @@ export default function App() {
 
   React.useEffect(() => {
     const instance = axios.create();
-    instance.get("/books/")
+    instance.get("/async_books/")
       .then((response) => {
         setBooks(response.data);
       });

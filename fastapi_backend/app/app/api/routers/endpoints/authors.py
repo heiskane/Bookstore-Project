@@ -15,7 +15,8 @@ router = APIRouter()
 
 @router.post("/authors/", response_model=schemas.Author)
 def create_author(
-    author: schemas.AuthorCreate, db: Session = Depends(deps.get_db)
+    author: schemas.AuthorCreate, db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin)
 ) -> Any:
     # This endpoint might not be needed
     db_author = crud.get_author_by_name(db=db, name=author.name)
@@ -41,7 +42,8 @@ def read_author(author_id: int, db: Session = Depends(deps.get_db)) -> Any:
 
 
 @router.delete("/authors/{author_id}/")
-def delete_author(author_id: int, db: Session = Depends(deps.get_db)) -> Any:
+def delete_author(author_id: int, db: Session = Depends(deps.get_db),
+    curr_user: schemas.User = Depends(deps.require_admin)) -> Any:
     author = crud.get_author(db=db, author_id=author_id)
     if not author:
         raise HTTPException(status_code=404, detail="Author not found")
