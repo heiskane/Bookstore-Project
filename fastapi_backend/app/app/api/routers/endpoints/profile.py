@@ -12,6 +12,11 @@ from app.api import deps
 router = APIRouter()
 
 
+@router.get("/profile/", response_model=schemas.User)
+def get_profile(curr_user: models.User = Depends(deps.get_current_user)) -> Any:
+    return curr_user
+
+
 @router.get("/profile/library/", response_model=List[schemas.Book])
 def get_user_library(curr_user: models.User = Depends(deps.get_current_user)) -> Any:
     return curr_user.books
