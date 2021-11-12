@@ -18,19 +18,16 @@ const bull = (
 const ShoppingCart = () => {
   const orders = useSelector((state) => state.shopping_cart);
   const [prices, setPrices] = useState([]);
-
+  const [subtotal, setSubtotal] = useState();
  
   useEffect(() => {
-    {
-      orders?.map((book) => {
-        prices.push(book.price);
-      });
+    let total = 0
+    for (let i = 0; i < orders.length; i++) {
+      total += orders[i].price
     }
+    setSubtotal(total)
+    
   }, [orders]);
-
-    const subtotal = prices.reduce((accumulator, currentValue) => {
-        return accumulator + currentValue;
-    }, 0);
 
 
   return (
@@ -39,7 +36,7 @@ const ShoppingCart = () => {
         <h1 className="shoppingcart__header">Your Shopping Cart</h1>
         <div class="shoppingcart__book">
           {orders.map((order) => (
-            <Order order={order} />
+            <Order order={order} setSubtotal={setSubtotal} />
           ))}
         </div>
       </div>

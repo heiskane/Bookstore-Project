@@ -21,10 +21,11 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-export default function Order({ order }) {
+export default function Order({ order, setSubtotal }) {
   const dispatch = useDispatch()
 
-  const removeFromCart = () =>{
+  const removeFromCart = () => {
+    setSubtotal(curr => curr - order.price)
     dispatch({
       type: "REMOVE_FROM_SHOPPINGCART",
       id: order.id,

@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import BuyButton from './BuyButton';
 
-const Subtotal = () => {
+const Subtotal = ({subtotal}) => {
     const shoppingcart = useSelector(state => state.shopping_cart);
     const [prices, setPrices] = useState([])
 
@@ -18,10 +18,7 @@ const Subtotal = () => {
                 <Typography>
                     Subtotal:
                     <span>
-                        {shoppingcart?.map((book) => { prices.push(book.price) })}
-                        {prices?.reduce((accumulator, currentValue) => {
-                            return accumulator + currentValue;
-                        }, 0)} €
+                        {subtotal} €
                     </span>
 
                 </Typography>
