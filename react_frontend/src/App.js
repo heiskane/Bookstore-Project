@@ -7,6 +7,7 @@ import Checkout from './component/Checkout';
 import Login from './component/Login';
 import BookDetails from './component/BookDetails';
 import ReadBook from './component/ReadBook';
+import Profile from './component/Profile';
 
 import axios from 'axios';
 import ShoppingCart from './component/ShoppingCart';
@@ -21,49 +22,54 @@ function App() {
   return (
     <Router>
 
-        <Switch>
-          <Route exact path="/">
-            <Header />
-            <Home />
-          </Route>
+      <Switch>
+        <Route exact path="/">
+          <Header />
+          <Home />
+        </Route>
 
-          <Route path="/checkout">
-            <Header />
-            <Checkout />
-          </Route>
-          <Route path="/login">
-            <Header />
-            <Login />
-          </Route>
-          <Route path="/register">
-            <Header />
-            <Login />
-          </Route>
-          <Route path="/books/:book_id">
-            <Header />
-            <BookDetails />
-          </Route>
-          <Route path="/read_book/:book_id">
-            <Header />
-            <ReadBook />
-          </Route>
+        <Route path="/checkout">
+          <Header />
+          <Checkout />
+        </Route>
+        <Route path="/login">
+          <Header />
+          <Login />
+        </Route>
+        <Route path="/register">
+          <Header />
+          <Login />
+        </Route>
+        <Route path="/books/:book_id">
+          <Header />
+          <BookDetails />
+        </Route>
+        <Route path="/read_book/:book_id">
+          <Header />
+          <ReadBook />
+        </Route>
 
-          <Route path="/shoppingcart">
-            <Header />
-            <ShoppingCart />
-          </Route>
+        <Route path="/shoppingcart">
+          <Header />
+          <ShoppingCart />
+        </Route>
 
-          <Route path="/orders">
-            <Header />
-            <Orders />
-          </Route>
+        <Route path="/orders">
+          <Header />
+          <Orders />
+        </Route>
 
-          <Route path="/forgetpassword">
-            <Header />
-            <ForgetPassword />
-          </Route>
+        <Route path="/forgetpassword">
+          <Header />
+          <ForgetPassword />
+        </Route>
 
-        </Switch>
+        <Route path="/profile">
+          <Header />
+          <Profile />
+        </Route>
+
+      </Switch>
 
     </Router>
   );

@@ -17,16 +17,15 @@ const bull = (
 
 const ShoppingCart = () => {
   const orders = useSelector((state) => state.shopping_cart);
-  const [prices, setPrices] = useState([]);
   const [subtotal, setSubtotal] = useState();
- 
+
   useEffect(() => {
     let total = 0
     for (let i = 0; i < orders.length; i++) {
       total += orders[i].price
     }
     setSubtotal(total)
-    
+
   }, [orders]);
 
 

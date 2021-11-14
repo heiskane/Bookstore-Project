@@ -40,22 +40,22 @@ const Header = () => {
   const LoginOrUser = () => {
     if (!user_token.sub) {
       return (
-          <Button
-            color='inherit'
-            component={Link}
-            to="/login"
-          >
-            Login
-          </Button>
+        <Button
+          color='inherit'
+          component={Link}
+          to="/login"
+        >
+          Login
+        </Button>
       )
     } else {
       return (
         <>
           <Button
             color='inherit'
-            onClick={() => alert("Profile page not yet implemented")}
+            //onClick={() => alert("Profile page not yet implemented")}
             component={Link}
-            to="/"
+            to="/profile"
           >
             {user_token.sub}
           </Button>
@@ -82,9 +82,9 @@ const Header = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
 
-      <AppBar position='static'> 
+      <AppBar position='static'>
 
-      {/*
+        {/*
       <Link to="/">
         <img className="header__logo" src={HLG_Books} alt="HLG_Books logo" />
       </Link>
@@ -97,25 +97,26 @@ const Header = () => {
             sx={{
               flexGrow: 1,
               textDecoration: 'none',
-              color: 'inherit' }}>
+              color: 'inherit'
+            }}>
             HLG Bookstore
           </Typography>
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-          <LoginOrUser />
-          <IconButton
-            color="inherit"
-            component={Link}
-            to="/shoppingcart"
-          >
-            <Badge
-              sx={{ overflow: 'visible' }}
-              overlap="circular"
-              badgeContent={shoppingcart.length}
-              color="error">
-              <ShoppingCartOutlinedIcon />
-            </Badge>
-          </IconButton>
+            <LoginOrUser />
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/shoppingcart"
+            >
+              <Badge
+                sx={{ overflow: 'visible' }}
+                overlap="circular"
+                badgeContent={shoppingcart.length}
+                color="error">
+                <ShoppingCartOutlinedIcon />
+              </Badge>
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>

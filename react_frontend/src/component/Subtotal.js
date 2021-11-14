@@ -7,9 +7,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import BuyButton from './BuyButton';
 
-const Subtotal = ({subtotal}) => {
-    const shoppingcart = useSelector(state => state.shopping_cart);
-    const [prices, setPrices] = useState([])
+const Subtotal = ({ subtotal }) => {
+
 
     return (
 
