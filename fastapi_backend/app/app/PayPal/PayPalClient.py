@@ -5,6 +5,7 @@ from typing import Dict
 from typing import List
 
 from dotenv import load_dotenv  # type: ignore[import]
+from paypalcheckoutsdk.core import LiveEnvironment
 from paypalcheckoutsdk.core import PayPalHttpClient  # type: ignore[import]
 from paypalcheckoutsdk.core import SandboxEnvironment
 
