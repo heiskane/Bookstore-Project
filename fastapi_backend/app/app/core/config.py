@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     """Tries to read environment variables to set the settings"""
 
     DEBUG: bool = True
+    ENVIRONMENT: str = "DEV"
 
     SECRET_KEY: str
     ALGORITHM: str = "HS256"

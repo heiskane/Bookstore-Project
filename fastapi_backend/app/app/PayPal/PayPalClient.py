@@ -4,27 +4,38 @@ from typing import Any
 from typing import Dict
 from typing import List
 
-from dotenv import load_dotenv
-from paypalcheckoutsdk.core import PayPalHttpClient
+from dotenv import load_dotenv  # type: ignore[import]
+from paypalcheckoutsdk.core import PayPalHttpClient  # type: ignore[import]
 from paypalcheckoutsdk.core import SandboxEnvironment
+
+from app.core.config import settings
 
 load_dotenv()
 
 CLIENT_ID = getenv("PAYPAL-SANDBOX-CLIENT-ID")
 CLIENT_SECRET = getenv("PAYPAL-SANDBOX-CLIENT-SECRET")
+LIVE_CLIENT_ID = getenv("PAYPAL-LIVE-CLIENT-ID")
+LIVE_CLIENT_SECRET = getenv("PAYPAL-LIVE-CLIENT-SECRET")
 
 # https://developer.paypal.com/docs/checkout/reference/server-integration/setup-sdk/
 class PayPalClient:
     def __init__(self) -> None:
         self.client_id = CLIENT_ID
         self.client_secret = CLIENT_SECRET
+        self.live_client_id = LIVE_CLIENT_ID
+        self.live_client_secret = LIVE_CLIENT_SECRET
 
         """Set up and return PayPal Python SDK environment with PayPal access credentials.
 		   This sample uses SandboxEnvironment. In production, use LiveEnvironment."""
 
-        self.environment = SandboxEnvironment(
-            client_id=self.client_id, client_secret=self.client_secret
-        )
+        if settings.ENVIRONMENT == "PROD":
+            self.environment = LiveEnvironment(
+                client_id=self.live_client_id, client_secret=self.live_client_secret
+            )
+        else:
+            self.environment = SandboxEnvironment(
+                client_id=self.client_id, client_secret=self.client_secret
+            )
 
         """ Returns PayPal HTTP client instance with environment that has access
 			credentials context. Use this instance to invoke PayPal APIs, provided the
