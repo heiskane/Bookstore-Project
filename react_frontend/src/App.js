@@ -16,7 +16,11 @@ import ForgetPassword from './ForgetPassword';
 
 // https://github.com/axios/axios#global-axios-defaults
 // Define baseURL for all api calls
-axios.defaults.baseURL = 'http://localhost:8000'
+if (process.env.NODE_ENV != 'production') {
+  axios.defaults.baseURL = 'http://localhost:8000'
+} else {
+  axios.defaults.baseURL = 'https://api.hlgbooks.com'
+}
 
 function App() {
   return (

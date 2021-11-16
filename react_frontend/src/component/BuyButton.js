@@ -12,18 +12,19 @@ const BuyButton = () => {
   const shoppingCart = useSelector(state => state.shopping_cart);
   const [ids, setIds] = useState([])
 
+  /*
+  if (process.env.NODE_ENV != 'production') {
+    setClientId("AVRE2PhqcdO4hh6ak49te0ouOyRq3cdngOheyPvCqS7QQew1XOykcvEM4L9X3DGyWRDnyhGsCZtUg62m");
+  } else {
+    setClientId("ARBTnyC9yOG3m5nkySbFD8E453_QsA-f24Y_xnlB9bgR2JApJtkArLZ5xE4S0yTTfSCx_cAe2DqNJvh0");
+  }*/
+
   useEffect(() => {
     shoppingCart?.map((item) => { ids.push(item.id) })
-    console.log("ids in the BuyButton>>><" + ids)
   }, [])
 
-  return (
-    <PayPalScriptProvider options={
-      {
-        "client-id": "AVRE2PhqcdO4hh6ak49te0ouOyRq3cdngOheyPvCqS7QQew1XOykcvEM4L9X3DGyWRDnyhGsCZtUg62m",
-        "currency": "EUR"
-      }
-    }>
+  function PayPalBuyButton() {
+    return (
       <PayPalButtons
         style={{ layout: "horizontal" }}
         createOrder={(data, actions) => {
@@ -76,8 +77,32 @@ const BuyButton = () => {
           alert("Something went wrong :(")
         }}
       />
-    </PayPalScriptProvider>
-  );
+    )
+  }
+
+  if (process.env.NODE_ENV != 'production') {
+    return (
+      <PayPalScriptProvider options={
+        {
+          "client-id": "AVRE2PhqcdO4hh6ak49te0ouOyRq3cdngOheyPvCqS7QQew1XOykcvEM4L9X3DGyWRDnyhGsCZtUg62m",
+          "currency": "EUR"
+        }
+      }>
+        <PayPalBuyButton />
+      </PayPalScriptProvider>
+    );
+  } else {
+    return (
+      <PayPalScriptProvider options={
+        {
+          "client-id": "ARBTnyC9yOG3m5nkySbFD8E453_QsA-f24Y_xnlB9bgR2JApJtkArLZ5xE4S0yTTfSCx_cAe2DqNJvh0",
+          "currency": "EUR"
+        }
+      }>
+        <PayPalBuyButton />
+      </PayPalScriptProvider>
+    );
+  }
 
 }
 
