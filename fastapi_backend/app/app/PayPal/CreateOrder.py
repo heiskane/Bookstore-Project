@@ -54,7 +54,6 @@ class CreateOrder(PayPalClient):
             books_json.append(
                 {
                     "name": book.title,
-                    "description": book.description,
                     "unit_amount": {"currency_code": "EUR", "value": book.price},
                     "quantity": 1,
                     "category": "DIGITAL_GOODS",
