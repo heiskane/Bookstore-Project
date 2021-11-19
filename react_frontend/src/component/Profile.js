@@ -1,27 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
 import './Profile.css';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
 
 const Profile = () => {
     const [cookies, setCookie] = useCookies();
 
     const [profile, setProfile] = useState("");
-    const url = "http://localhost:8000/profile/";
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + cookies.jwt_token
-        }
-    })
-        .then(response => response.json())
-        .then(data => setProfile(data))
+
+
+
+    useEffect(() => {
+        fetch(axios.defaults.baseURL + "/profile/", {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + cookies.jwt_token
+            }
+        })
+            .then(response => response.json())
+            .then(data => setProfile(data))
+    }, [])
+
     return (
         <div class="profile">
             <h1>My information</h1>
-            <Card sx={{ maxWidth: 345 }}>
+            <Card sx={{ minWidth: 500 }}>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                         Username: {profile.username}
