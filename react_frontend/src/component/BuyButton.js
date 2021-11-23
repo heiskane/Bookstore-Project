@@ -5,19 +5,14 @@ import { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
+import { download_book } from './DownloadFunc';
+
 const BuyButton = () => {
   const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies();
 
   const shoppingCart = useSelector(state => state.shopping_cart);
   const [ids, setIds] = useState([])
-
-  /*
-  if (process.env.NODE_ENV != 'production') {
-    setClientId("AVRE2PhqcdO4hh6ak49te0ouOyRq3cdngOheyPvCqS7QQew1XOykcvEM4L9X3DGyWRDnyhGsCZtUg62m");
-  } else {
-    setClientId("ARBTnyC9yOG3m5nkySbFD8E453_QsA-f24Y_xnlB9bgR2JApJtkArLZ5xE4S0yTTfSCx_cAe2DqNJvh0");
-  }*/
 
   useEffect(() => {
     shoppingCart?.map((item) => { ids.push(item.id) })
@@ -69,9 +64,12 @@ const BuyButton = () => {
                   path: "/",
                   sameSite: 'strict'
                 });
+              for (let i = 0; i < ids.length; i++) {
+                download_book(ids[i], json.access_token);
+              }
             }
           });
-        }} // TODO: If user not logged in set jwt_token from response
+        }}
 
         onError={(error) => {
           alert("Something went wrong :(")
