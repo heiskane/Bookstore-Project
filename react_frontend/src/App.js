@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import axios from 'axios';
 import Header from './component/Header';
 import Home from './component/Home';
 import Checkout from './component/Checkout';
@@ -9,7 +10,7 @@ import BookDetails from './component/BookDetails';
 import ReadBook from './component/ReadBook';
 import Profile from './component/Profile';
 
-import axios from 'axios';
+
 import ShoppingCart from './component/ShoppingCart';
 import Orders from './component/Orders';
 import ThankYou from './component/ThankYou';
@@ -22,6 +23,8 @@ if (process.env.NODE_ENV !== 'production') {
 } else {
   axios.defaults.baseURL = 'https://api.hlgbooks.com'
 }
+
+document.title = "HLG Books"
 
 function App() {
   return (
