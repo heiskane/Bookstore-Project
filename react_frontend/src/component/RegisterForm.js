@@ -75,10 +75,7 @@ class RegisterForm extends React.Component {
       return <Redirect to={this.state.redirectTo} />
     }
     return (
-      <Paper
-        elevation={8}
-        className="registerForm"
-      >
+      <Paper elevation={8}>
         <form
           onSubmit={this.handleSubmit}
         >
@@ -89,6 +86,7 @@ class RegisterForm extends React.Component {
             alignItems='center'
             padding={10}
             spacing={2}
+            height="550px"
           >
             <Typography variant="h2">Register</Typography>
             <Grid item>

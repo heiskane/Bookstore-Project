@@ -1,4 +1,7 @@
 import React from 'react';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import './Login.css';
@@ -8,10 +11,13 @@ const Login = () => {
 
 
   return (
-    <div className="login">
-      <div className="login__loginForm">
+    <Box
+      className="login"
+      padding="5%"
+    >
+      <Box padding="5%">
         <LoginForm />
-      </div>
+      </Box>
      
       <div className="login__middle">
         <div className="login__middleline">
@@ -21,13 +27,13 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="login__registerForm">
+      <Box padding="5%">
         <RegisterForm />
-      </div>
+      </Box>
       
   
 
-    </div>
+    </Box>
   )
 }
 

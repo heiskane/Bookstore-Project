@@ -3,7 +3,6 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: rgb(51, 87, 110);
 }
 
 .login__loginForm , .login__registerForm  {
