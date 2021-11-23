@@ -5,6 +5,7 @@ import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
@@ -74,7 +75,10 @@ export default function ReadBook() {
 				file={book}
 				onLoadSuccess={onDocumentLoadSuccess}
 			>
-				<Page pageNumber={pageNumber} />
+				<Page
+					pageNumber={pageNumber}
+					height={window.innerHeight - 200}
+				/>
 			</Document>
 			<Box
 			  display="flex"
@@ -83,7 +87,7 @@ export default function ReadBook() {
 				<Button variant="outlined" onClick={previousPage}>&lt;</Button>
 				<Button variant="outlined" onClick={nextPage}>&gt;</Button>
 			</Box>
-			<p>Page {pageNumber} of {numPages}</p>
+			<Typography>Page {pageNumber} of {numPages}</Typography>
 		</Box>
 	)
 
