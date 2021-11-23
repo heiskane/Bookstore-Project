@@ -69,25 +69,27 @@ export default function BookDetails() {
       justifyContent: 'center'
     }}>
       <Card  sx={{
-        maxWidth: 600,
-        maxHeight: "100vh"
+        maxWidth: 750,
+        maxHeight: "100vh",
       }} className="book">
         <CardMedia
           component="img"
-          height="340px"
+          height="400px"
           image={axios.defaults.baseURL + "/books/" + book_id + "/image/"}
           alt="Book cover"
         />
-        <Typography  variant="h5" component="div">
-          {book.title}
-        </Typography>
-        <BookRating avg_rating={book.avg_rating} />
-        <BookAuthors authors={book.authors} />
-        <BookGenres genres={book.genres} />
-        <Typography>Description: {book.description}</Typography>
-        <Typography>Price: {book.price} €</Typography>
-        <Typography>Language: {book.language}</Typography>
-        <Typography>Publication Date: {book.publication_date}</Typography>
+        <Box padding="5%">
+          <Typography  variant="h5" component="div">
+            {book.title}
+          </Typography>
+          <BookRating avg_rating={book.avg_rating} />
+          <BookAuthors authors={book.authors} />
+          <BookGenres genres={book.genres} />
+          <Typography>Description: {book.description}</Typography>
+          <Typography>Price: {book.price} €</Typography>
+          <Typography>Language: {book.language}</Typography>
+          <Typography>Publication Date: {book.publication_date}</Typography>
+        </Box>
         <CardActions sx={{
           display: 'flex',
           justifyContent: 'space-between' 
