@@ -21,7 +21,6 @@ export default function BookDetails() {
       .then((response) => {
         if (response) {
           setBook(response.data);
-          console.log(book);
         } else {
           console.log("Fetching book failed")
         }
