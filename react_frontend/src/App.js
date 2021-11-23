@@ -12,6 +12,7 @@ import Profile from './component/Profile';
 import axios from 'axios';
 import ShoppingCart from './component/ShoppingCart';
 import Orders from './component/Orders';
+import ThankYou from './component/ThankYou';
 import ForgetPassword from './ForgetPassword';
 
 // https://github.com/axios/axios#global-axios-defaults
@@ -71,6 +72,11 @@ function App() {
         <Route path="/profile">
           <Header />
           <Profile />
+        </Route>
+
+        <Route path="/thankyou">
+          <Header />
+          <ThankYou />
         </Route>
 
       </Switch>

@@ -3,13 +3,16 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 import { download_book } from './DownloadFunc';
 
 const BuyButton = () => {
   const dispatch = useDispatch();
+
   const [cookies, setCookie] = useCookies();
+  const [redirect, setRedirect] = useState(false);
 
   const shoppingCart = useSelector(state => state.shopping_cart);
   const [ids, setIds] = useState([])
@@ -20,6 +23,7 @@ const BuyButton = () => {
 
   function PayPalBuyButton() {
     return (
+
       <PayPalButtons
         style={{ layout: "horizontal" }}
         createOrder={(data, actions) => {
@@ -68,6 +72,7 @@ const BuyButton = () => {
                 download_book(ids[i], json.access_token);
               }
             }
+            setRedirect(true);
           });
         }}
 
@@ -75,6 +80,12 @@ const BuyButton = () => {
           alert("Something went wrong :(")
         }}
       />
+    )
+  }
+
+  if (redirect) {
+    return (
+      <Redirect to="/thankyou" />
     )
   }
 

@@ -39,7 +39,6 @@ def create_anon_buyer_token(books: List[models.Book], expires_delta: timedelta) 
         )
     to_encode = {
         "exp": expire,
-        "sub": "anonymous",
         "ordered_book_ids": [book.id for book in books],
     }
     encoded_jwt = jwt.encode(
