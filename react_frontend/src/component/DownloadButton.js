@@ -1,6 +1,5 @@
 import React from 'react';
 import { useCookies } from 'react-cookie';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import { download_book } from './DownloadFunc';
 

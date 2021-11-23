@@ -2,7 +2,7 @@ import React from 'react';
 import './Book.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { add_to_cart } from '../actions';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -11,15 +11,13 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
 import DownloadButton from "./DownloadButton";
 import ReadBookButton from './ReadBookButton';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 
 const Book = ({ book }) => {
 
-  const shoppingCart = useSelector(state => state.shopping_Cart);
   const dispatch = useDispatch();
 
   const [ids, setIds] = useState([])

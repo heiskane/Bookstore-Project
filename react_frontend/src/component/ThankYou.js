@@ -1,13 +1,10 @@
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 
 export default function ThankYou() {
 
-  const [cookies, setCookie] = useCookies();
   const user_token = useSelector(state => state.user_token)
 
   return (

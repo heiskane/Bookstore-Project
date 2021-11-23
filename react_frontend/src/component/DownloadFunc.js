@@ -1,4 +1,3 @@
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
 

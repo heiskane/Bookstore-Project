@@ -14,9 +14,9 @@ export default function BookDetails() {
 
   const [book, setBook] = React.useState(null);
   let { book_id } = useParams();
-  const instance = axios.create();
 
   React.useEffect(() => {
+    const instance = axios.create();
     instance.get("/books/" + book_id)
       .then((response) => {
         if (response) {

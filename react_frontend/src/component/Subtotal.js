@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import "./Subtotal.css"
-import { useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -10,7 +9,7 @@ import BuyButton from './BuyButton';
 
 const Subtotal = ({ subtotal }) => {
 
-    const [cookies, setCookie, removeCookie] = useCookies();
+    const [cookies] = useCookies();
 
     return (
 
