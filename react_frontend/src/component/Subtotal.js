@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import "./Subtotal.css"
 import { useSelector } from 'react-redux';
+import { useCookies } from 'react-cookie';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -9,6 +10,7 @@ import BuyButton from './BuyButton';
 
 const Subtotal = ({ subtotal }) => {
 
+    const [cookies, setCookie, removeCookie] = useCookies();
 
     return (
 
@@ -19,8 +21,13 @@ const Subtotal = ({ subtotal }) => {
                     <span>
                         {subtotal} €
                     </span>
-
                 </Typography>
+                {!cookies.jwt_token &&
+                <Typography>
+                    We strongly recommend registering a user before buying books
+                    so that they are added to your account.
+                </Typography>
+                }
             </CardContent>
             {/* checkout button */}
             <CardActions>
