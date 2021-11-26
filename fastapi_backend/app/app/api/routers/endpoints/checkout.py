@@ -83,6 +83,8 @@ def paypal_capture_order(
     db_order = crud.get_order_by_order_id(db=db, order_id=order_id)
     client = db_order.client
 
+    print(client)
+
     if not client:
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = security.create_anon_buyer_token(

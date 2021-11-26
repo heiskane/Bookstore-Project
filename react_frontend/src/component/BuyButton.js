@@ -29,12 +29,12 @@ const BuyButton = () => {
         createOrder={(data, actions) => {
           return fetch(axios.defaults.baseURL + '/checkout/paypal/order/create/', {
             method: 'post',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + cookies.jwt_token
+            },
             body: JSON.stringify(
-              {
-                "book_ids": ids,
-                'Authorization': 'Bearer ' + cookies.jwt_token
-              } // Put book IDs here from shopping cart
+              { "book_ids": ids }
             )
           })
             .then((res) => {

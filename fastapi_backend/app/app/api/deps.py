@@ -75,7 +75,7 @@ async def get_current_user_or_none(
         token_data = schemas.TokenData(username=username)
     except JWTError:
         return None
-    user = crud.get_user_by_name(db=db, username=token_data.username)  # type: ignore[arg-type]
+    user = crud.get_user_by_name(db=db, username=token_data.username)
     return user
 
 
