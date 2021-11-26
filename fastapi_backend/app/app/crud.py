@@ -282,7 +282,7 @@ def create_order_record(
         order_date=order_date,
         order_id=order_id,
         total_price=total_price,
-        ordered_books=ordered_books
+        ordered_books=ordered_books,
     )
 
     if client:
