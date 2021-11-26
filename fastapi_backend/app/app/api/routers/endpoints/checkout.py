@@ -50,6 +50,8 @@ def paypal_create_order(
 
     order_id = order.result._dict["id"]  # type: ignore[attr-defined]
 
+    print("CURRENT USER:", curr_user)
+
     crud.create_order_record(
         db=db,
         order_date=date.today(),
@@ -82,8 +84,6 @@ def paypal_capture_order(
     order_id = order.result._dict["id"]  # type: ignore[attr-defined]
     db_order = crud.get_order_by_order_id(db=db, order_id=order_id)
     client = db_order.client
-
-    print(client)
 
     if not client:
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -125,6 +125,9 @@ def paypal_capture_mobile_order(
     order_id = order.result._dict["id"]  # type: ignore[attr-defined]
     db_order = crud.get_order_by_order_id(db=db, order_id=order_id)
     client = db_order.client
+
+    print(client)
+    print(order)
 
     crud.complete_order(db=db, order=db_order)
 

@@ -67,7 +67,7 @@ class CreateOrder(PayPalClient):
                 "landing_page": "NO_PREFERENCE",
                 "user_action": "CONTINUE",
                 # This is for mobile app
-                "return_url": "https://api.hlgbooks.com/mobile/checkout/paypal/order/capture/",
+                "return_url": "http://76f2-86-115-55-28.ngrok.io/mobile/checkout/paypal/order/capture/",
             },
             "purchase_units": [
                 {
