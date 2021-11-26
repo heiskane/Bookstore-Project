@@ -45,7 +45,7 @@ const Header = () => {
           component={Link}
           to="/login"
         >
-          Login
+          Login/Register
         </Button>
       )
     } else {

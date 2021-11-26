@@ -13,9 +13,10 @@ const BuyButton = () => {
 
   const [cookies, setCookie] = useCookies();
   const [redirect, setRedirect] = useState(false);
-
-  const shoppingCart = useSelector(state => state.shopping_cart);
   const [ids, setIds] = useState([])
+
+  const user_token = useSelector(state => state.user_token)
+  const shoppingCart = useSelector(state => state.shopping_cart);
 
   useEffect(() => {
     shoppingCart?.map((item) => { ids.push(item.id) })
@@ -62,7 +63,7 @@ const BuyButton = () => {
           })
           .then((json) => {
             //console.log(json);
-            if (!cookies.jwt_token) {
+            if (!user_token.sub) {
               setCookie("jwt_token", json.access_token,
                 {
                   path: "/",

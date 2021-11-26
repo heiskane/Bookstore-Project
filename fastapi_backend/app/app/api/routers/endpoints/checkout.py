@@ -72,6 +72,7 @@ def paypal_capture_order(
     order_id: str,
     db: Session = Depends(deps.get_db),
 ) -> Any:
+    CaptureOrder().capture_order(order_id, debug=settings.DEBUG)
     order = GetOrder().get_order(order_id=order_id)
 
     # Maybe implement this in a function
@@ -95,7 +96,6 @@ def paypal_capture_order(
             expires_delta=access_token_expires,
         )
         # Find a better way to do this later
-        CaptureOrder().capture_order(order_id, debug=settings.DEBUG)
         crud.complete_order(db=db, order=db_order)
         return {"access_token": access_token, "token_type": "bearer"}
 
@@ -106,7 +106,7 @@ def paypal_capture_order(
     db.commit()
     db.refresh(client)
 
-    return CaptureOrder().capture_order(order_id, debug=settings.DEBUG)
+    return order
 
 
 @router.get("/mobile/checkout/paypal/order/capture/", response_class=HTMLResponse)
@@ -116,6 +116,7 @@ def paypal_capture_mobile_order(
     db: Session = Depends(deps.get_db),
 ) -> Any:
     order = GetOrder().get_order(order_id=token)
+    CaptureOrder().capture_order(token, debug=settings.DEBUG)
 
     ordered_books: List[models.Book] = []
     for book in order.result.purchase_units[0].items:  # type: ignore[attr-defined]
@@ -136,8 +137,6 @@ def paypal_capture_mobile_order(
     db.add(client)
     db.commit()
     db.refresh(client)
-
-    CaptureOrder().capture_order(token, debug=settings.DEBUG)
 
     return templates.TemplateResponse(
         "thankyou.html", {"request": request, "username": client.username}
