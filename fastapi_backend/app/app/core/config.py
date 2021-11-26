@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     ENVIRONMENT: str = "DEV"
 
+    PAYPAL_RETURN_URL: str
+
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     # 60 minutes * 24 hours * 8 days = 8 days

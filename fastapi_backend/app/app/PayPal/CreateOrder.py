@@ -5,7 +5,9 @@ from typing import List
 
 from paypalcheckoutsdk.orders import OrdersCreateRequest
 
-from ..models import Book
+from app.core.config import settings
+from app.models import Book
+
 from .PayPalClient import PayPalClient
 
 
@@ -67,7 +69,7 @@ class CreateOrder(PayPalClient):
                 "landing_page": "NO_PREFERENCE",
                 "user_action": "CONTINUE",
                 # This is for mobile app
-                "return_url": "http://76f2-86-115-55-28.ngrok.io/mobile/checkout/paypal/order/capture/",
+                "return_url": f"{settings.PAYPAL_RETURN_URL}/mobile/checkout/paypal/order/capture/",
             },
             "purchase_units": [
                 {

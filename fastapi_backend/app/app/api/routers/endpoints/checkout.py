@@ -6,6 +6,9 @@ from typing import List
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app import crud
@@ -19,6 +22,8 @@ from app.PayPal.CreateOrder import CreateOrder
 from app.PayPal.GetOrder import GetOrder
 
 router = APIRouter()
+
+templates = Jinja2Templates(directory="templates")
 
 
 @router.post("/checkout/paypal/order/create/")
@@ -49,8 +54,6 @@ def paypal_create_order(
     order = CreateOrder().create_order(books=books, debug=settings.DEBUG)
 
     order_id = order.result._dict["id"]  # type: ignore[attr-defined]
-
-    print("CURRENT USER:", curr_user)
 
     crud.create_order_record(
         db=db,
@@ -106,9 +109,10 @@ def paypal_capture_order(
     return CaptureOrder().capture_order(order_id, debug=settings.DEBUG)
 
 
-@router.get("/mobile/checkout/paypal/order/capture/")
+@router.get("/mobile/checkout/paypal/order/capture/", response_class=HTMLResponse)
 def paypal_capture_mobile_order(
     token: str,
+    request: Request,
     db: Session = Depends(deps.get_db),
 ) -> Any:
     order = GetOrder().get_order(order_id=token)
@@ -126,9 +130,6 @@ def paypal_capture_mobile_order(
     db_order = crud.get_order_by_order_id(db=db, order_id=order_id)
     client = db_order.client
 
-    print(client)
-    print(order)
-
     crud.complete_order(db=db, order=db_order)
 
     client.books += ordered_books  # type: ignore[operator]
@@ -136,4 +137,8 @@ def paypal_capture_mobile_order(
     db.commit()
     db.refresh(client)
 
-    return CaptureOrder().capture_order(token, debug=settings.DEBUG)
+    CaptureOrder().capture_order(token, debug=settings.DEBUG)
+
+    return templates.TemplateResponse(
+        "thankyou.html", {"request": request, "username": client.username}
+    )
