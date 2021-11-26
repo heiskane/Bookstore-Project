@@ -31,7 +31,10 @@ const BuyButton = () => {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(
-              { "book_ids": ids } // Put book IDs here from shopping cart
+              {
+                "book_ids": ids,
+                'Authorization': 'Bearer ' + cookies.jwt_token
+              } // Put book IDs here from shopping cart
             )
           })
             .then((res) => {
@@ -49,10 +52,7 @@ const BuyButton = () => {
 
         onApprove={(data, actions) => {
           return fetch(axios.defaults.baseURL + '/checkout/paypal/order/' + data.orderID + '/capture/', {
-            method: 'post',
-            headers: {
-              'Authorization': 'Bearer ' + cookies.jwt_token
-            }
+            method: 'post'
           })
           .then(
             dispatch({ type: 'EMPTY_SHOPPINGCART' })
@@ -61,7 +61,7 @@ const BuyButton = () => {
             return res.json();
           })
           .then((json) => {
-            console.log(json);
+            //console.log(json);
             if (!cookies.jwt_token) {
               setCookie("jwt_token", json.access_token,
                 {

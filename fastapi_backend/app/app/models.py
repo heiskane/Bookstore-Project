@@ -173,6 +173,8 @@ class Order(Base):
     id = Column(Integer, primary_key=True, index=True)
     order_date = Column(Date, index=True)
     total_price = Column(Float, index=True)
+    order_id = Column(String, index=True)
+    completed = Column(Boolean, default=False, index=True)
 
     client_user_id = Column(Integer, ForeignKey("users.id"))
     client = relationship("User", back_populates="orders")

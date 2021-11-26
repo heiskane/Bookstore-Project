@@ -133,6 +133,8 @@ Book.update_forward_refs()
 class OrderBase(BaseModel):
     order_date: date
     total_price: float
+    order_id: Optional[str]
+    completed: Optional[bool]
 
 
 class Order(OrderBase):

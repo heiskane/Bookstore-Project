@@ -271,13 +271,18 @@ def delete_review(db: Session, review: models.Review) -> None:
 def create_order_record(
     db: Session,
     order_date: date,
+    order_id: str,
     total_price: float,
     ordered_books: List[models.Book],
     client: Optional[models.User] = None,
 ) -> models.Order:
 
     db_order = models.Order(
-        order_date=order_date, total_price=total_price, ordered_books=ordered_books
+        completed=False,
+        order_date=order_date,
+        order_id=order_id,
+        total_price=total_price,
+        ordered_books=ordered_books
     )
 
     if client:
@@ -288,6 +293,19 @@ def create_order_record(
     db.refresh(db_order)
 
     return db_order
+
+
+def complete_order(db: Session, order: models.Order):
+    order.completed = True
+    db.add(order)
+    db.commit()
+    db.refresh(order)
+
+    return order
+
+
+def get_order_by_order_id(db: Session, order_id: str):
+    return db.query(models.Order).filter(models.Order.order_id == order_id).first()
 
 
 def get_orders(db: Session, skip: int = 0, limit: int = 100) -> List[models.Order]:
