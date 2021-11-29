@@ -13,6 +13,8 @@ import { useDispatch } from "react-redux";
 
 
 export default function Order({ order, setSubtotal }) {
+
+
   const dispatch = useDispatch()
 
   const removeFromCart = () => {
@@ -21,7 +23,10 @@ export default function Order({ order, setSubtotal }) {
       type: "REMOVE_FROM_SHOPPINGCART",
       id: order.id,
     });
+
   }
+
+
 
   return (
 
@@ -52,11 +57,12 @@ export default function Order({ order, setSubtotal }) {
           variant="contained"
           startIcon={<DeleteIcon />}
           onClick={removeFromCart}
-          
-          >
+        >
           DELETE
         </Button>
+  
       </CardActions>
+
     </Card>
 
   );
