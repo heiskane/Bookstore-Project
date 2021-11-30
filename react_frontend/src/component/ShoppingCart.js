@@ -20,22 +20,35 @@ const ShoppingCart = () => {
 
 
   return (
-    <div className="shoppingcart">
-      <div class="shoppingcart__left">
-        <h1 className="shoppingcart__header">Your Shopping Cart</h1>
-        <div class="shoppingcart__book">
-          {orders.map((order) => (
-            <Order
-              order={order}
-              setSubtotal={setSubtotal}
-              key={order.id}
-            />
-          ))}
-        </div>
-      </div>
-      <div class="shoppingcart__right">
-        <Subtotal subtotal={subtotal} />
-      </div>
+
+    <div >
+      {
+        subtotal === 0 ? (
+          <div class="shoppingcart__left">
+            <h1 className="shoppingcart__header">Your Shopping Cart is Empty</h1>
+          </div>
+        ) : (
+          <div className="shoppingcart">
+            <div class="shoppingcart__left">
+              <h1 className="shoppingcart__header">Your Shopping Cart</h1>
+              <div class="shoppingcart__book">
+                {orders.map((order) => (
+                  <Order
+                    order={order}
+                    setSubtotal={setSubtotal}
+                    key={order.id}
+                  />
+                ))}
+              </div>
+            </div>
+            <div class="shoppingcart__right">
+              <Subtotal subtotal={subtotal} />
+            </div>
+          </div>
+        )
+      }
+
+
     </div>
   );
 };
