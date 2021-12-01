@@ -72,21 +72,11 @@ def paypal_capture_order(
     order_id: str,
     db: Session = Depends(deps.get_db),
 ) -> Any:
-    CaptureOrder().capture_order(order_id, debug=settings.DEBUG)
-    order = GetOrder().get_order(order_id=order_id)
 
-    # Maybe implement this in a function
-    ordered_books: List[models.Book] = []
-    for book in order.result.purchase_units[0].items:  # type: ignore[attr-defined]
-        db_book = crud.get_book_by_title(db=db, title=book.name)
-        if not db_book:
-            continue
-        ordered_books.append(db_book)
-
-    total_price = sum([book.price for book in ordered_books])
-
-    order_id = order.result._dict["id"]  # type: ignore[attr-defined]
     db_order = crud.get_order_by_order_id(db=db, order_id=order_id)
+    order = CaptureOrder().capture_order(order_id, debug=settings.DEBUG)
+    ordered_books = db_order.ordered_books
+    total_price = sum([book.price for book in ordered_books])
     client = db_order.client
 
     if not client:
@@ -115,20 +105,11 @@ def paypal_capture_mobile_order(
     request: Request,
     db: Session = Depends(deps.get_db),
 ) -> Any:
-    order = GetOrder().get_order(order_id=token)
-    CaptureOrder().capture_order(token, debug=settings.DEBUG)
-
-    ordered_books: List[models.Book] = []
-    for book in order.result.purchase_units[0].items:  # type: ignore[attr-defined]
-        db_book = crud.get_book_by_title(db=db, title=book.name)
-        if not db_book:
-            continue
-        ordered_books.append(db_book)
-
+    
+    db_order = crud.get_order_by_order_id(db=db, order_id=token)
+    order = CaptureOrder().capture_order(token, debug=settings.DEBUG)
+    ordered_books = db_order.ordered_books
     total_price = sum([book.price for book in ordered_books])
-
-    order_id = order.result._dict["id"]  # type: ignore[attr-defined]
-    db_order = crud.get_order_by_order_id(db=db, order_id=order_id)
     client = db_order.client
 
     crud.complete_order(db=db, order=db_order)
