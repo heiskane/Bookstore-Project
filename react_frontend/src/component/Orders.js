@@ -15,7 +15,7 @@ const Orders = () => {
 
 	useEffect(() => {
 		const instance = axios.create();
-		instance.get("/profile/library", {
+		instance.get("/profile/library/", {
 			headers: {
 				'Authorization': 'Bearer ' + cookies.jwt_token
 			}
