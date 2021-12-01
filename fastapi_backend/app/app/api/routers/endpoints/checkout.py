@@ -106,10 +106,10 @@ def paypal_capture_mobile_order(
     db: Session = Depends(deps.get_db),
 ) -> Any:
     
+    CaptureOrder().capture_order(token, debug=settings.DEBUG)
+    
     db_order = crud.get_order_by_order_id(db=db, order_id=token)
-    order = CaptureOrder().capture_order(token, debug=settings.DEBUG)
     ordered_books = db_order.ordered_books
-    total_price = sum([book.price for book in ordered_books])
     client = db_order.client
 
     crud.complete_order(db=db, order=db_order)
