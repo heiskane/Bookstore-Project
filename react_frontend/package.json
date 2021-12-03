@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.0.3",
     "@mui/material": "^5.0.3",
+    "@mui/styles": "^5.2.2",
     "@paypal/react-paypal-js": "^7.3.3",
     "@react-pdf/renderer": "^2.0.20",
     "@reduxjs/toolkit": "^1.6.1",

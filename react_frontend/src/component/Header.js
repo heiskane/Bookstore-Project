@@ -14,14 +14,44 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
-const Header = () => {
+import MenuIcon from "@material-ui/icons/Menu";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1
+  },
+
+  title: {
+    flexGrow: 1
+  }
+}));
+const theme = createTheme();
+
+const Header = (props) => {
   // This seems to give 'removeCookies' as the third option
   // Do 'cookies' AND 'setCookies' have to be included as well
   const [cookies, setCookie, removeCookie] = useCookies();
   const user_token = useSelector(state => state.user_token)
   const dispatch = useDispatch();
   const shoppingcart = useSelector(state => state.shopping_cart);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery('(max-width:600px)');
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (cookies.jwt_token) {
@@ -80,47 +110,86 @@ const Header = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-
-      <AppBar position='static'>
-
-        {/*
-      <Link to="/">
-        <img className="header__logo" src={HLG_Books} alt="HLG_Books logo" />
-      </Link>
-      */}
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component={Link}
-            to="/"
-            sx={{
-              flexGrow: 1,
-              textDecoration: 'none',
-              color: 'inherit'
-            }}>
-            HLG Bookstore
-          </Typography>
-
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <LoginOrUser />
-            <IconButton
-              color="inherit"
+    <ThemeProvider theme={theme}>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position='static'>
+          <Toolbar>
+            <Typography
+              variant="h6"
               component={Link}
-              to="/shoppingcart"
-            >
-              <Badge
-                sx={{ overflow: 'visible' }}
-                overlap="circular"
-                badgeContent={shoppingcart.length}
-                color="error">
-                <ShoppingCartOutlinedIcon />
-              </Badge>
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
+              to="/"
+              sx={{
+                flexGrow: 1,
+                textDecoration: 'none',
+                color: 'inherit'
+              }}>
+              HLG Bookstore
+            </Typography>
+
+            {
+              isMobile ? (<div>
+                <IconButton
+                  onClick={handleMenu}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="demo-positioned-menu"
+                  aria-labelledby="demo-positioned-button"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                >
+                  <MenuItem onClick={handleClose}><LoginOrUser /></MenuItem>
+                  <MenuItem onClick={handleClose}> <IconButton
+                    color="inherit"
+                    component={Link}
+                    to="/shoppingcart"
+                  >
+                    <Badge
+                      sx={{ overflow: 'visible' }}
+                      overlap="circular"
+                      badgeContent={shoppingcart.length}
+                      color="error">
+                      <ShoppingCartOutlinedIcon />
+                    </Badge>
+                  </IconButton></MenuItem>
+                </Menu>
+
+
+              </div>) : (
+                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                  <LoginOrUser />
+                  <IconButton
+                    color="inherit"
+                    component={Link}
+                    to="/shoppingcart"
+                  >
+                    <Badge
+                      sx={{ overflow: 'visible' }}
+                      overlap="circular"
+                      badgeContent={shoppingcart.length}
+                      color="error">
+                      <ShoppingCartOutlinedIcon />
+                    </Badge>
+                  </IconButton>
+                </Box>
+              )
+            }
+
+
+          </Toolbar>
+        </AppBar>
+      </Box>
+    </ThemeProvider>
   )
 }
 
