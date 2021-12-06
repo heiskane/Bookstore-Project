@@ -9,7 +9,7 @@ import Login from './component/Login';
 import BookDetails from './component/BookDetails';
 import ReadBook from './component/ReadBook';
 import Profile from './component/Profile';
-
+import { Redirect } from 'react-router-dom';
 
 import ShoppingCart from './component/ShoppingCart';
 import Orders from './component/Orders';
@@ -36,6 +36,13 @@ function App() {
           <Home />
         </Route>
 
+        <Route
+          path="/mobile"
+          component={() => {
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.hlg.books';
+            return null;
+          }}
+        />
         <Route path="/checkout">
           <Header />
           <Checkout />
