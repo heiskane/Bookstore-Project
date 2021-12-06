@@ -76,7 +76,7 @@ class LoginForm extends React.Component {
       return <Redirect to={this.state.redirectTo} />
     }
     return (
-      <Paper elevation={2}>
+      <Paper elevation={8}>
         <form
           onSubmit={this.handleSubmit}
         >
