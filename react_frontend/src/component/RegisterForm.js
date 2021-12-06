@@ -42,6 +42,15 @@ class RegisterForm extends React.Component {
   };
 
   handleSubmit(event) {
+    if (this.state.username.length < 3) {
+      alert("Username must be at least 3 charachters long")
+    } else {
+      this.register_user();
+    }
+    event.preventDefault();
+  }
+
+  register_user() {
     const instance = axios.create();
     instance.post('/users/', {
       username: this.state.username,
@@ -63,10 +72,12 @@ class RegisterForm extends React.Component {
         this.setState({ redirect: '/' });
       })
       .catch(err => {
-        alert("Registeration failed")
-        alert(JSON.stringify(err.response.data.detail))
+        if (err.response.data.detail[0].msg) {
+          alert(err.response.data.detail[0].msg)
+        } else {
+          alert("Registeration failed")
+        }
       })
-    event.preventDefault();
   }
 
 

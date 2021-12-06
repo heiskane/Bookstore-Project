@@ -29,7 +29,7 @@ class Genre(GenreBase):
 
 class UserBase(BaseModel):
     # https://pydantic-docs.helpmanual.io/usage/types/#constrained-types
-    username: constr(min_length=5, max_length=20)  # type: ignore[valid-type]
+    username: constr(min_length=3, max_length=20)  # type: ignore[valid-type]
     email: Optional[EmailStr] = None  # Maybe hide email somewhere
 
 
