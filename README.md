@@ -1,5 +1,7 @@
 # HLG Bookstore
 
+Visit live deployment at https://hlgbooks.com
+
 ## Overview
 
 This project is an online bookstore that focuses on selling eBooks. For the payments we are using PayPal server-side integration. We are also implementing user control so that a registered users can have access to the books they have bought. Users will also be able to write reviews and give ratings on books.
