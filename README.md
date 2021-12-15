@@ -1,13 +1,12 @@
 # HLG Bookstore
-
-Visit live deployment at https://hlgbooks.com
-
 ## Overview
 
 Live Deployment: https://hlgbooks.com/
 
 Note that the mobile app is part of a diffrent project.
+
 Mobile app: https://play.google.com/store/apps/details?id=com.hlg.books
+
 Mobile app code: https://github.com/heiskane/hlg-books-mobile
 
 This project is an online bookstore that focuses on selling eBooks. For the payments we are using PayPal. We have also implemented user control so that a registered users can have access to the books they have bought for as long as the servers will be up.
