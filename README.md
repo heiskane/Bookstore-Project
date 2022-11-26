@@ -1,7 +1,7 @@
 # HLG Bookstore
 ## Overview
 
-Live Deployment: https://hlgbooks.com/
+Live Deployment: Offline due to cost
 
 Note that the mobile app is part of a diffrent project.
 
